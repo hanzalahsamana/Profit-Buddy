@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  font-family: 'Poppins', sans-serif;
+  --primary: #ffffff;
+  --secondary: #171717;
+  --lBackground: #fafafa;
+  --lText: #666666;
+  --border: #00000014;
+  --accent: #24E698;
+}
+
+.dark {
+  --primary: #000000;
+  --secondary: #ededed;
+  --lBackground: #171717;
+  --lText: #a1a1a1;
+  --border: #ffffff24;
+  --accent: #24E698;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-lBackground: var(--lBackground);
+  --color-lText: var(--lText);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+}
+
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.toastifyCustomClass {
+  font-size: 12px;
+  width: auto !important;
+  max-width: 500px;
+  min-width: 220px;
+}
+
+.toastifyCustomClass>div {
+  max-width: 250px;
+  border-radius: 10px !important;
+  min-height: 48px !important;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.toastifyCustomClass .Toastify__close-button {
+  align-self: center !important;
+  align-items: end;
+  opacity: 1;
+}
+
+.toastifyCustomClass .Toastify__toast-icon {
+  width: 18px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.customScroll {
+  overflow: auto;
+}
+
+.customScroll::-webkit-scrollbar {
+  width: 2.5px;
+  height: 2.5px;
+}
+
+.customScroll::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 0px;
+}
+
+.customScroll::-webkit-scrollbar-thumb {
+  background-color: #b9b9b9;
+  border-radius: 10px;
+  border: 0px solid #f1f1f1;
+}
+
+.customScroll::-webkit-scrollbar-thumb:hover {
+  background-color: #a5a4a4;
+}

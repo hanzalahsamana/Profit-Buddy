@@ -1,0 +1,245 @@
+export const ProductSearchData = [
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/510T962DtNL.jpg',
+      'https://m.media-amazon.com/images/I/61KYNCHH3iL.jpg',
+      'https://m.media-amazon.com/images/I/81ByAiMY77L.jpg',
+      'https://m.media-amazon.com/images/I/31qIwONt0jL.jpg',
+    ],
+    title: "Casio Men's F108WH Illuminator Collection Black Resin Strap Digital Watch",
+    asin: 'B0053HBJBE',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 46,
+      count: 26979,
+    },
+    info: {
+      sellPrice: 1688,
+      sellRank: 1203,
+      monthlySold: 8000,
+      competitivePriceThreshold: 1688,
+    },
+    fees: {
+      fbaFees: 390,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/71rpLpKLVtL.jpg',
+      'https://m.media-amazon.com/images/I/71BR27Q9IhL.jpg',
+      'https://m.media-amazon.com/images/I/71qA40BVI4L.jpg',
+      'https://m.media-amazon.com/images/I/71jLwfsduyL.jpg',
+      'https://m.media-amazon.com/images/I/71KXdDgtOXL.jpg',
+      'https://m.media-amazon.com/images/I/81ixKrnr82L.jpg',
+      'https://m.media-amazon.com/images/I/71SMv5WYvUL.jpg',
+    ],
+    title: "Taxau Mens Silver Watch Blue Face Casual Dress Watches for Men Analog Quartz Waterproof Men's Wrist Watches with Date Luminou & Stainless Steel Silver Band",
+    asin: 'B0F6CG1ZVC',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 48,
+      count: 8,
+    },
+    info: {
+      sellPrice: 4077,
+      sellRank: 422469,
+    },
+    fees: {
+      fbaFees: 390,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/61umEhyV-UL.jpg',
+      'https://m.media-amazon.com/images/I/61O-h97DtHL.jpg',
+      'https://m.media-amazon.com/images/I/71nSf3GwWkL.jpg',
+      'https://m.media-amazon.com/images/I/71IWxWGX9rL.jpg',
+      'https://m.media-amazon.com/images/I/71KzCUiJ6qL.jpg',
+      'https://m.media-amazon.com/images/I/61coYXNPNiL.jpg',
+    ],
+    title:
+      'Apple Watch SE (2nd Gen) [GPS 40mm] Smartwatch with Starlight Aluminum Case with Starlight Sport Band S/M. Fitness and Sleep Trackers, Crash Detection, Heart Rate Monitor, Retina Display',
+    asin: 'B0DGJ73CFS',
+    category: 'Electronics',
+    reviews: {
+      rating: 46,
+      count: 3921,
+    },
+    info: {
+      sellPrice: 16900,
+      sellRank: 57,
+      monthlySold: 10000,
+      competitivePriceThreshold: 16900,
+    },
+    fees: {
+      fbaFees: 510,
+      referralFeePercent: 8,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/61CdX7OX-1L.jpg',
+      'https://m.media-amazon.com/images/I/71RVfgI40GL.jpg',
+      'https://m.media-amazon.com/images/I/61eGbb1oFaL.jpg',
+      'https://m.media-amazon.com/images/I/81zK01idTdL.jpg',
+      'https://m.media-amazon.com/images/I/71i8y+uUZ9L.jpg',
+      'https://m.media-amazon.com/images/I/71BvldgRpNL.jpg',
+      'https://m.media-amazon.com/images/I/71r0NgE53tL.jpg',
+      'https://m.media-amazon.com/images/I/51ch0xohlAL.jpg',
+    ],
+    title: 'HANPOSH Mens Digital Watch Ultra Thin Minimalist Sports Waterproof Outdoor LED Screen Large Face Wrist Watches for Men with Back Light Alarm Date Stopwatch',
+    asin: 'B0CGX3SBJF',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 42,
+      count: 1270,
+    },
+    info: {
+      sellPrice: 949,
+      sellRank: 4481,
+      monthlySold: 3000,
+    },
+    fees: {
+      fbaFees: 238,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/71UUjbESoFL.jpg',
+      'https://m.media-amazon.com/images/I/81HpPZRmhWL.jpg',
+      'https://m.media-amazon.com/images/I/71yzFCntjvL.jpg',
+      'https://m.media-amazon.com/images/I/81JvFkh3MxL.jpg',
+      'https://m.media-amazon.com/images/I/71arAwuDiKL.jpg',
+      'https://m.media-amazon.com/images/I/71J69l2hJ7L.jpg',
+      'https://m.media-amazon.com/images/I/71anmG7Hx2L.jpg',
+      'https://m.media-amazon.com/images/I/71ZkD+VHLqL.jpg',
+      'https://m.media-amazon.com/images/I/51ch0xohlAL.jpg',
+    ],
+    title: 'LN LENQIN Mens Watches Unisex Military Sport Nylon Strap Stylish Luminous Fashion Analog Quartz Watch for Men Waterproof Army Tactical Casual Wristwatch',
+    asin: 'B0CGX3KN95',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 43,
+      count: 3145,
+    },
+    info: {
+      sellPrice: 999,
+      sellRank: 2996,
+      monthlySold: 3000,
+    },
+    fees: {
+      fbaFees: 238,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/61VG9Grol0L.jpg',
+      'https://m.media-amazon.com/images/I/71EMZzGQwfL.jpg',
+      'https://m.media-amazon.com/images/I/71J5Yoa2NmL.jpg',
+      'https://m.media-amazon.com/images/I/71-2CAq4ANL.jpg',
+      'https://m.media-amazon.com/images/I/71d2CfAvd7L.jpg',
+      'https://m.media-amazon.com/images/I/71bFG5Sr7mL.jpg',
+      'https://m.media-amazon.com/images/I/71viUaLSaoL.jpg',
+      'https://m.media-amazon.com/images/I/615BeioL8eL.jpg',
+      'https://m.media-amazon.com/images/I/71upmXOyrEL.jpg',
+    ],
+    title: 'Bomieux L6671S-SilverWhite-zsfei Made in China',
+    asin: 'B0DWDGWXFQ',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 46,
+      count: 29,
+    },
+    info: {
+      sellPrice: 2999,
+      sellRank: 710587,
+    },
+    fees: {
+      fbaFees: 390,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/61EU0vMqbFL.jpg',
+      'https://m.media-amazon.com/images/I/71vURhZuNkL.jpg',
+      'https://m.media-amazon.com/images/I/616UrVvzqfL.jpg',
+      'https://m.media-amazon.com/images/I/81xRlkxYEpL.jpg',
+      'https://m.media-amazon.com/images/I/71UJIGWHX+L.jpg',
+      'https://m.media-amazon.com/images/I/716fAFkQMyL.jpg',
+      'https://m.media-amazon.com/images/I/61aYg86jPrL.jpg',
+    ],
+    title: 'CHEETAH Watches for Women with Small Vintage Bracelet, Gold White Face, Rectangular Case, Roman Dial',
+    asin: 'B0DBHG7DBP',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 46,
+      count: 1405,
+    },
+    info: {
+      sellPrice: 2799,
+      sellRank: 825,
+      monthlySold: 5000,
+    },
+    fees: {
+      fbaFees: 368,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/61MzuK6Ir9L.jpg',
+      'https://m.media-amazon.com/images/I/71ByFqPnpbL.jpg',
+      'https://m.media-amazon.com/images/I/71ZIsooeX2L.jpg',
+      'https://m.media-amazon.com/images/I/61yRL0ZXVcL.jpg',
+      'https://m.media-amazon.com/images/I/61FTZ-6uFIL.jpg',
+      'https://m.media-amazon.com/images/I/71F0TLv-jyL.jpg',
+    ],
+    title: 'TWOPTION Nurse Watch for Women Waterproof Analog Silicone Watch with Second Hand Nursing Easy Read Dial Nurse Watches(Black)',
+    asin: 'B0CSVDYW2X',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 43,
+      count: 859,
+    },
+    info: {
+      sellPrice: 999,
+      sellRank: 1405,
+      monthlySold: 2000,
+    },
+    fees: {
+      fbaFees: 291,
+      referralFeePercent: 16,
+    },
+  },
+  {
+    images: [
+      'https://m.media-amazon.com/images/I/61hBJsXJMML.jpg',
+      'https://m.media-amazon.com/images/I/71ttPLgnYaL.jpg',
+      'https://m.media-amazon.com/images/I/71iYplCwtML.jpg',
+      'https://m.media-amazon.com/images/I/71TOfn7Z-yL.jpg',
+      'https://m.media-amazon.com/images/I/81oFlj1mAIL.jpg',
+      'https://m.media-amazon.com/images/I/71dbHWvNbAL.jpg',
+    ],
+    title: 'GAOFAN HOUR Gold Watches for Women with Vintage Rectangular Case,White Roman Dial,Stainless Steel Band,Adjustment Tool Included,Water Resistant',
+    asin: 'B0DXQ69Q81',
+    category: 'Clothing, Shoes & Jewelry',
+    reviews: {
+      rating: 46,
+      count: 124,
+    },
+    info: {
+      sellPrice: 2795,
+      sellRank: 4390,
+      monthlySold: 3000,
+    },
+    fees: {
+      fbaFees: 324,
+      referralFeePercent: 16,
+    },
+  },
+];

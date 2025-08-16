@@ -1,0 +1,1 @@
+export const Project_Name = 'profit buddy'
