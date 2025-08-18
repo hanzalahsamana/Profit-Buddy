@@ -32,7 +32,7 @@ const Home = () => {
   return (
     <div className='bg-lBackground min-h-screen p-5 flex flex-col gap-4'>
 
-      <ProductCard product={ProductSearchData?.[0]} />
+      {/* <ProductCard product={ProductSearchData?.[0]} /> */}
       {productsLoading && [1, 2, 3, 4, 5].map((_, index) => (
         <ProductCardLoader key={index} />
       ))}
