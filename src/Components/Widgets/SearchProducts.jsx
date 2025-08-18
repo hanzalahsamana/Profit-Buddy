@@ -1,26 +1,21 @@
-import React, { useState } from 'react'
-import Button from '../Controls/Button'
-import { searchProducts } from '../../Apis/product'
-import { useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomInput from '../Controls/CustomInput'
 import { IoSearch } from 'react-icons/io5'
+import { setCurrentPage, setSearchTerm } from '../../Redux/Slices/ProductSlice'
 
 const SearchProducts = () => {
 
-    const { products, productsLoading } = useSelector((state) => state?.products)
+    const { productsLoading } = useSelector((state) => state?.products)
     const [searchQuery, setSearchQuerry] = useState()
+    const dispatch = useDispatch()
 
     const handleSearchProducts = async (e) => {
         e.preventDefault();
+        
         if (productsLoading) return
-        try {
-            await searchProducts(searchQuery); // use the state value
-            toast.success('Fetched successfully!');
-        } catch (error) {
-            
-            // toast.error(error.response ? error.response.data.message : error.message);
-        }
+        dispatch(setSearchTerm(searchQuery))
+        dispatch(setCurrentPage(0))
     };
 
     return (

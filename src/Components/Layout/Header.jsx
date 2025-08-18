@@ -33,25 +33,24 @@ const Header = () => {
         <div className='w-full bg-primary p-4 border-b border-border flex flex-col gap-6 '>
             <div className='flex justify-between'>
 
-                <img src={theme?LightLogoImage:DarkLogoImage} alt="" className='w-[200px]' />
+                <img src={theme ? LightLogoImage : DarkLogoImage} alt="" className='w-[200px]' />
                 <div className='flex gap-2 items-center'>
-                    <ToggleSwitch label='Theme' enabled={theme} setEnabled={(value) => dispatch(setTheme(value))} />
+                    <ToggleSwitch options={['Dark', 'Light']} selected={theme ? 'Dark' : 'Light'} onChange={(value) => dispatch(setTheme(value === 'Dark'))} />
                     <Button size='small' label='SPY A SELLER' action={() => setModalOpen(!modalOpen)} />
                 </div>
 
-                {/* <h1 className='capitalize fontDmmono font-bold text-[35px] text-secondary '>{Project_Name}</h1> */}
             </div>
             <div className='inline flex-col  flex-1'>
                 <SearchProducts />
             </div>
             <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
                 <div className='p-4'>
-                    <h1 className='w-full text-center text-secondary font-medium text-[30px]'>SPY A SELLER</h1>
+                    <h1 className='w-full text-center text-secondary text-[32px] font-semibold fontDmmono'>SPY A SELLER</h1>
                     <p className='text-lText pb-2 pt-4'>Search Sellers by thier id</p>
                     <form onSubmit={handleSubmit}>
 
-                        <CustomInput value={sellerId} onChange={(e)=>setSellerId(e.target.value)} error={inputError} prefix={'Seller Id'} />
-                        <Button label='SPY A SELLER' className='w-full my-6 opacity-90' />
+                        <CustomInput value={sellerId} onChange={(e) => setSellerId(e.target.value)} error={inputError} prefix={'Seller Id'} />
+                        <Button label='SPY A SELLER' size='large' className='w-full my-6 opacity-90' />
                     </form>
                 </div>
             </Modal>

@@ -18,7 +18,7 @@ const CopyButton = ({ text }) => {
 
   return (
     <span
-      className="cursor-pointer text-lg text-secondary hover:text-accent transition-colors"
+      className="cursor-pointer text-sm select-none text-secondary hover:text-accent transition-colors"
       onClick={handleCopy}
     >
       {copied ? <MdCheck /> : <MdContentCopy />}

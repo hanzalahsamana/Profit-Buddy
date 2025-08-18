@@ -1,46 +1,171 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import Rating from './Rating'
-import { formatNumber } from '../../Utils/formatNumber'
 import CopyButton from '../Controls/CopyText'
 import BASE_URL from '../../../config'
+import ButtonLoader from '../Loaders/ButtonLoader'
+import { formatNumberWithCommas } from '../../Utils/NumberUtil'
+import { calculateMaxCost } from '../../Utils/CalculationUtils'
+import { abbreviateNumber } from './../../Utils/NumberUtil';
+import { getProductOffers } from '../../Apis/product'
+import { useNavigate } from 'react-router-dom'
 
 const ProductCard = ({ product }) => {
-  return (
-    <div className='flex md:items-center justify-between flex-col items-start md:flex-row gap-4 md:gap-7 p-3 border border-border rounded-[18px] bg-primary transition-all hover:opacity-85 cursor-pointer hover:scale-[1.01]'>
-      <div className='flex gap-4'>
+  const [loading, setloading] = useState(false)
+  const [productOffers, setproductOffers] = useState({})
 
-        <div className='flex flex-col gap-2 w-[60px]'>
+  const navigate = useNavigate();
+
+
+  const handleGetOffers = async () => {
+    try {
+      setloading(true)
+      const responce = await getProductOffers(product?.asin)
+      setproductOffers(responce?.offer)
+      setloading(false)
+    } catch (error) {
+      setloading(false)
+      console.error(error.response ? error.response.data.message : error.message);
+    }
+  }
+
+  useEffect(() => {
+    if (!product) return
+    handleGetOffers()
+  }, [product])
+
+
+  return (
+    <div
+      className='grid grid-cols-10 gap-2 md:gap-7 p-3 border border-border rounded-[18px] bg-primary transition-transform cursor-pointer hover:scale-[1.005]'
+      onClick={() => navigate(`/detail?asin=${product?.asin}`)}
+    >
+      <div className='flex gap-4 w-full h-max col-span-5'>
+
+        <div className="grid gap-2"
+          style={{
+            gridTemplateColumns: "repeat(4, 50px)",
+            gridTemplateRows: "repeat(3, 50px)"
+          }}
+        >
           {(() => {
             const imgs = product?.images?.slice(1, 4).filter(Boolean) || [];
             while (imgs.length < 3 && imgs.length > 0) {
               imgs.push(imgs[imgs.length - 1]);
             }
             return imgs.map((img, i) => (
-              <img
+              <div
                 key={i}
-                src={img}
-                alt={`product-thumbnail-${i + 1}`}
-                className='object-contain p-1 max-w-[60px] min-w-[60px] max-h-[60px] min-h-[60px] bg-white rounded-lg'
-              />
+                className="aspect-square  bg-white rounded-lg overflow-hidden"
+                style={{ gridRowStart: i + 1 }}
+              >
+                <img
+                  src={img}
+                  alt={`product-thumbnail-${i + 1}`}
+                  className="w-full h-full object-contain p-1"
+                />
+              </div>
             ));
           })()}
+
+          <div className="col-span-3 row-span-3 bg-white border border-border rounded-[8px] overflow-hidden">
+            <img
+              src={product?.images?.[0]}
+              alt="product"
+              className="object-contain w-full h-full"
+            />
+          </div>
         </div>
-        <div className='aspect-square min-w-[200px] bg-white max-w-[200px]  border border-border rounded-[8px] overflow-hidden p-2'>
-          <img src={product?.images[0]} className='object-contain w-full h-full' />
-        </div>
-        <div>
-          <p className='text-secondary py-2 text-sm'>{product?.title}</p>
-          <p className='text-lText text-xs pb-2'>{product?.category}</p>
-          {/* <a className='text-accent text-[12px]/[12px] pb-2 flex items-end gap-1 cursor-pointer'>See On Amazon<RiExternalLinkLine className='text-sm' /></a> */}
-          <a className='text-[14px]/[14px] pb-2 flex items-end gap-1 text-secondary'><span className='text-lText text-[12px]/[12px]'>ASIN:</span>{product?.asin} <CopyButton text={product.asin} /></a>
-          <Rating rating={product?.reviews?.rating / 10} count={product?.reviews?.count} />
-          <p className='py-2'><span className='text-lText'>Sale Price:</span><span className='fontDmmono text-secondary text-lg pl-2 font-medium'>${formatNumber(product?.info?.sellPrice / 100)}</span></p>
+
+        <div className='flex flex-col justify-between'>
+          <p
+            className="text-secondary pt-1 text-xs" title={product?.title}>
+            {product?.title?.length > 80 ? product.title.slice(0, 80) + "..." : product?.title}
+          </p>
+          <p className='text-lText text-[10px] py-0.5'>{product?.category}</p>
+          <Rating rating={product?.reviews?.rating} count={product?.reviews?.count} />
+          <a className='text-[12px]/[12px] pb-2 flex items-end gap-1 text-secondary'><span className='text-lText text-[12px]/[12px]'>ASIN:</span>{product?.asin} <CopyButton text={product.asin} /></a>
+          <div className="overflow-x-auto border-[1.5px] border-accent rounded-lg max-w-md">
+            <table className="min-w-full border border-accent rounded-lg overflow-hidden !text-xs">
+              <thead className="bg-accent/15">
+                <tr>
+                  <th className="px-1 py-2 text-center text-xs font-medium text-secondary border-r border-accent">
+                    Est Sales
+                  </th>
+                  <th className="px-1 py-2 text-center text-xs font-medium text-secondary border-r border-accent">
+                    Sale Cost
+                  </th>
+                  <th className="px-1 py-2 text-center text-xs font-medium text-secondary border-r border-accent">
+                    BSR Rank
+                  </th>
+                  <th className="px-1 py-2 text-center text-xs font-medium text-secondary">
+                    Max Cost
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="hover:bg-accent/5 transition">
+                  <td className="px-1 py-1 text-center text-lText border-r border-accent">{abbreviateNumber(product?.info?.monthlySold)}+/mo</td>
+                  <td className="px-1 py-1 text-center text-lText border-r border-accent">{formatNumberWithCommas(product?.info?.sellPrice)}</td>
+                  <td className="px-1 py-1 text-center text-lText border-r border-accent"># {product?.info?.sellRank}</td>
+                  <td className="px-1 py-1 text-center text-lText">{formatNumberWithCommas(calculateMaxCost(product))}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
 
         </div>
       </div>
 
-      <div className='min-w-[400px] max-w-[400px] h-full '>
-        <img className='object-contain rounded-[10px]' src={`${BASE_URL}/get/get-graph-image?asin=${product?.asin}`} alt="" />
+      <div className='w-full h-max col-span-2 px-[25px]'>
+        <p className='text-secondary text-xs py-1.5'>Live Offers:</p>
+
+        <div className="overflow-x-auto customScroll border-[1.5px] border-accent rounded-lg max-w-md">
+          {loading ? (
+            <ButtonLoader className='py-[70px] h-[100%]' />
+          ) : (
+            <div className="max-h-[160px] overflow-y-auto customScroll rounded-lg ">
+              <table className="min-w-full !text-xs">
+                <thead className="bg-accent/10 backdrop-blur-2xl sticky top-0 z-10">
+                  <tr>
+                    <th className="px-1 py-1.5 text-center text-xs font-medium text-secondary border-r border-accent">
+                      Seller
+                    </th>
+                    <th className="px-1 py-1.5 text-center text-xs font-medium text-secondary border-r border-accent">
+                      Stock
+                    </th>
+                    <th className="px-1 py-1.5 text-center text-xs font-medium text-secondary">
+                      Price
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {productOffers?.offers?.map((offer, index) => (
+                    <tr
+                      key={index}
+                      className="hover:bg-accent/5 transition"
+                    >
+                      <td className="px-1 py-1.5 text-center text-lText border-r border-accent font-semibold">
+                        {offer?.seller}
+                      </td>
+                      <td className="px-1 py-1.5 text-center text-lText border-r border-accent">
+                        {offer?.stock || "-"}
+                      </td>
+                      <td className="px-1 py-1.5 text-center text-lText">
+                        {formatNumberWithCommas(offer?.price)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+          )}
+
+        </div>
+      </div>
+      <div className='w-full h-max border border-border p-2 rounded-lg col-span-3'>
+        <img className='object-contain rounded-lg' src={`${BASE_URL}/get/get-graph-image?asin=${product?.asin}`} alt="" />
       </div>
     </div>
   )

@@ -6,8 +6,8 @@
   --secondary: #171717;
   --lBackground: #fafafa;
   --lText: #666666;
-  --border: #00000014;
-  --accent: #24E698;
+  --border: #0000001a;
+  --accent: #25d890;
 }
 
 .dark {
@@ -15,7 +15,7 @@
   --secondary: #ededed;
   --lBackground: #171717;
   --lText: #a1a1a1;
-  --border: #ffffff24;
+  --border: #ffffff36;
   --accent: #24E698;
 }
 

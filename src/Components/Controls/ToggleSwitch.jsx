@@ -1,19 +1,45 @@
-import { useState } from "react";
+import { div } from "framer-motion/client";
+import React from "react";
+import InfoTooltip from "./InfoTooltip";
 
-export default function ToggleSwitch({ label = '', enabled = false, setEnabled = () => { } }) {
+const ToggleSwitch = ({ options = [], selected, onChange, className, label , info }) => {
+    const selectedIndex = options.indexOf(selected) !== -1 ? options.indexOf(selected) : 0
     return (
-        <div className="flex items-center gap-2">
-            <span className="text-white">{label}</span>
-            <button
-                onClick={() => setEnabled(!enabled)}
-                className={`w-10 h-5 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 
-          ${enabled ? "bg-transparent border-2 border-accent" : "bg-transparent border-2 border-accent"}`}
-            >
-                <div
-                    className={`w-2 h-2 !rounded-full bg-accent transition-transform duration-300 
-            ${enabled ? "translate-x-5" : "translate-x-0"}`}
-                ></div>
-            </button>
+
+        <div className="flex items-center gap-2 justify-between">
+            {label && (
+                <label className="flex gap-2 items-center text-sm font-medium text-secondary fontDmmono">
+                    {label}
+                    {info && (<InfoTooltip content={info} id={`InputInfo_${label}`} />)}
+                </label>
+            )}
+
+            <div className={`p-1 bg-accent rounded-full overflow-hidden ${className} `}>
+                <div className="relative flex bg-accent rounded-full ">
+                    {/* Active background */}
+                    <div
+                        className="absolute  h-full bg-primary rounded-full transition-all duration-300"
+                        style={{
+                            width: `${100 / options.length}%`,
+                            left: `${(selectedIndex * 100) / options.length}%`,
+                        }}
+                    />
+
+                    {options.map((option, i) => (
+                        <button
+                            key={option}
+                            className={`relative px-5 py-1 flex-1 text-center text-[14px] font-medium z-10 transition-colors fontDmmono ${selectedIndex === i ? "text-accent" : "text-primary"
+                                }`}
+                            onClick={() => onChange(option)}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+            </div>
         </div>
+
     );
-}
+};
+
+export default ToggleSwitch;

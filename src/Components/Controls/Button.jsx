@@ -1,27 +1,39 @@
 import React from 'react'
 import ButtonLoader from '../Loaders/ButtonLoader'
 
-const Button = ({
+const   Button = ({
     label = '',
-    variant = 'primary',
-    size = 'large',
+    variant = 'accent',
+    size = 'small',
+    corner = "small",
     action = () => { },
     loading = false,
     className = ''
 }) => {
 
     const variantsClasses = {
-        primary: `bg-accent text-black`,
+        primary: `bg-primary text-secondary`,
+        secondary: `bg-secondary text-primary`,
+        accent: `bg-accent text-black`,
+        outline:`border border-secondary text-secondary`,
+        text:`text-secondary`,
     }
 
     const sizeClasses = {
-        large: `py-2 px-4 rounded-md text-lg`,
-        small: `py-2 px-4 rounded-md text-[14px]`,
+        large: `py-2 px-4 text-lg font-medium`,
+        small: `py-1.5 px-4 w-max text-[12px] font-medium`,
+    }
+    
+    const cornerClasses = {
+        none: `rounded-none`,
+        small:`rounded-md`,
+        full:`rounded-full`
+
     }
 
 
     return (
-        <button type='submit' onClick={action} disabled={loading} className={`relative font-medium cursor-pointer hover:opacity-85 ${variantsClasses?.[variant]} ${sizeClasses?.[size]} ${className}`}>
+        <button type='submit' onClick={action} disabled={loading} className={`relative cursor-pointer hover:opacity-95 ${variantsClasses?.[variant]} ${sizeClasses?.[size]} ${cornerClasses?.[corner]} ${className}`}>
             {label && (<span className={`${loading ? 'invisible' : 'visible'} text-nowrap`}>{label}</span>)}
             {loading && (
                 <span className="absolute inset-0  flex items-center justify-center">

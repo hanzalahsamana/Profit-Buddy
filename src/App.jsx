@@ -4,6 +4,7 @@ import './Styles/Font.css'
 import Home from './Pages/Home'
 import Header from './Components/Layout/Header'
 import { useSelector } from 'react-redux'
+import ProductDetail from './Pages/ProductDetail'
 
 function App() {
   const { theme } = useSelector((state) => state.system)
@@ -22,6 +23,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/detail" element={<ProductDetail />} />
       </Routes>
     </div>
   )
