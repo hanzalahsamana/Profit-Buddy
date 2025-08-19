@@ -17,7 +17,7 @@ const CustomInput = ({
     ...props
 }) => {
     return (
-        <div className={`w-full fontDmmono ${disabled ? 'opacity-80 pointer-events-none select-none' : ''}`}>
+        <div className={`w-full fontDmmono ${disabled ? 'opacity-80 pointer-events-none select-none' : ''} ${className}`}>
             {label && (
                 <label
                     htmlFor={name}
@@ -33,7 +33,6 @@ const CustomInput = ({
                     "flex border rounded-md focus-within:ring focus-within:ring-secondary h-11 transition-all overflow-hidden",
                     error ? "border-red-500" : "border-border",
                     disabled && "opacity-60 cursor-not-allowed",
-                    className
                 )}
             >
                 {prefix && (
@@ -50,7 +49,7 @@ const CustomInput = ({
                     onChange={onChange}
                     placeholder={placeholder}
                     disabled={disabled}
-                    step="any" 
+                    step="any"
                     className={clsx(
                         "flex-1 bg-transparent border-none h-full outline-none px-3  w-full text-[16px] font-medium text-secondary",
                         "placeholder:text-lText placeholder:font-normal"

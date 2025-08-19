@@ -2,11 +2,12 @@ import { div } from "framer-motion/client";
 import React from "react";
 import InfoTooltip from "./InfoTooltip";
 
-const ToggleSwitch = ({ options = [], selected, onChange, className, label , info }) => {
+const ToggleSwitch = ({ options = [], selected, onChange, className, label, info }) => {
     const selectedIndex = options.indexOf(selected) !== -1 ? options.indexOf(selected) : 0
+
     return (
 
-        <div className="flex items-center gap-2 justify-between">
+        <div className={`flex items-center gap-2 justify-between ${className}`}>
             {label && (
                 <label className="flex gap-2 items-center text-sm font-medium text-secondary fontDmmono">
                     {label}
@@ -14,7 +15,7 @@ const ToggleSwitch = ({ options = [], selected, onChange, className, label , inf
                 </label>
             )}
 
-            <div className={`p-1 bg-accent rounded-full overflow-hidden ${className} `}>
+            <div className={`p-1 bg-accent rounded-full overflow-hidden  `}>
                 <div className="relative flex bg-accent rounded-full ">
                     {/* Active background */}
                     <div
@@ -28,7 +29,7 @@ const ToggleSwitch = ({ options = [], selected, onChange, className, label , inf
                     {options.map((option, i) => (
                         <button
                             key={option}
-                            className={`relative px-5 py-1 flex-1 text-center text-[14px] font-medium z-10 transition-colors fontDmmono ${selectedIndex === i ? "text-accent" : "text-primary"
+                            className={`relative px-5 py-1 cursor-pointer flex-1 text-center text-[14px] font-medium z-10 transition-colors fontDmmono ${selectedIndex === i ? "text-accent" : "text-primary"
                                 }`}
                             onClick={() => onChange(option)}
                         >

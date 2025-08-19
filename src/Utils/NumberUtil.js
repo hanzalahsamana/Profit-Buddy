@@ -7,10 +7,11 @@ export const abbreviateNumber = (num) => {
   return num?.toString();
 };
 
-export const formatNumberWithCommas = (num, decimals = 2, wantCurrencyCode = true) => {
+export const formatNumberWithCommas = (num, decimals = 2, wantCurrencyCode = true, withCommas = true) => {
   if (num === null || num === undefined || isNaN(num)) return '0.00';
 
   const formatted = new Intl.NumberFormat('en-US', {
+    useGrouping: withCommas,
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(num);

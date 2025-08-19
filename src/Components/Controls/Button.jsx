@@ -21,7 +21,8 @@ const   Button = ({
 
     const sizeClasses = {
         large: `py-2 px-4 text-lg font-medium`,
-        small: `py-1.5 px-4 w-max text-[12px] font-medium`,
+        medium: `py-2 px-4 text-sm font-medium`,
+        small: `py-1.5 px-4 w-max text-xs font-medium`,
     }
     
     const cornerClasses = {
@@ -33,10 +34,10 @@ const   Button = ({
 
 
     return (
-        <button type='submit' onClick={action} disabled={loading} className={`relative cursor-pointer hover:opacity-95 ${variantsClasses?.[variant]} ${sizeClasses?.[size]} ${cornerClasses?.[corner]} ${className}`}>
+        <button type='submit' onClick={action} disabled={loading} className={`fontDmmono relative cursor-pointer hover:opacity-95 ${variantsClasses?.[variant]} ${sizeClasses?.[size]} ${cornerClasses?.[corner]} ${className}`}>
             {label && (<span className={`${loading ? 'invisible' : 'visible'} text-nowrap`}>{label}</span>)}
             {loading && (
-                <span className="absolute inset-0  flex items-center justify-center">
+                <span className="absolute inset-0   flex items-center justify-center">
                     <ButtonLoader />
                 </span>
             )}

@@ -36,7 +36,7 @@ const Header = () => {
                 <img src={theme ? LightLogoImage : DarkLogoImage} alt="" className='w-[200px]' />
                 <div className='flex gap-2 items-center'>
                     <ToggleSwitch options={['Dark', 'Light']} selected={theme ? 'Dark' : 'Light'} onChange={(value) => dispatch(setTheme(value === 'Dark'))} />
-                    <Button size='small' label='SPY A SELLER' action={() => setModalOpen(!modalOpen)} />
+                    <Button size='medium' corner='full' label='Spy A Seller' action={() => setModalOpen(!modalOpen)} />
                 </div>
 
             </div>

@@ -1,54 +1,72 @@
-import React, { useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import { ProductSearchData } from '../Utils/MockData';
+import ProfitCalculator from '../Components/Widgets/ProfitCalculator';
+import Rating from '../Components/UI/Rating';
+import CopyButton from '../Components/Controls/CopyText';
+import { useEffect } from 'react';
+import { setBuyCost, setProduct, setSellPrice } from '../Redux/Slices/profitCalcSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomInput from '../Components/Controls/CustomInput';
-import RangeSelector from '../Components/Controls/RangeSelector';
-import { formatNumberWithCommas } from '../Utils/NumberUtil';
-import ToggleSwitch from './../Components/Controls/ToggleSwitch';
+import { CURRENCY } from '../Enums/Enums';
+import BASE_URL from '../../config';
 
 const ProductDetail = () => {
     const [searchParams] = useSearchParams();
+    const { products } = useSelector((state) => state?.products)
     const asin = searchParams.get("asin");
-    const [range, setRange] = useState(80);
+    const dispatch = useDispatch()
+
+    // const product = ProductSearchData[0]
+
+    const {
+        buyCost,
+        sellPrice,
+        product,
+    } = useSelector((state) => state.profitCalc);
+
+    useEffect(() => {
+        const product = products?.find((prod) => prod?.asin === asin)
+        if (!product) {
+            dispatch(setProduct(ProductSearchData[0]))
+        } else {
+            dispatch(setProduct(product))
+        }
+    }, [products])
+
+
 
     return (
-        <div className='bg-primary text-secondary min-h-screen fontDmmono'>
-            <div className='grid grid-cols-2 gap-2'>
-                <div className=''>
-                    <img src={ProductSearchData[0]?.images[0]} className=' w-full h-full max-w-[200px]' alt="" />
-                </div>
-
-                <div className='w-[100%] h-[200px]'>
-                    <h1 className='text-[32px] font-semibold fontDmmono'>Profit Calculator</h1>
-                    <div className='flex flex-col gap-4 py-[20px] max-w-md'>
-                        <div className='flex gap-4'>
-                            <CustomInput placeholder={'Buy Cost'} prefix={'$'} label={'Buy Cost'} info={''} />
-                            <CustomInput placeholder={'Sell Price'} prefix={'$'} label={'Sell Price:'} />
-                        </div>
-                        <ToggleSwitch options={['FBA', 'FBM']} label={'Fulfillment Type:'} className={'w-max'} />
-                        <RangeSelector
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={range}
-                            onChange={setRange}
-                            marks={[0, 25, 50, 75, 100]}
-                            formatLabel={(n) => formatNumberWithCommas(n, 0, false)}
-                            label={'Storage Month:'}
-                        />
-                        {/* <CustomInput placeholder={'Max Cost'} prefix={'$'} label={'Sale Price:'} /> */}
-                        <div className='grid grid-cols-2 gap-2'>
-                            <div className='border border-border p-3 rounded-lg bg-border flex justify-between text-lg'>
-                                <p className='font-medium'>Profit:</p>
-                                <p className='text-end'>$56.00</p>
+        <div className=' text-secondary min-h-screen bg-lBackground '>
+            <div className='grid grid-cols-3 gap-2 h-full items-start py-4 px-8'>
+                <div className='col-span-2 flex flex-col gap-6 px-3'>
+                    <div className=' bg-primary rounded-lg border border-border p-3 '>
+                        {/* <h1 className='text-[32px] font-semibold fontDmmono'>Sales Graph</h1> */}
+                        <div className='flex gap-3 '>
+                            <div className=''>
+                                <img src={product?.images[0]} className=' w-full h-full min-w-[250px] max-w-[250px] aspect-square bg-white rounded-lg  object-contain' alt="" />
                             </div>
-                            <div className='border border-border p-3 rounded-lg bg-border flex justify-between text-lg'>
-                                <p className='font-medium'>ROI(%):</p>
-                                <p className='text-end'>45%</p>
+                            <div>
+                                <p>{product?.title}</p>
+                                <p className='text-lText text-xs pt-2'>{product?.category}</p>
+
+                                <Rating rating={product?.reviews?.rating} count={product?.reviews?.count} className={'py-2'} />
+                                <a className='text-[14px]/[14px] py-2 flex items-end gap-1 text-secondary'><span className='text-lText text-[12px]/[12px]'>ASIN:</span>{product?.asin} <CopyButton text={product?.asin} /></a>
+                                <div className='flex gap-4 justify-start fontDmmono py-2'>
+                                    <CustomInput type='number' label={'Buy Cost:'} className={'!w-[120px] !h-[40px]'} prefix={CURRENCY} value={buyCost} onChange={(e) => dispatch(setBuyCost(e.target.value))} />
+                                    <CustomInput type='number' label={'Sell Price:'} className={'!w-[120px] !h-[40px]'} prefix={CURRENCY} value={sellPrice} onChange={(e) => dispatch(setSellPrice(e.target.value))} />
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div className='flex flex-col gap-3 bg-primary border border-border rounded-lg p-3 '>
+                        <h1 className='text-[32px] font-semibold fontDmmono'>Sales Graph</h1>
+                        <div className='w-full '>
+                            <img className='object-contain rounded-lg w-full' src={`${BASE_URL}/get/get-graph-image?asin=${product?.asin}`} alt="" />
+                        </div>
+                    </div>
                 </div>
+
+                <ProfitCalculator product={product} />
             </div>
         </div>
     );

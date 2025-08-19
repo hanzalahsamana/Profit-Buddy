@@ -1,9 +1,7 @@
-import { KEEPA_EPOCH_START_MINUTES, MIN_PROFIT, MIN_ROI } from '../Enums/Enums';
+import { MIN_PROFIT, MIN_ROI } from '../Enums/Enums';
 
-export const calculateMaxCost = (product) => {
-  const abc = calculateAmazonPayout(product);
-  const { totalFees } = abc;
-  const { sellPrice } = product?.info || {};
+export const calculateMaxCost = (sellPrice, totalFees) => {
+  // const { sellPrice } = product?.info || {};
 
   const maxCostByROI = (sellPrice - totalFees) / (1 + MIN_ROI);
 
@@ -17,60 +15,57 @@ export const calculateMaxCost = (product) => {
   }
 };
 
-export const calculateAmazonPayout = (product, storageMonths = 0, isFBA = true) => {
-  const {
-    weight = 0, // lbs
-    referralFeePercent = 0,
-    fbaFees = 0,
-    prepFee = 1.5,
-    closingFee = 0,
-    placementFee = 0,
-  } = product?.fees || {};
+export const calculateTotalFees = (product, sellPrice, storageMonths = 0, isFBA = true) => {
+  const { referralFeePercent = 0, fbaFees = 0, prepFee = 1.5, closingFee = 0, placementFee = 0 } = product?.fees || {};
 
-  const { sellPrice } = product?.info || {};
+  const { weight = 0 } = product?.info || {};
 
   const referralFee = sellPrice * referralFeePercent;
 
-  const inboundShippingFee = weight * 0.6; // $0.60 per lb
-  const storageFee = storageMonths * 0.75; // $0.75 per cubic foot/month (example)
+  const inboundShippingFee = isFBA ? weight * 0.6 : 0;
+  const storageFee = isFBA ? storageMonths * 0.75 : 0;
+  const appliedPrepFee = isFBA ? prepFee : 0;
+  const appliedPlacementFee = isFBA ? placementFee : 0;
+  const fulfillmentFee = isFBA ? fbaFees : 0;
 
-  const totalFees = referralFee + (isFBA ? fbaFees : 0) + inboundShippingFee + storageFee + prepFee + placementFee + closingFee;
-
-  const payout = sellPrice - totalFees;
+  const totalFees = referralFee + fulfillmentFee + inboundShippingFee + storageFee + appliedPrepFee + appliedPlacementFee + closingFee;
 
   return {
-    sellPrice,
+    referralFeePercent,
     referralFee,
-    fulfillmentFee: isFBA ? fbaFees : 0,
+    fulfillmentFee,
     inboundShippingFee,
     storageFee,
-    prepFee,
-    placementFee,
+    prepFee: appliedPrepFee,
+    placementFee: appliedPlacementFee,
     closingFee,
     totalFees,
-    payout,
   };
 };
 
-function calculateProfitMargin(sellingPrice, costPrice, referralFee, fulfillmentFee) {
+export const calculateProfitMargin = (sellingPrice, costPrice, referralFee, fulfillmentFee) => {
   const totalCost = costPrice + referralFee + fulfillmentFee;
   const profit = sellingPrice - totalCost;
   const profitMargin = (profit / sellingPrice) * 100;
   return profitMargin.toFixed(2);
-}
+};
 
-export const calculateProfitAndROI = (product, costPrice) => {
-  const { totalFees, sellPrice } = calculateAmazonPayout(product);
+export const calculateProfit = ({ sellPrice, costPrice, totalFees }) => {
+  // if (!sellPrice || !costPrice) return 0;
+  return sellPrice - costPrice - (totalFees || 0);
+};
 
+export const calculateROI = ({ profit, costPrice }) => {
+  // if (!costPrice) return 0;
+  return ((profit / costPrice) * 100).toFixed(2); // ROI %
+};
+
+export const calculateProfitAndROI = (totalFees , sellPrice, costPrice) => {
   const profit = calculateProfit({ sellPrice, costPrice, totalFees });
   const roi = calculateROI({ profit, costPrice });
 
   return {
-    profit: Math.floor(profit * 100) / 100, // round to 2 decimals
+    profit: Math.floor(profit * 100) / 100,
     roi,
   };
 };
-const sellingPrice2 = 54.5;
-const costPrice = 29.81;
-const referralFee2 = 9.27;
-const fulfillmentFee2 = 7.96;

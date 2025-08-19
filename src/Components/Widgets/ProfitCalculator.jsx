@@ -1,0 +1,158 @@
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { CURRENCY, MIN_PROFIT, MIN_ROI } from '../../Enums/Enums';
+import ToggleSwitch from '../Controls/ToggleSwitch';
+import RangeSelector from '../Controls/RangeSelector';
+import CustomInput from '../Controls/CustomInput';
+import { IoIosArrowDown } from 'react-icons/io';
+import { formatNumberWithCommas } from '../../Utils/NumberUtil';
+import { PiApproximateEquals } from 'react-icons/pi';
+import { setBuyCost, setFulfillment, setSellPrice, setStorageMonth } from '../../Redux/Slices/profitCalcSlice';
+
+const ProfitCalculator = () => {
+    const [isBreakdownOpen, setIsBreakdownOpen] = useState(false)
+    const [quantity, setQuantity] = useState(1)
+    const dispatch = useDispatch()
+
+    const {
+        buyCost,
+        sellPrice,
+        storageMonth,
+        fulfillment,
+        fees,
+        maxCost,
+        profit,
+        roi,
+    } = useSelector((state) => state.profitCalc);
+
+
+    return (
+        <div className='w-[100%] fontDmmono bg-primary rounded-lg border border-border p-4'>
+            <h1 className='text-[32px] font-semibold'>Profit Calculator</h1>
+            <div className='flex flex-col gap-4 py-[20px] max-w-md'>
+                <div className="border p-3 rounded-lg bg-border flex justify-between text-sm">
+                    <p className="font-medium">Estimated Maximum Buy Cost:</p>
+                    <p className="text-end">{formatNumberWithCommas(maxCost)}</p>
+                </div>
+                <div className='flex gap-4'>
+                    <CustomInput
+                        placeholder="Buy Cost"
+                        prefix={CURRENCY}
+                        label="Buy Cost"
+                        value={buyCost ?? 0}
+                        onChange={(e) => dispatch(setBuyCost(e.target.value))}
+                        type='number'
+                    />
+                    <CustomInput
+                        placeholder="Sell Price"
+                        prefix={CURRENCY}
+                        label="Sell Price"
+                        value={sellPrice ?? 0}
+                        onChange={(e) => dispatch(setSellPrice(e.target.value))}
+                        type='number'
+                    />
+                </div>
+                <ToggleSwitch
+                    options={['FBA', 'FBM']}
+                    label="Fulfillment Type:"
+                    selected={fulfillment}
+                    onChange={(value) => dispatch(setFulfillment(value))}
+                />
+
+                {fulfillment === "FBA" && (
+                    <RangeSelector
+                        min={0}
+                        max={12}
+                        step={1}
+                        value={storageMonth}
+                        onChange={(value) => dispatch(setStorageMonth(value))}
+                        marks={[0, 3, 6, 9, 12]}
+                        label="Storage Month:"
+                    />
+                )}
+                <div className="grid grid-cols-2 gap-2">
+                    <div className={`border p-3 rounded-lg flex justify-between text-lg ${profit >= MIN_PROFIT ? 'bg-border' : 'border-[red] bg-[#ff00005c] '}`}>
+                        <p className="font-medium">Profit:</p>
+                        <p className="text-end">{formatNumberWithCommas(profit)}</p>
+                    </div>
+                    <div className={`border p-3 rounded-lg flex justify-between text-lg ${roi >= MIN_ROI * 100 ? 'bg-border' : 'border-[red] bg-[#ff00005c] '}`}>
+                        <p className="font-medium">ROI(%):</p>
+                        <p className="text-end">{formatNumberWithCommas(roi, 2, false, false)}%</p>
+                    </div>
+                </div>
+
+                <div
+                    className="border p-3 rounded-lg bg-border select-none flex justify-between text-lg hover:opacity-90 cursor-pointer"
+                    onClick={() => setIsBreakdownOpen(!isBreakdownOpen)}
+                >
+                    <p className="font-medium">Total Fees:</p>
+                    <p className="flex gap-2 items-center">
+                        {formatNumberWithCommas(fees?.totalFees)} <IoIosArrowDown className={`${isBreakdownOpen ? 'rotate-180' : 'rotate-0'} transition-all`} />
+                    </p>
+                </div>
+                <div className={`mt-2 space-y-2 text-lText text-sm transition-all duration-500 overflow-hidden ${isBreakdownOpen ? 'max-h-[400px]' : 'max-h-0'}`}>
+                    <div className={`flex justify-between`}>
+                        <span>Refferal Fee:</span>
+                        <span className='flex items-center gap-1.5'>{fees?.referralFeePercent * 100}% <PiApproximateEquals /> {formatNumberWithCommas(fees?.referralFee)}</span>
+                    </div>
+                    <div className={`flex justify-between`}>
+                        <span>Fulfillment Fee ({fulfillment}):</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.fulfillmentFee)}</span>
+                    </div>
+                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                        <span>Inbound Shipping Fee:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.inboundShippingFee)}</span>
+                    </div>
+                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                        <span>Storage Fee </span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.storageFee)}</span>
+                    </div>
+                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                        <span>Prepration Fee:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.prepFee)}</span>
+                    </div>
+                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                        <span>Placement Fee:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.placementFee)}</span>
+                    </div>
+                    <div className={`flex justify-between`}>
+                        <span>Closing Fee:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.closingFee)}</span>
+                    </div>
+                </div>
+
+                <CustomInput
+                    placeholder="Quantity"
+                    prefix={'#'}
+                    label="Quantity"
+                    value={quantity ?? 1}
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^\d*$/.test(val)) {
+                            setQuantity(val);
+                        }
+                    }}
+                    type='number'
+                    step="1"
+                    min="1"
+                />
+                <div className={`mt-2 space-y-2 text-lText text-sm transition-all overflow-hidden duration-500 ${quantity > 1 ? 'max-h-[100px]' : 'max-h-0'}`}>
+                    <div className={`flex justify-between`}>
+                        <span>Total Cost:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(buyCost * quantity)}</span>
+                    </div>
+                    <div className={`flex justify-between`}>
+                        <span>Sale Price:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(sellPrice * quantity)}</span>
+                    </div>
+                    <div className={`flex justify-between`}>
+                        <span>Total Profit:</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(profit * quantity)}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default ProfitCalculator
