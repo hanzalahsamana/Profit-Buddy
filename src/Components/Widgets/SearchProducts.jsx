@@ -1,21 +1,39 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CustomInput from '../Controls/CustomInput'
 import { IoSearch } from 'react-icons/io5'
-import { setCurrentPage, setSearchTerm } from '../../Redux/Slices/ProductSlice'
+import { setCurrentPage, setProducts, setProductsLoading, setSearchTerm } from '../../Redux/Slices/ProductSlice'
+import { searchProducts } from '../../Apis/product'
+import { toast } from 'react-toastify'
+import CustomInput from '../Controls/CustomInput'
+import { isASIN } from '../../Utils/NumberUtil'
+import { useNavigate } from 'react-router-dom'
 
 const SearchProducts = () => {
 
-    const { productsLoading } = useSelector((state) => state?.products)
-    const [searchQuery, setSearchQuerry] = useState()
+    const { productsLoading , page } = useSelector((state) => state?.products)
+    const [searchQuery, setSearchQuerry] = useState('')
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const handleSearchProducts = async (e) => {
         e.preventDefault();
-        
-        if (productsLoading) return
-        dispatch(setSearchTerm(searchQuery))
-        dispatch(setCurrentPage(0))
+        if (isASIN(searchQuery)) {
+            navigate(`/detail?asin=${searchQuery}`);
+        } else {
+            navigate(`/`);
+        }
+        try {
+            if (!searchQuery) return;
+            dispatch(setProductsLoading(true));
+            const products = await searchProducts(searchQuery, page);
+            dispatch(setProducts(products));
+            dispatch(setCurrentPage(0));
+            dispatch(setSearchTerm(searchQuery))
+        } catch (error) {
+            toast.error(error.response ? error.response.data.message : error.message);
+        } finally {
+            dispatch(setProductsLoading(false));
+        }
     };
 
     return (

@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { ProductSearchData } from '../Utils/MockData';
+import { OfferData, ProductSearchData } from '../Utils/MockData';
 import ProfitCalculator from '../Components/Widgets/ProfitCalculator';
 import Rating from '../Components/UI/Rating';
 import CopyButton from '../Components/Controls/CopyText';
@@ -9,6 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import CustomInput from '../Components/Controls/CustomInput';
 import { CURRENCY } from '../Enums/Enums';
 import BASE_URL from '../../config';
+import CustomCard from '../Components/UI/CustomCard';
+import { formatNumberWithCommas } from '../Utils/NumberUtil';
+import { calculateProfitAndROI } from '../Utils/CalculationUtils';
+import TopOffers from '../Components/Widgets/TopOffers';
+import BasicInfo from '../Components/Widgets/BasicInfo';
+import SalesGraph from '../Components/Widgets/SalesGraph';
 
 const ProductDetail = () => {
     const [searchParams] = useSearchParams();
@@ -16,13 +22,9 @@ const ProductDetail = () => {
     const asin = searchParams.get("asin");
     const dispatch = useDispatch()
 
-    // const product = ProductSearchData[0]
+    const productOffers = OfferData
 
-    const {
-        buyCost,
-        sellPrice,
-        product,
-    } = useSelector((state) => state.profitCalc);
+    const { product } = useSelector((state) => state.profitCalc);
 
     useEffect(() => {
         const product = products?.find((prod) => prod?.asin === asin)
@@ -33,39 +35,15 @@ const ProductDetail = () => {
         }
     }, [products])
 
-
-
     return (
-        <div className=' text-secondary min-h-screen bg-lBackground '>
-            <div className='grid grid-cols-3 gap-2 h-full items-start py-4 px-8'>
-                <div className='col-span-2 flex flex-col gap-6 px-3'>
-                    <div className=' bg-primary rounded-lg border border-border p-3 '>
-                        {/* <h1 className='text-[32px] font-semibold fontDmmono'>Sales Graph</h1> */}
-                        <div className='flex gap-3 '>
-                            <div className=''>
-                                <img src={product?.images[0]} className=' w-full h-full min-w-[250px] max-w-[250px] aspect-square bg-white rounded-lg  object-contain' alt="" />
-                            </div>
-                            <div>
-                                <p>{product?.title}</p>
-                                <p className='text-lText text-xs pt-2'>{product?.category}</p>
+        <div className='grid grid-cols-5 gap-4 h-full items-start p-4 text-secondary min-h-screen bg-lBackground'>
+            <div className='col-span-3 flex flex-col gap-4'>
+                <SalesGraph product={product} />
+                <BasicInfo product={product} />
+                <TopOffers product={product} productOffers={productOffers} />
+            </div>
 
-                                <Rating rating={product?.reviews?.rating} count={product?.reviews?.count} className={'py-2'} />
-                                <a className='text-[14px]/[14px] py-2 flex items-end gap-1 text-secondary'><span className='text-lText text-[12px]/[12px]'>ASIN:</span>{product?.asin} <CopyButton text={product?.asin} /></a>
-                                <div className='flex gap-4 justify-start fontDmmono py-2'>
-                                    <CustomInput type='number' label={'Buy Cost:'} className={'!w-[120px] !h-[40px]'} prefix={CURRENCY} value={buyCost} onChange={(e) => dispatch(setBuyCost(e.target.value))} />
-                                    <CustomInput type='number' label={'Sell Price:'} className={'!w-[120px] !h-[40px]'} prefix={CURRENCY} value={sellPrice} onChange={(e) => dispatch(setSellPrice(e.target.value))} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='flex flex-col gap-3 bg-primary border border-border rounded-lg p-3 '>
-                        <h1 className='text-[32px] font-semibold fontDmmono'>Sales Graph</h1>
-                        <div className='w-full '>
-                            <img className='object-contain rounded-lg w-full' src={`${BASE_URL}/get/get-graph-image?asin=${product?.asin}`} alt="" />
-                        </div>
-                    </div>
-                </div>
-
+            <div className='col-span-2 flex flex-col gap-4'>
                 <ProfitCalculator product={product} />
             </div>
         </div>

@@ -8,6 +8,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { formatNumberWithCommas } from '../../Utils/NumberUtil';
 import { PiApproximateEquals } from 'react-icons/pi';
 import { setBuyCost, setFulfillment, setSellPrice, setStorageMonth } from '../../Redux/Slices/profitCalcSlice';
+import CustomCard from '../UI/CustomCard';
 
 const ProfitCalculator = () => {
     const [isBreakdownOpen, setIsBreakdownOpen] = useState(false)
@@ -27,9 +28,8 @@ const ProfitCalculator = () => {
 
 
     return (
-        <div className='w-[100%] fontDmmono bg-primary rounded-lg border border-border p-4'>
-            <h1 className='text-[32px] font-semibold'>Profit Calculator</h1>
-            <div className='flex flex-col gap-4 py-[20px] max-w-md'>
+        <CustomCard label={'Profit Calculator'}>
+            <div className='flex flex-col gap-4'>
                 <div className="border p-3 rounded-lg bg-border flex justify-between text-sm">
                     <p className="font-medium">Estimated Maximum Buy Cost:</p>
                     <p className="text-end">{formatNumberWithCommas(maxCost)}</p>
@@ -85,7 +85,7 @@ const ProfitCalculator = () => {
                     className="border p-3 rounded-lg bg-border select-none flex justify-between text-lg hover:opacity-90 cursor-pointer"
                     onClick={() => setIsBreakdownOpen(!isBreakdownOpen)}
                 >
-                    <p className="font-medium">Total Fees:</p>
+                    <p className="font-medium ">Total Fees:</p>
                     <p className="flex gap-2 items-center">
                         {formatNumberWithCommas(fees?.totalFees)} <IoIosArrowDown className={`${isBreakdownOpen ? 'rotate-180' : 'rotate-0'} transition-all`} />
                     </p>
@@ -151,7 +151,7 @@ const ProfitCalculator = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </CustomCard>
     )
 }
 

@@ -2,9 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   products: [],
-  productsLoading: false,
   currentPage: 0,
   searchTerm: '',
+  productsLoading: false,
+  loadmoreLoading: false,
 };
 
 export const productsSlice = createSlice({
@@ -12,10 +13,16 @@ export const productsSlice = createSlice({
   initialState,
   reducers: {
     setProducts: (state, action) => {
+      state.products = action.payload;
+    },
+    pushProducts: (state, action) => {
       state.products = [...state.products, ...action.payload];
     },
     setProductsLoading: (state, action) => {
       state.productsLoading = action.payload;
+    },
+    setLoadmoreLoading: (state, action) => {
+      state.loadmoreLoading = action.payload;
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
@@ -26,6 +33,6 @@ export const productsSlice = createSlice({
   },
 });
 
-export const { setProducts, setProductsLoading, setCurrentPage  ,setSearchTerm} = productsSlice.actions;
+export const { setProducts, pushProducts, setLoadmoreLoading, setProductsLoading, setCurrentPage, setSearchTerm } = productsSlice.actions;
 
 export const productsReducer = productsSlice.reducer;

@@ -9,6 +9,7 @@ import SearchProducts from '../Widgets/SearchProducts'
 import Button from '../Controls/Button'
 import Modal from '../UI/Modal'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
 
@@ -32,8 +33,14 @@ const Header = () => {
     return (
         <div className='w-full bg-primary p-4 border-b border-border flex flex-col gap-6 '>
             <div className='flex justify-between'>
-
-                <img src={theme ? LightLogoImage : DarkLogoImage} alt="" className='w-[200px]' />
+                <Link to="/">
+                    <img
+                        src={theme ? LightLogoImage : DarkLogoImage}
+                        alt="logo"
+                        className="w-[200px] cursor-pointer"
+                    />
+                </Link>
+                
                 <div className='flex gap-2 items-center'>
                     <ToggleSwitch options={['Dark', 'Light']} selected={theme ? 'Dark' : 'Light'} onChange={(value) => dispatch(setTheme(value === 'Dark'))} />
                     <Button size='medium' corner='full' label='Spy A Seller' action={() => setModalOpen(!modalOpen)} />

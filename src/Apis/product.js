@@ -11,11 +11,9 @@ export const searchProducts = async (searchTerm, page = 0) => {
     });
     store.dispatch(setProductsLoading(true));
     const response = await axios.get(`${EndPoints.searchProducts}?${query.toString()}`);
-    store.dispatch(setProducts(response?.data?.products));
-    store.dispatch(setCurrentPage(page));
-    return response.data;
+   
+    return response.data.products;
   } catch (error) {
-    store.dispatch(setProducts([]));
     throw error;
   } finally {
     store.dispatch(setProductsLoading(false));

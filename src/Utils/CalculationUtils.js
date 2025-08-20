@@ -1,8 +1,6 @@
 import { MIN_PROFIT, MIN_ROI } from '../Enums/Enums';
 
 export const calculateMaxCost = (sellPrice, totalFees) => {
-  // const { sellPrice } = product?.info || {};
-
   const maxCostByROI = (sellPrice - totalFees) / (1 + MIN_ROI);
 
   const profit = sellPrice - totalFees - maxCostByROI;
@@ -60,7 +58,7 @@ export const calculateROI = ({ profit, costPrice }) => {
   return ((profit / costPrice) * 100).toFixed(2); // ROI %
 };
 
-export const calculateProfitAndROI = (totalFees , sellPrice, costPrice) => {
+export const calculateProfitAndROI = (totalFees, sellPrice, costPrice) => {
   const profit = calculateProfit({ sellPrice, costPrice, totalFees });
   const roi = calculateROI({ profit, costPrice });
 
@@ -68,4 +66,17 @@ export const calculateProfitAndROI = (totalFees , sellPrice, costPrice) => {
     profit: Math.floor(profit * 100) / 100,
     roi,
   };
+};
+
+export const calculateOfferProfitAndROI = (product, offerPrice, storageMonth, fulfillment, buyCost) => {
+  try {
+    const fees = calculateTotalFees(product ?? {}, Number(offerPrice) || 0, storageMonth ?? 0, fulfillment === 'FBA');
+
+    const { profit = 0, roi = 0 } = calculateProfitAndROI(fees?.totalFees, Number(offerPrice) || 0, Number(buyCost) || 0) || {};
+
+    return { profit, roi };
+  } catch (err) {
+    console.error('Error in safeProfitAndROI:', err);
+    return { profit: 0, roi: 0 };
+  }
 };

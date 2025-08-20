@@ -18,3 +18,7 @@ export const formatNumberWithCommas = (num, decimals = 2, wantCurrencyCode = tru
 
   return wantCurrencyCode ? `${CURRENCY}${formatted}` : formatted;
 };
+
+export const isASIN = (value) => {
+  return /^[A-Z0-9]{10}$/.test(value);
+};
