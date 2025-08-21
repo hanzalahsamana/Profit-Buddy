@@ -3,30 +3,22 @@ import './Styles/App.css'
 import './Styles/Font.css'
 import Home from './Pages/Home'
 import Header from './Components/Layout/Header'
-import { useSelector } from 'react-redux'
 import ProductDetail from './Pages/ProductDetail'
+import ThemeProvider from './Components/Layout/ThemeProvider'
 
 function App() {
-  const { theme } = useSelector((state) => state.system)
-
-
-  useSelector(() => {
-    if(theme){
-      document.documentElement.classList.add('dark');
-    }else{
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme])
-
+  
   return (
-    <div className='max-w-[1800px]'>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/detail" element={<ProductDetail />} />
-      </Routes>
-    </div>
-  )
+    <ThemeProvider>
+      <div className="max-w-[1800px] min-h-screen bg-primary">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/detail" element={<ProductDetail />} />
+        </Routes>
+      </div>
+    </ThemeProvider>
+  );
 }
 
 export default App

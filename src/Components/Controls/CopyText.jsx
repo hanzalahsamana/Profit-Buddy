@@ -6,7 +6,9 @@ import { MdCheck, MdContentCopy } from "react-icons/md";
 const CopyButton = ({ text }) => {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e) => {
+    e.preventDefault(); 
+    e.stopPropagation();
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);

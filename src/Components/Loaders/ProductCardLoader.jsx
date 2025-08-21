@@ -36,7 +36,7 @@ const ProductCardLoader = (props) => (
                 speed={1}
                 width={"100%"}
                 height={150}
-                viewBox="0 0 100% 150"
+                viewBox="0 0 500 150"
                 backgroundColor="#ededeb90"
                 foregroundColor="#e8e8e3"
                 {...props}

@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { ProductSearchData } from '../../Utils/MockData';
 
 const initialState = {
-  products: [],
+  products: ProductSearchData,
   currentPage: 0,
   searchTerm: '',
   productsLoading: false,

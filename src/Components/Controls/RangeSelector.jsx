@@ -15,7 +15,7 @@ const RangeSelector = ({
     const percentage = ((value - min) / (max - min)) * 100;
 
     return (
-        <div className={`flex flex-col gap-2 w-full max-w-md ${className}`}>
+        <div className={`flex flex-col gap-2 w-full ${className}`}>
             {label && (
                 <label className="flex gap-2 items-center text-sm font-medium text-secondary fontDmmono">
                     {label}

@@ -40,7 +40,7 @@ const Header = () => {
                         className="w-[200px] cursor-pointer"
                     />
                 </Link>
-                
+
                 <div className='flex gap-2 items-center'>
                     <ToggleSwitch options={['Dark', 'Light']} selected={theme ? 'Dark' : 'Light'} onChange={(value) => dispatch(setTheme(value === 'Dark'))} />
                     <Button size='medium' corner='full' label='Spy A Seller' action={() => setModalOpen(!modalOpen)} />

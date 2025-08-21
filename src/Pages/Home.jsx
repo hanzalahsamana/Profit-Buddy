@@ -9,7 +9,7 @@ import { pushProducts, setCurrentPage, setLoadmoreLoading, setSearchTerm } from 
 import { ProductSearchData } from '../Utils/MockData'
 
 const Home = () => {
-  const { products, currentPage, productsLoading,searchTerm , loadmoreLoading } = useSelector((state) => state?.products)
+  const { products, currentPage, productsLoading, searchTerm, loadmoreLoading } = useSelector((state) => state?.products)
   const dispatch = useDispatch()
 
   const handleLoadMoreProducts = async ({ page }) => {
@@ -36,6 +36,7 @@ const Home = () => {
         <ProductCardLoader key={index} />
       ))}
 
+      <p className='text-secondary font-semibold text-[30px]'>Featured Products</p>
       {products?.length === 0 ? (
         <div>
           <p className='text-lText text-lg'>Please search products....</p>
@@ -48,7 +49,7 @@ const Home = () => {
 
       <div className='w-full flex justify-center'>
         {products?.length > 0 && (
-          <Button label='Load More' loading={loadmoreLoading} corner='full' variant='secondary' action={() => handleLoadMoreProducts(currentPage + 1 || 0)} />
+          <Button label='Load More' loading={loadmoreLoading} corner='full' variant='secondary' size='medium' action={() => handleLoadMoreProducts(currentPage + 1 || 0)} />
         )}
       </div>
     </div>
