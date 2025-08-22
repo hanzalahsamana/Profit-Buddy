@@ -22,3 +22,12 @@ export const formatNumberWithCommas = (num, decimals = 2, wantCurrencyCode = tru
 export const isASIN = (value) => {
   return /^[A-Z0-9]{10}$/.test(value);
 };
+
+export const Converters = {
+  gramsToPounds: (g) => g / 453.592,
+  gramsToOunce: (g) => g / 28.35,
+  gramsToKilo: (g) => g / 1000,
+  mmToInch: (mm) => mm / 25.4,
+  mmToCm: (mm) => mm / 10,
+  mmToMeter: (mm) => mm / 1000,
+};

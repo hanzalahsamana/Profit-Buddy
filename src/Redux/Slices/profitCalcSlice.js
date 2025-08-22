@@ -3,7 +3,7 @@ import { calculateTotalFees, calculateMaxCost, calculateProfitAndROI } from '../
 
 const initialState = {
   product: null,
-  buyCost: 1,
+  buyCost: 0,
   sellPrice: 0,
   storageMonth: 0,
   fulfillment: 'FBA',
@@ -23,15 +23,28 @@ const profitCalcSlice = createSlice({
       const product = action.payload;
       state.product = product;
       state.sellPrice = product?.info?.sellPrice ?? 0;
-      state.buyCost = 1;
+      state.buyCost = 0;
       profitCalcSlice.caseReducers.recalculate(state);
     },
     setBuyCost(state, action) {
-      state.buyCost = Number(action.payload) || 0;
+      const val = action.payload;
+      if (val === '') {
+        state.buyCost = '';
+      } else {
+        const num = Number(val);
+        state.buyCost = num < 0 ? 0 : num; // clamp at 0
+      }
       profitCalcSlice.caseReducers.recalculate(state);
     },
+
     setSellPrice(state, action) {
-      state.sellPrice = Number(action.payload) || 0;
+      const val = action.payload;
+      if (val === '') {
+        state.sellPrice = '';
+      } else {
+        const num = Number(val);
+        state.sellPrice = num < 0 ? 0 : num; // clamp at 0
+      }
       profitCalcSlice.caseReducers.recalculate(state);
     },
     setStorageMonth(state, action) {

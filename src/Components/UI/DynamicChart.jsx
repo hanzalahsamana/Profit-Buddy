@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { generateTicks, getDomainWithPadding, getEvenlySpacedTicks } from "../../Utils/GraphUtils";
 import { div } from "framer-motion/client";
+import { formatNumberWithCommas } from "../../Utils/NumberUtil";
 
 const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large", showLegend = true }) => {
 
@@ -21,8 +22,8 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
 
   if (!graphData?.length) return (
     <div className=" w-full !h-full min-h-[150px] flex flex-col gap-0 items-center justify-center bg-primary">
-    <p className="font-normal text-lg text-secondary ">Sorry, No Price History Available</p>
-    <p className="font-normal text-xs text-lText ">May be this product is new or is not offered by any seller</p>
+      <p className="font-normal text-lg text-secondary ">Sorry, No Price History Available</p>
+      <p className="font-normal text-xs text-lText ">May be this product is new or is not offered by any seller</p>
     </div>
   );
 
@@ -36,7 +37,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
     );
 
     const getDomain = (keys) => {
-      if (!keys.length) return [0, 0]; // fallback when no keys
+      if (!keys.length) return [0, 0];
 
       const values = graphData.flatMap((d) =>
         keys.map((k) => +d[k]).filter((v) => !isNaN(v))
@@ -52,7 +53,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
     const [leftMin, leftMax] = getDomain(leftKeys);
     const [rightMin, rightMax] = getDomain(rightKeys);
 
-    return { leftKeys, rightKeys, leftMin, leftMax, rightMin, rightMax };
+    return { leftKeys, rightKeys, leftMin, leftMax, rightMin, rightMax, };
   }, [graphData, graphKeys]);
 
 
@@ -91,7 +92,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
               yAxisId="left"
               domain={[leftMin, leftMax]}
               ticks={generateTicks(leftMin, leftMax, 4)}
-              tickFormatter={(v) => `$${v}`}
+              tickFormatter={(v) => `${graphKeys[leftKeys[0]]?.symbol || ""}${formatNumberWithCommas(v, graphKeys[leftKeys[0]]?.decimal ? 2 : 0, false, true)}`}
               axisLine={false}
               tickLine={false}
               tick={{
@@ -109,7 +110,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
               orientation="right"
               domain={[rightMin, rightMax]}
               ticks={generateTicks(rightMin, rightMax, 4)}
-              tickFormatter={(v) => `#${v}`}
+              tickFormatter={(v) => `${graphKeys[rightKeys[0]]?.symbol || ""}${formatNumberWithCommas(v, graphKeys[rightKeys[0]]?.decimal ? 2 : 0, false, true)}`}
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: size === "small" ? '17px' : '13px', fill: "#000000b1", fontWeight: "600" }}
@@ -117,9 +118,30 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
           )}
 
           <Tooltip
-            labelClassName="text-sm text-black font-semibold"
-            wrapperClassName="text-[15px]/[15px] font-medium"
-            animationDuration={100}
+            content={({ active, payload, label }) => {
+              if (!active || !payload) return null;
+
+              return (
+                <div className="bg-white p-2 rounded shadow-md border border-border">
+                  <p className="font-semibold mb-1">{label}</p>
+                  {payload.map((item, index) => {
+                    const key = item.dataKey;
+                    const cfg = graphKeys[key];
+                    return (
+                      <div key={index} className="flex items-center gap-1">
+                        <span
+                          className="w-2 h-2 rounded-full"
+                          style={{ backgroundColor: cfg?.color }}
+                        />
+                        <span className="text-sm" style={{ color: cfg?.color }}>
+                          {cfg?.label}: {cfg?.symbol}{formatNumberWithCommas(item.value, cfg?.decimal ? 2 : 0, false)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            }}
           />
 
           {showLegend && (
@@ -182,7 +204,7 @@ const CustomLegend = React.memo(({ payload, data, graphKeys, size }) => {
               {graphKeys?.[dataKey]?.label}{" "}
               <span>
                 : {graphKeys?.[dataKey]?.symbol}
-                {data[data?.length - 1]?.[dataKey] || "-"}
+                {formatNumberWithCommas(data[data?.length - 1]?.[dataKey], graphKeys?.[dataKey]?.decimal ? 2 : 0, false) || "-"}
               </span>
             </span>
           </li>

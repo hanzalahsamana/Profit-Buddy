@@ -22,7 +22,7 @@ const ProductImageGrid = ({ images = [] }) => {
                 gridTemplateRows: "repeat(3, auto)",
             }}
         >
-            {sideImgs.map((img, i) => (
+            {/* {sideImgs.map((img, i) => (
                 <div
                     key={uuidv4()}
                     className="aspect-square bg-white border border-border rounded-[8px] p-0.5 overflow-hidden"
@@ -34,9 +34,9 @@ const ProductImageGrid = ({ images = [] }) => {
                         className="w-full h-full object-contain rounded-[8px]"
                     />
                 </div>
-            ))}
+            ))} */}
 
-            <div className="col-span-2 row-span-3 bg-white border border-border rounded-[8px] overflow-hidden p-1">
+            <div className="col-span-3 row-span-3 bg-white border border-border rounded-[8px] overflow-hidden p-1">
                 <img
                     src={mainImage || placeholder}
                     alt="product"

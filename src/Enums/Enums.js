@@ -12,13 +12,13 @@ export const CURRENCY = '$';
 
 //Graph Configs
 export const SalesGraphKeys = {
-  salesRank: { label: 'Sales Rank', symbol: '#', color: '#299912dc', yAxis: 'right', type: 'line' },
-  buyBox: { label: 'Buybox', symbol: '$', color: '#f70cd0dc', yAxis: 'left', type: 'line' },
-  amazon: { label: 'Amazon', symbol: '$', color: '#ff5900dc', yAxis: 'left', type: 'area' },
-  new: { label: 'New', symbol: '$', color: '#a600ffdc', yAxis: 'left', type: 'line' },
+  salesRank: { label: 'Sales Rank', symbol: '#', color: '#299912dc', yAxis: 'right', type: 'line', decimal: false },
+  newPrice: { label: 'New Price', symbol: CURRENCY, color: '#039BE5', yAxis: 'left', type: 'line', decimal: true },
+  amazon: { label: 'Amazon', symbol: CURRENCY, color: '#ff5900dc', yAxis: 'left', type: 'area', decimal: true },
+  buyBox: { label: 'Buybox', symbol: CURRENCY, color: '#f70cd0dc', yAxis: 'left', type: 'line', decimal: true },
 };
 
 export const OfferGraphKeys = {
-  offerCount: { label: 'Offer Count', symbol: '#', color: '#000000', yAxis: 'left', type: 'area' },
+  offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'area', decimal:false },
   // offerCount: { label: 'Offer Count', symbol: '#', color: '#000000', yAxis: 'left', type: 'area' },
 };

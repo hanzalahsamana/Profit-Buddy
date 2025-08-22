@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Rating from './Rating'
 import CopyButton from '../Controls/CopyText'
 import { formatNumberWithCommas } from '../../Utils/NumberUtil'
-import { calculateMaxCost, calculateTotalFees } from '../../Utils/CalculationUtils'
+import { calculateMaxCost, calculateProfit, calculateTotalFees } from '../../Utils/CalculationUtils'
 import { abbreviateNumber } from './../../Utils/NumberUtil';
 import { getProductOffers } from '../../Apis/product'
 import { Link, useNavigate } from 'react-router-dom'
@@ -65,22 +65,26 @@ const ProductCard = ({ product }) => {
                       BSR Rank
                     </th>
                     <th className="px-1 py-2 text-center font-medium text-secondary">
-                      Max Cost
+                      Profit
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="hover:bg-accent/5 transition">
-                    <td className="px-1 py-2 text-center text-lText border-r border-accent">{abbreviateNumber(info?.monthlySold)}+/mo</td>
+                    <td className="px-1 py-2 text-center text-lText border-r border-accent">{info?.monthlySold ? `${abbreviateNumber(info?.monthlySold)}+/mo` : 'No Record'}</td>
                     <td className="px-1 py-2 text-center text-lText border-r border-accent">{formatNumberWithCommas(info?.sellPrice)}</td>
-                    <td className="px-1 py-2 text-center text-lText border-r border-accent"># {info?.sellRank}</td>
-                    <td className="px-1 py-2 text-center text-lText">{formatNumberWithCommas(calculateMaxCost(info?.sellPrice, calculateTotalFees(product, info?.sellPrice)?.totalFees || 0))}</td>
+                    <td className="px-1 py-2 text-center text-lText border-r border-accent">#{formatNumberWithCommas(info?.sellRank, 0, false, true)}</td><td className="px-1 py-2 text-center text-lText">
+                      {(() => {
+                        const totalFees = calculateTotalFees(product, info?.sellPrice)?.totalFees || 0;
+                        const maxCost = calculateMaxCost(info?.sellPrice, totalFees);
+                        const profit = calculateProfit(info?.sellPrice, maxCost, totalFees);
+                        return formatNumberWithCommas(profit);
+                      })()}
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
-
           </div>
         </div>
 
@@ -105,7 +109,6 @@ const ProductCard = ({ product }) => {
             </thead>
           </table>
 
-          {/* Scrollable tbody wrapper */}
           <div className="max-h-[180px] overflow-y-auto hideScroll">
             <table className="min-w-full !text-xs table-fixed">
               <tbody>
@@ -150,16 +153,11 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
 
-        {/* <div className='w-max  flex'> */}
-
-
         <div className='flex items-center h-full bg-white rounded-lg '>
           <div className='w-[450px] h-max overflow-hidden  '>
             <DynamicChart graphData={graphData?.salesGraph} graphKeys={SalesGraphKeys} showLegend={false} size='small' />
-            {/* <img className='object-fill w-full !h-full' src={`${BASE_URL}/get/get-graph-image?asin=${product?.asin}`} alt="" /> */}
           </div>
         </div>
-        {/* </div> */}
       </div >
     </Link>
 

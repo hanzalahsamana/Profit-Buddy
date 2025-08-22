@@ -8,8 +8,9 @@ export const getDomainWithPadding = (values, percentage = 0.1, minFloor = [0]) =
 
   // If all values equal, create a small range around them
   if (max === min) {
-    const pad = Math.max(Math.abs(max) * percentage, 1);
-    const paddedMin = Math.max(minFloor, min - pad);
+    const pad = Math.max(Math.abs(max) * percentage, 0);
+    const paddedMin = Math.max(0, min - pad);
+    console.log(pad);
     const paddedMax = max + pad;
     return [Math.floor(paddedMin), Math.ceil(paddedMax)];
   }
@@ -39,6 +40,7 @@ export const getEvenlySpacedTicks = (data, count) => {
 
   return ticks;
 };
+
 export const generateTicks = (min, max, step = 5) => {
   const ticks = [];
   const range = max - min;

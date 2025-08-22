@@ -39,7 +39,7 @@ const ProfitCalculator = () => {
                         placeholder="Buy Cost"
                         prefix={CURRENCY}
                         label="Buy Cost"
-                        value={buyCost ?? 0}
+                        value={buyCost ?? ""}
                         onChange={(e) => dispatch(setBuyCost(e.target.value))}
                         type='number'
                     />
@@ -47,9 +47,10 @@ const ProfitCalculator = () => {
                         placeholder="Sell Price"
                         prefix={CURRENCY}
                         label="Sell Price"
-                        value={sellPrice ?? 0}
+                        value={sellPrice ?? ""}
                         onChange={(e) => dispatch(setSellPrice(e.target.value))}
                         type='number'
+                        min={0}
                     />
                 </div>
                 <ToggleSwitch
@@ -71,11 +72,25 @@ const ProfitCalculator = () => {
                     />
                 )}
                 <div className="grid grid-cols-2 gap-2">
-                    <div className={`border p-3 rounded-lg flex justify-between text-lg ${profit >= MIN_PROFIT ? 'bg-border' : 'border-[red] bg-[#ff00005c] '}`}>
+                    <div className={`border p-3 rounded-lg flex justify-between text-lg transition-colors
+                     ${profit < 0
+                            ? 'border-[red] bg-[#ff00005c]'
+                            : profit < MIN_PROFIT
+                                ? 'border-[orange] bg-[#ffa5005c]'
+                                : 'border-green-900 bg-green-200'
+                        }
+                    `}>
                         <p className="font-medium">Profit:</p>
                         <p className="text-end">{formatNumberWithCommas(profit)}</p>
                     </div>
-                    <div className={`border p-3 rounded-lg flex justify-between text-lg ${roi >= MIN_ROI * 100 ? 'bg-border' : 'border-[red] bg-[#ff00005c] '}`}>
+                    <div className={`border p-3 rounded-lg flex justify-between text-lg transition-colors
+                         ${profit < 0
+                            ? 'border-[red] bg-[#ff00005c]'
+                            : profit < MIN_PROFIT
+                                ? 'border-[orange] bg-[#ffa5005c]'
+                                : 'border-green-900 bg-green-200'
+                        }
+                         `}>
                         <p className="font-medium">ROI(%):</p>
                         <p className="text-end">{formatNumberWithCommas(roi, 2, false, false)}%</p>
                     </div>
@@ -92,23 +107,27 @@ const ProfitCalculator = () => {
                 </div>
                 <div className={`mt-2 space-y-2 text-lText text-sm transition-all duration-500 overflow-hidden ${isBreakdownOpen ? 'max-h-[400px]' : 'max-h-0'}`}>
                     <div className={`flex justify-between`}>
-                        <span>Refferal Fee:</span>
-                        <span className='flex items-center gap-1.5'>{fees?.referralFeePercent * 100}% <PiApproximateEquals /> {formatNumberWithCommas(fees?.referralFee)}</span>
+                        <span>Referral Fee:</span>
+                        <span className='flex items-center gap-1.5'>
+                            {fees?.referralFeePercent * 100}% <PiApproximateEquals /> {formatNumberWithCommas(fees?.referralFee)}
+                        </span>
                     </div>
                     <div className={`flex justify-between`}>
-                        <span>Fulfillment Fee ({fulfillment}):</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.fulfillmentFee)}</span>
+                        <span>Fulfilment Fee ({fulfillment}):</span>
+                        <span className='flex items-center gap-1.5'>
+                            {formatNumberWithCommas(fees?.fulfillmentFee)}
+                        </span>
                     </div>
                     <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
                         <span>Inbound Shipping Fee:</span>
                         <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.inboundShippingFee)}</span>
                     </div>
                     <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span>Storage Fee </span>
+                        <span>Storage Fee:</span>
                         <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.storageFee)}</span>
                     </div>
                     <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span>Prepration Fee:</span>
+                        <span>Preparation Fee:</span>
                         <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.prepFee)}</span>
                     </div>
                     <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
@@ -120,6 +139,7 @@ const ProfitCalculator = () => {
                         <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.closingFee)}</span>
                     </div>
                 </div>
+
 
                 <CustomInput
                     placeholder="Quantity"

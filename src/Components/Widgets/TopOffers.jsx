@@ -72,13 +72,23 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                                 {formatNumberWithCommas(offer?.price)}
                                             </td>
                                             <td
-                                                className={`px-1 py-1.5 text-center border-r border-accent ${profit < MIN_PROFIT ? "text-red-400" : ""
+                                                className={`px-1 py-1.5 text-center font-medium border-r border-accent  
+                                                    ${profit < 0
+                                                        ? 'text-[red]'
+                                                        : profit < MIN_PROFIT
+                                                            ? 'text-[orange] '
+                                                            : 'text-green-900'
                                                     }`}
                                             >
                                                 {formatNumberWithCommas(profit)}
                                             </td>
                                             <td
-                                                className={`px-1 py-1.5 text-center ${roi < MIN_ROI ? "text-red-400" : ""
+                                                className={`px-1 py-1.5 text-center font-medium 
+                                                  ${profit < 0
+                                                        ? 'text-[red]'
+                                                        : roi < MIN_ROI
+                                                            ? 'text-[orange] '
+                                                            : 'text-green-900'
                                                     }`}
                                             >
                                                 {formatNumberWithCommas(roi, 2, false, false)}%
