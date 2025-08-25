@@ -7,6 +7,9 @@ export const KEEPA_EPOCH_START_MINUTES = 21564000;
 export const MIN_ROI = 0.25;
 export const MIN_PROFIT = 3.0;
 
+//Place Fee Types
+export const PLACEMENT_FEE_TYPES = ['minimal', 'partial', 'optimized'];
+
 //currency
 export const CURRENCY = '$';
 
@@ -19,6 +22,5 @@ export const SalesGraphKeys = {
 };
 
 export const OfferGraphKeys = {
-  offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'area', decimal:false },
-  // offerCount: { label: 'Offer Count', symbol: '#', color: '#000000', yAxis: 'left', type: 'area' },
+  offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'area', decimal: false },
 };

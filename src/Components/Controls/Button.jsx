@@ -14,7 +14,7 @@ const   Button = ({
     const variantsClasses = {
         primary: `bg-primary text-secondary`,
         secondary: `bg-secondary text-primary`,
-        accent: `bg-accent text-black`,
+        accent: `bg-accent text-primary`,
         outline:`border border-secondary text-secondary`,
         text:`text-secondary`,
     }

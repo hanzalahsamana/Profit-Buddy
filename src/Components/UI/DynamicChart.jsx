@@ -65,7 +65,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
         <ComposedChart data={graphData} margin={{
           top: 10,
           right: 40,
-          left: 0,
+          left: size === "small" ? 40 : 20,
           bottom: 10,
         }} >
           <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
@@ -96,11 +96,11 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
               axisLine={false}
               tickLine={false}
               tick={{
-                fontSize: size === "small" ? '17px' : '13px',
+                fontSize: size === "small" ? '16px' : '13px',
                 fill: "#000000b1",
                 fontWeight: "600"
               }}
-              style={{ width: "20px" }}
+              // style={{ width: "40px" }}
             />
           )}
 
@@ -113,7 +113,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
               tickFormatter={(v) => `${graphKeys[rightKeys[0]]?.symbol || ""}${formatNumberWithCommas(v, graphKeys[rightKeys[0]]?.decimal ? 2 : 0, false, true)}`}
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: size === "small" ? '17px' : '13px', fill: "#000000b1", fontWeight: "600" }}
+              tick={{ fontSize: size === "small" ? '16px' : '13px', fill: "#000000b1", fontWeight: "600" }}
             />
           )}
 

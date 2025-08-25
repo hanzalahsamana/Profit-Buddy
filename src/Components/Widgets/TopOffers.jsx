@@ -7,7 +7,7 @@ import { MIN_PROFIT, MIN_ROI } from '../../Enums/Enums'
 import { FiLoader } from 'react-icons/fi'
 
 const TopOffers = ({ product, productOffers, offerLoading }) => {
-    const { buyCost, storageMonth, fulfillment } = useSelector(
+    const { buyCost, storageMonth, fulfillment , placementFeeType } = useSelector(
         (state) => state.profitCalc
     );
 
@@ -51,7 +51,8 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                         offer?.price,
                                         storageMonth,
                                         fulfillment,
-                                        buyCost
+                                        buyCost,
+
                                     );
 
                                     return (

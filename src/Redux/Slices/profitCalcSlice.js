@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { calculateTotalFees, calculateMaxCost, calculateProfitAndROI } from '../../Utils/CalculationUtils';
+import { PLACEMENT_FEE_TYPES } from '../../Enums/Enums';
 
 const initialState = {
   product: null,
@@ -7,6 +8,7 @@ const initialState = {
   sellPrice: 0,
   storageMonth: 0,
   fulfillment: 'FBA',
+  placementFeeType: PLACEMENT_FEE_TYPES[0], // minimal , partial , optimized
 
   // derived values
   fees: null,
@@ -56,9 +58,15 @@ const profitCalcSlice = createSlice({
       profitCalcSlice.caseReducers.recalculate(state);
     },
 
+    setPlacementFeeType(state, action) {
+      if (!PLACEMENT_FEE_TYPES.includes(action.payload)) return;
+      state.placementFeeType = action.payload;
+      profitCalcSlice.caseReducers.recalculate(state);
+    },
+
     // place to recalc all derived values
     recalculate(state) {
-      const fees = calculateTotalFees(state.product, state.sellPrice, state.storageMonth, state.fulfillment === 'FBA');
+      const fees = calculateTotalFees(state.product, state.sellPrice, state.storageMonth, state.fulfillment === 'FBA', state.placementFeeType);
       state.fees = fees;
 
       state.maxCost = calculateMaxCost(state.sellPrice, fees?.totalFees);
@@ -71,6 +79,6 @@ const profitCalcSlice = createSlice({
   },
 });
 
-export const { setProduct, setBuyCost, setSellPrice, setStorageMonth, setFulfillment, recalculate } = profitCalcSlice.actions;
+export const { setProduct, setBuyCost, setSellPrice, setStorageMonth, setFulfillment, recalculate, setPlacementFeeType } = profitCalcSlice.actions;
 
 export const profitCalcReducer = profitCalcSlice.reducer;

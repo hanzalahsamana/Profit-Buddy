@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { CURRENCY, MIN_PROFIT, MIN_ROI } from '../../Enums/Enums';
+import { CURRENCY, MIN_PROFIT, MIN_ROI, PLACEMENT_FEE_TYPES } from '../../Enums/Enums';
 import ToggleSwitch from '../Controls/ToggleSwitch';
 import RangeSelector from '../Controls/RangeSelector';
 import CustomInput from '../Controls/CustomInput';
 import { IoIosArrowDown } from 'react-icons/io';
 import { formatNumberWithCommas } from '../../Utils/NumberUtil';
 import { PiApproximateEquals } from 'react-icons/pi';
-import { setBuyCost, setFulfillment, setSellPrice, setStorageMonth } from '../../Redux/Slices/profitCalcSlice';
+import { setBuyCost, setFulfillment, setPlacementFeeType, setSellPrice, setStorageMonth } from '../../Redux/Slices/profitCalcSlice';
 import CustomCard from '../UI/CustomCard';
 
 const ProfitCalculator = () => {
@@ -24,7 +24,16 @@ const ProfitCalculator = () => {
         maxCost,
         profit,
         roi,
+        placementFeeType,
     } = useSelector((state) => state.profitCalc);
+
+    const handleTogglePlacementFeeType = () => {
+        const currentIndex = PLACEMENT_FEE_TYPES.indexOf(placementFeeType);
+        const nextIndex = (currentIndex + 1) % PLACEMENT_FEE_TYPES.length;
+        const nextType = PLACEMENT_FEE_TYPES[nextIndex];
+
+        dispatch(setPlacementFeeType(nextType));
+    };
 
 
     return (
@@ -131,7 +140,7 @@ const ProfitCalculator = () => {
                         <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.prepFee)}</span>
                     </div>
                     <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span>Placement Fee:</span>
+                        <span onClick={handleTogglePlacementFeeType} className='cursor-pointer hover:opacity-85 underline capitalize'>Placement Fee ({placementFeeType}):</span>
                         <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.placementFee)}</span>
                     </div>
                     <div className={`flex justify-between`}>

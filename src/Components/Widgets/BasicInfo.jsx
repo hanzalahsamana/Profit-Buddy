@@ -14,12 +14,12 @@ const BasicInfo = ({ product }) => {
 
     const { dimension } = product
 
-    const formatted = {
-        width: `${Converters.mmToCm(dimension.width).toFixed(2)} cm (${Converters.mmToInch(dimension.width).toFixed(2)} in)`,
-        height: `${Converters.mmToCm(dimension.height).toFixed(2)} cm (${Converters.mmToInch(dimension.height).toFixed(2)} in)`,
-        length: `${Converters.mmToCm(dimension.length).toFixed(2)} cm (${Converters.mmToInch(dimension.length).toFixed(2)} in)`,
-        weight: `${Converters.gramsToOunce(dimension.weight).toFixed(2)} oz`,
-    };
+    // const formatted = {
+    //     width: `${Converters.mmToCm(dimension.width).toFixed(2)} cm (${Converters.mmToInch(dimension.width).toFixed(2)} in)`,
+    //     height: `${Converters.mmToCm(dimension.height).toFixed(2)} cm (${Converters.mmToInch(dimension.height).toFixed(2)} in)`,
+    //     length: `${Converters.mmToCm(dimension.length).toFixed(2)} cm (${Converters.mmToInch(dimension.length).toFixed(2)} in)`,
+    //     weight: `${Converters.gramsToOunce(dimension.weight).toFixed(2)} oz`,
+    // };
 
     return (
         <CustomCard label={'Basic Info'}>
@@ -71,21 +71,21 @@ const BasicInfo = ({ product }) => {
                 <Tooltip
                     id="Dimension"
                     place="bottom"
-                    className="!bg-secondary !backdrop-opacity-100 !max-w-[220px] !p-2 !text-[12px] !items-center"
+                    className="!bg-secondary !backdrop-opacity-100 !max-w-[220px] !p-2 !text-[12px] !text-primary !items-center"
                     content={
                         <div className="text-left space-y-0.5">
                             <div className="font-semibold mb-1 text-[13px]">Dimensions :</div>
-                            <div>Width: {formatted.width}</div>
-                            <div>Height: {formatted.height}</div>
-                            <div>Length: {formatted.length}</div>
-                            <div>Weight: {formatted.weight}</div>
+                            <div>Width: {dimension?.width || 0}</div>
+                            <div>Height: {dimension?.height || 0}</div>
+                            <div>Length: {dimension?.length || 0}</div>
+                            <div>Weight: {dimension?.weight || 0}</div>
                         </div>
                     }
                 />
                 <Tooltip
                     id="buttons"
                     place="bottom"
-                    className="!bg-secondary !backdrop-opacity-100 !max-w-[220px] !p-2 !text-[12px] !items-center"
+                    className="!bg-secondary !backdrop-opacity-100 !max-w-[220px] !p-2 !text-[12px] !text-secondary !items-center"
                 />
             </div>
         </CustomCard>
