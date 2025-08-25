@@ -5,9 +5,11 @@ import { calculateOfferProfitAndROI, calculateProfitAndROI, calculateTotalFees }
 import { useSelector } from 'react-redux'
 import { MIN_PROFIT, MIN_ROI } from '../../Enums/Enums'
 import { FiLoader } from 'react-icons/fi'
+import { Tooltip } from 'react-tooltip'
+import Rating from '../UI/Rating'
 
 const TopOffers = ({ product, productOffers, offerLoading }) => {
-    const { buyCost, storageMonth, fulfillment , placementFeeType } = useSelector(
+    const { buyCost, storageMonth, fulfillment, placementFeeType } = useSelector(
         (state) => state.profitCalc
     );
 
@@ -22,7 +24,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                         </div>
                     ) : productOffers?.offers?.length > 0 ? (
                         <table className="min-w-full fontDmmono">
-                            <thead className="bg-accent/10 sticky top-0 z-10">
+                            <thead className="bg-accent/10 sticky top-0 ">
                                 <tr>
                                     <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
                                         #
@@ -63,15 +65,19 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             <td className="px-1 py-1.5 text-center border-r border-accent">
                                                 {index + 1}
                                             </td>
+
                                             <td className="px-1 py-1.5 text-center border-r border-accent">
-                                                {offer?.seller}
+                                                <span data-tooltip-id={offer?.sellerInfo?.id} onClick={() => window.open(`/sellerProfile?sellerid=${encodeURIComponent(offer?.sellerInfo?.id?.trim())}`, "_blank")} className='cursor-pointer'>{offer?.seller}</span>
                                             </td>
+
                                             <td className="px-1 py-1.5 text-center border-r border-accent">
                                                 {offer?.stock || "-"}
                                             </td>
+
                                             <td className="px-1 py-1.5 text-center border-r border-accent">
                                                 {formatNumberWithCommas(offer?.price)}
                                             </td>
+
                                             <td
                                                 className={`px-1 py-1.5 text-center font-medium border-r border-accent  
                                                     ${profit < 0
@@ -83,6 +89,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             >
                                                 {formatNumberWithCommas(profit)}
                                             </td>
+
                                             <td
                                                 className={`px-1 py-1.5 text-center font-medium 
                                                   ${profit < 0
@@ -94,6 +101,18 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             >
                                                 {formatNumberWithCommas(roi, 2, false, false)}%
                                             </td>
+
+                                            <Tooltip
+                                                id={offer?.sellerInfo?.id}
+                                                place="top"
+                                                className="!bg-secondary !bg-opacity-100 !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !backdrop-blur-0 !shadow-lg"
+                                                content={
+                                                    <div className="text-left space-y-0.5">
+                                                        <div className="font-medium text-white mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
+                                                        <Rating className={'text-[12px]'} count={offer?.sellerInfo?.ratingCount} rating={offer?.sellerInfo?.rating} />
+                                                    </div>
+                                                }
+                                            />
                                         </tr>
                                     );
                                 })}
@@ -101,9 +120,10 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                         </table>
                     ) : (
                         <div className="flex flex-col items-center justify-center py-12 text-secondary">
-                            <p className="text-xl text-lText">No offers found</p>
+                            <p className="text-sm text-lText ">No offers found</p>
                         </div>
                     )}
+
                 </div>
             </div>
         </CustomCard>

@@ -50,16 +50,19 @@ const Header = () => {
             <div className='inline flex-col  flex-1'>
                 <SearchProducts />
             </div>
-            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
-                <div className='p-4'>
-                    <h1 className='w-full text-center text-secondary text-[32px] font-semibold fontDmmono'>SPY A SELLER</h1>
-                    <p className='text-lText pb-2 pt-4'>Search Sellers by thier id</p>
-                    <form onSubmit={handleSubmit}>
-
-                        <CustomInput value={sellerId} onChange={(e) => setSellerId(e.target.value)} error={inputError} prefix={'Seller Id'} />
-                        <Button label='SPY A SELLER' size='large' className='w-full my-6 opacity-90' />
-                    </form>
-                </div>
+            <Modal
+                isOpen={modalOpen}
+                setIsOpen={setModalOpen}
+                label='SPY A Seller'
+                subText='Search sellers by thier ID'
+                actions={<>
+                    <Button label='Cancel' size='medium' variant='outline' />
+                    <Button type='submit' label='SPY A SELLER' size='medium' variant='secondary' action={handleSubmit} />
+                </>}>
+                <form onSubmit={handleSubmit}>
+                    <CustomInput label={'Search Seller'} value={sellerId} onChange={(e) => setSellerId(e.target.value)} error={inputError} prefix={'Seller Id'} />
+                    <button type='submit' className='hidden'></button>
+                </form>
             </Modal>
         </div>
     )

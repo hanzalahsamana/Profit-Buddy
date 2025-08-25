@@ -5,13 +5,12 @@ import { formatNumberWithCommas } from '../../Utils/NumberUtil'
 import { calculateMaxCost, calculateProfit, calculateTotalFees } from '../../Utils/CalculationUtils'
 import { abbreviateNumber } from './../../Utils/NumberUtil';
 import { getProductOffers } from '../../Apis/product'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DynamicChart from './DynamicChart'
 import { SalesGraphKeys } from '../../Enums/Enums'
-import { v4 as uuidv4 } from 'uuid';
 import ProductImageGrid from './ProductImageGrid'
-import { OfferData } from '../../Utils/MockData'
 import { FiLoader } from 'react-icons/fi'
+import { Tooltip } from 'react-tooltip'
 
 
 const ProductCard = ({ product }) => {
@@ -105,6 +104,7 @@ const ProductCard = ({ product }) => {
                 <th className=" py-1.5 text-center text-xs font-medium text-secondary">
                   Price
                 </th>
+
               </tr>
             </thead>
           </table>
@@ -126,7 +126,8 @@ const ProductCard = ({ product }) => {
                         className="hover:bg-accent/5 transition"
                       >
                         <td className="px-1 py-1.5 text-center text-lText border-r border-accent font-semibold">
-                          {offer?.seller}
+                          <span data-tooltip-id={offer?.sellerInfo?.id} className='cursor-pointer'>{offer?.seller}</span>
+
                         </td>
                         <td className="px-1 py-1.5 text-center text-lText border-r border-accent">
                           {offer?.stock || "-"}
@@ -134,6 +135,17 @@ const ProductCard = ({ product }) => {
                         <td className="px-1 py-1.5 text-center text-lText">
                           {formatNumberWithCommas(offer?.price)}
                         </td>
+                        <Tooltip
+                          id={offer?.sellerInfo?.id}
+                          place="top"
+                          className="!bg-secondary !bg-opacity-100 !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !backdrop-blur-0 !shadow-lg"
+                          content={
+                            <div className="text-left space-y-0.5">
+                              <div className="font-medium text-white mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
+                              <Rating className={'text-[12px]'} count={offer?.sellerInfo?.ratingCount} rating={offer?.sellerInfo?.rating} />
+                            </div>
+                          }
+                        />
                       </tr>
                     ))
                   ) : (

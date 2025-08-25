@@ -68,7 +68,6 @@ html {
 .customScroll {
   overflow: auto;
 }
-
 .customScroll::-webkit-scrollbar {
   width: 2.5px;
   height: 2.5px;

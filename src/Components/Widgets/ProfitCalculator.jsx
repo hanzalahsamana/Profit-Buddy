@@ -83,10 +83,10 @@ const ProfitCalculator = () => {
                 <div className="grid grid-cols-2 gap-2">
                     <div className={`border p-3 rounded-lg flex justify-between text-lg transition-colors
                      ${profit < 0
-                            ? 'border-[red] bg-[#ff00005c]'
+                            ? 'border-[red] bg-[#ff000038]'
                             : profit < MIN_PROFIT
-                                ? 'border-[orange] bg-[#ffa5005c]'
-                                : 'border-green-900 bg-green-200'
+                                ? 'border-[orange] bg-[#ffa50038]'
+                                : 'border-[green] bg-[#00800038]'
                         }
                     `}>
                         <p className="font-medium">Profit:</p>
@@ -94,10 +94,10 @@ const ProfitCalculator = () => {
                     </div>
                     <div className={`border p-3 rounded-lg flex justify-between text-lg transition-colors
                          ${profit < 0
-                            ? 'border-[red] bg-[#ff00005c]'
+                            ? 'border-[red] bg-[#ff000038]'
                             : profit < MIN_PROFIT
-                                ? 'border-[orange] bg-[#ffa5005c]'
-                                : 'border-green-900 bg-green-200'
+                                ? 'border-[orange] bg-[#ffa50038]'
+                                : 'border-[green] bg-[#00800038]'
                         }
                          `}>
                         <p className="font-medium">ROI(%):</p>

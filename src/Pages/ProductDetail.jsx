@@ -14,6 +14,7 @@ import { getProductOffers, searchProducts } from '../Apis/product';
 import { FiLoader } from "react-icons/fi";
 import { MdOutlineSearchOff } from "react-icons/md";
 import { motion } from "framer-motion";
+import SellerInfo from '../Components/Widgets/SellerInfo';
 
 
 const ProductDetail = () => {
@@ -98,6 +99,10 @@ const ProductDetail = () => {
                 <motion.div variants={fadeUpVariant} initial="hidden" animate="visible">
                     <BasicInfo product={product} />
                 </motion.div>
+
+                {/* <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
+                    <SellerInfo />
+                </motion.div> */}
 
                 <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
                     <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />

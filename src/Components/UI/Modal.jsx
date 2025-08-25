@@ -17,11 +17,15 @@ const modalVariants = {
 const Modal = ({
   isOpen,
   setIsOpen,
-  children,
-  className,
+  label = '',
+  subText = '',
+  actions = null,
+  className = '',
   extraFuntion = () => { },
   closeOnEsc = true,
+  children,
 }) => {
+
   const closeModal = useCallback(() => {
     extraFuntion();
     setIsOpen(false);
@@ -30,8 +34,10 @@ const Modal = ({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `2.5px`;
     } else {
       document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
     }
 
     const handleKeyDown = (e) => {
@@ -48,7 +54,7 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className={`inset-0 flex items-center justify-center bg-[#3434348e] z-[150] p-6 fixed`}
+          className={`inset-0 flex items-center justify-center bg-secondary/80 z-[150] p-6 fixed`}
           variants={backdropVariants}
           initial="hidden"
           animate="visible"
@@ -64,12 +70,28 @@ const Modal = ({
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute top-1 right-1 text-lText hover:text-secondary cursor-pointer z-[1]"
+              className="absolute top-2 right-2 text-lText hover:text-secondary cursor-pointer z-[1]"
               onClick={closeModal}
             >
               <VscClose size={22} />
             </button>
-            <div className="h-full">{children}</div>
+
+            {(label || subText) && (
+              <div className='flex flex-col px-4 py-4 w-full bg-lBackground border-b-[1.5px] border-border'>
+                {label && <h1 className='w-full text-secondary/90 text-[28px]/[28px] font-semibold '>{label}</h1>}
+                {subText && <p className='text-lText text-xs/[12px]'>{subText}</p>}
+              </div>
+            )}
+
+            <div className="h-full px-4 py-6">
+              {children}
+            </div>
+
+            {actions && (
+              <div className='flex gap-2 justify-end bg-lBackground px-4 py-4 w-full border-t-[1.5px] border-border'>
+                {actions}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

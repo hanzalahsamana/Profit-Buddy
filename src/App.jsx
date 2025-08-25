@@ -5,9 +5,10 @@ import Home from './Pages/Home'
 import Header from './Components/Layout/Header'
 import ProductDetail from './Pages/ProductDetail'
 import ThemeProvider from './Components/Layout/ThemeProvider'
+import SellerProfile from './Pages/SellerProfile'
 
 function App() {
-  
+
   return (
     <ThemeProvider>
       <div className="max-w-[1800px] min-h-screen bg-primary">
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/detail" element={<ProductDetail />} />
+          <Route path="/sellerProfile" element={<SellerProfile />} />
         </Routes>
       </div>
     </ThemeProvider>
