@@ -12,9 +12,6 @@ const Graphs = ({ product = {} }) => {
 
                 <DynamicChart graphData={graphData?.salesGraph} graphKeys={SalesGraphKeys} />
                 <DynamicChart graphData={graphData?.offerGraph} graphKeys={OfferGraphKeys} />
-                {/* <div className='w-full '>
-                    <img className='object-contain bg-[#ffffffdc] rounded-lg w-full' src={`${BASE_URL}/get/get-graph-image?asin=${product?.asin}`} alt="" />
-                </div> */}
             </div>
         </CustomCard>
     )

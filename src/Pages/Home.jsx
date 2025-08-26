@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ProductCardLoader from '../Components/Loaders/ProductCardLoader'
 import Button from '../Components/Controls/Button'
 import { useEffect } from 'react'
-import { searchProducts } from '../Apis/product'
+import { searchProducts } from '../Apis/Product'
 import { toast } from 'react-toastify'
 import { pushProducts, setCurrentPage, setLoadmoreLoading, setSearchTerm } from '../Redux/Slices/ProductSlice'
 import { ProductSearchData } from '../Utils/MockData'
@@ -12,12 +12,12 @@ const Home = () => {
   const { products, currentPage, productsLoading, searchTerm, loadmoreLoading } = useSelector((state) => state?.products)
   const dispatch = useDispatch()
 
-  const handleLoadMoreProducts = async ({ page }) => {
+  const handleLoadMoreProducts = async (page) => {
     try {
       dispatch(setLoadmoreLoading(true));
       const products = await searchProducts(searchTerm, page);
       dispatch(pushProducts(products));
-      dispatch(setCurrentPage(0));
+      dispatch(setCurrentPage(page));
     } catch (error) {
       toast.error(error.response ? error.response.data.message : error.message);
     } finally {

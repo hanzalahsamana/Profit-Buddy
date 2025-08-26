@@ -10,11 +10,13 @@ import Graphs from '../Components/Widgets/Graphs';
 import DynamicChart from '../Components/UI/DynamicChart';
 import { OfferGraphKeys, SalesGraphKeys } from '../Enums/Enums';
 import CustomCard from '../Components/UI/CustomCard';
-import { getProductOffers, searchProducts } from '../Apis/product';
+import { searchProducts } from '../Apis/Product';
 import { FiLoader } from "react-icons/fi";
 import { MdOutlineSearchOff } from "react-icons/md";
 import { motion } from "framer-motion";
 import SellerInfo from '../Components/Widgets/SellerInfo';
+import { getProductOffers } from '../Apis/Offer';
+import AnimationWrapper from '../Components/Layout/AnimationWrapper';
 
 
 const ProductDetail = () => {
@@ -96,35 +98,32 @@ const ProductDetail = () => {
     return (
         <div className='grid grid-cols-5 gap-4 h-full items-start p-4 text-secondary min-h-screen bg-lBackground'>
             <div className='col-span-3 flex flex-col gap-4'>
-                <motion.div variants={fadeUpVariant} initial="hidden" animate="visible">
+                <AnimationWrapper>
                     <BasicInfo product={product} />
-                </motion.div>
+                </AnimationWrapper>
 
-                {/* <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
-                    <SellerInfo />
-                </motion.div> */}
-
-                <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
+                <AnimationWrapper>
                     <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
-                </motion.div>
+                </AnimationWrapper>
 
-                <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
+                <AnimationWrapper>
                     <CustomCard label={'Price History'}>
                         <DynamicChart graphData={product?.graphData?.salesGraph} graphKeys={SalesGraphKeys} />
                     </CustomCard>
-                </motion.div>
+                </AnimationWrapper>
             </div>
 
             <div className='col-span-2 flex flex-col gap-4'>
-                <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.6 }}>
-                    <ProfitCalculator product={product} />
-                </motion.div>
 
-                <motion.div variants={fadeUpVariant} initial="hidden" animate="visible" transition={{ delay: 0.8 }}>
+                <AnimationWrapper>
+                    <ProfitCalculator product={product} />
+                </AnimationWrapper>
+
+                <AnimationWrapper>
                     <CustomCard label={'Offer Count'}>
                         <DynamicChart graphData={product?.graphData?.offerGraph} graphKeys={OfferGraphKeys} />
                     </CustomCard>
-                </motion.div>
+                </AnimationWrapper>
             </div>
         </div>
 

@@ -84,7 +84,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                                         ? 'text-[red]'
                                                         : profit < MIN_PROFIT
                                                             ? 'text-[orange] '
-                                                            : 'text-green-900'
+                                                            : 'text-green-700'
                                                     }`}
                                             >
                                                 {formatNumberWithCommas(profit)}
@@ -96,7 +96,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                                         ? 'text-[red]'
                                                         : roi < MIN_ROI
                                                             ? 'text-[orange] '
-                                                            : 'text-green-900'
+                                                            : 'text-green-700'
                                                     }`}
                                             >
                                                 {formatNumberWithCommas(roi, 2, false, false)}%

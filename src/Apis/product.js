@@ -1,7 +1,21 @@
 import axios from 'axios';
 import { EndPoints } from '../Utils/EndPoints';
 import { store } from '../Redux/Store';
-import { setCurrentPage, setProducts, setProductsLoading } from '../Redux/Slices/ProductSlice';
+import { setProductsLoading } from '../Redux/Slices/ProductSlice';
+
+export const getProduct = async (asin = '') => {
+  try {
+    const asinParam = Array.isArray(asin) ? asin.join(',') : asin;
+
+    const query = new URLSearchParams({
+      asin: asinParam,
+    });
+    const { data } = await axios.get(`${EndPoints.getProducts}?${query.toString()}`);
+    return data?.products;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const searchProducts = async (searchTerm, page = 0) => {
   try {
@@ -10,9 +24,8 @@ export const searchProducts = async (searchTerm, page = 0) => {
       page: page,
     });
     store.dispatch(setProductsLoading(true));
-    const response = await axios.get(`${EndPoints.searchProducts}?${query.toString()}`);
-   
-    return response.data.products;
+    const { data } = await axios.get(`${EndPoints.searchProducts}?${query.toString()}`);
+    return data.products;
   } catch (error) {
     throw error;
   } finally {
@@ -20,13 +33,13 @@ export const searchProducts = async (searchTerm, page = 0) => {
   }
 };
 
-export const getProductOffers = async (asin = '') => {
+export const findProductAsin = async (querry = {}) => {
   try {
     const query = new URLSearchParams({
-      asin,
+      ...querry,
     });
-    const response = await axios.get(`${EndPoints.getProductOffer}?${query.toString()}`);
-    return response.data;
+    const { data } = await axios.get(`${EndPoints.findProductAsin}?${query.toString()}`);
+    return data?.asins;
   } catch (error) {
     throw error;
   }

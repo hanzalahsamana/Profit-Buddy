@@ -1,5 +1,3 @@
-import { div } from "framer-motion/client";
-import React from "react";
 import InfoTooltip from "./InfoTooltip";
 
 const ToggleSwitch = ({ options = [], selected, onChange, className, label, info }) => {

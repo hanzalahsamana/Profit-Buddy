@@ -12,7 +12,6 @@ import {
   ReferenceLine,
 } from "recharts";
 import { generateTicks, getDomainWithPadding, getEvenlySpacedTicks } from "../../Utils/GraphUtils";
-import { div } from "framer-motion/client";
 import { formatNumberWithCommas } from "../../Utils/NumberUtil";
 
 const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large", showLegend = true }) => {
@@ -123,7 +122,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
 
               return (
                 <div className="bg-white p-2 rounded shadow-md border border-border">
-                  <p className="font-semibold mb-1">{label}</p>
+                  <p className="font-semibold mb-1 text-black">{label}</p>
                   {payload.map((item, index) => {
                     const key = item.dataKey;
                     const cfg = graphKeys[key];

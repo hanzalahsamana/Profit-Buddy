@@ -3,7 +3,7 @@ import { FaRegCopy, FaCheck } from "react-icons/fa";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { MdCheck, MdContentCopy } from "react-icons/md";
 
-const CopyButton = ({ text }) => {
+const CopyButton = ({ text ,className}) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async (e) => {
@@ -20,7 +20,7 @@ const CopyButton = ({ text }) => {
 
   return (
     <span
-      className="cursor-pointer text-sm select-none text-secondary hover:text-accent transition-colors"
+      className={`cursor-pointer text-sm select-none text-secondary hover:text-accent transition-colors ${className}`}
       onClick={handleCopy}
     >
       {copied ? <MdCheck /> : <MdContentCopy />}
