@@ -36,11 +36,15 @@ const Home = () => {
         <ProductCardLoader key={index} />
       ))}
 
-      <p className='text-secondary font-semibold text-[30px]'>Featured Products</p>
       {products?.length === 0 ? (
-        <div>
-          <p className='text-lText text-lg'>Please search products....</p>
-        </div>
+        <>
+          <p className="text-secondary font-semibold text-[30px]">
+            Featured Products
+          </p>
+          {ProductSearchData?.map((prod, index) => (
+            <ProductCard product={prod} key={prod?.asin || index} />
+          ))}
+        </>
       ) : (
         products?.map((prod, index) => (
           <ProductCard product={prod} key={prod?.asin || index} />

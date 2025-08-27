@@ -11,7 +11,7 @@ import { setBuyCost, setFulfillment, setPlacementFeeType, setSellPrice, setStora
 import CustomCard from '../UI/CustomCard';
 
 const ProfitCalculator = () => {
-    const [isBreakdownOpen, setIsBreakdownOpen] = useState(false)
+    const [isBreakdownOpen, setIsBreakdownOpen] = useState(true)
     const [quantity, setQuantity] = useState(1)
     const dispatch = useDispatch()
 

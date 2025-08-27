@@ -24,3 +24,12 @@ export const SalesGraphKeys = {
 export const OfferGraphKeys = {
   offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'area', decimal: false },
 };
+
+//Icon Images
+export const IconImages = {
+  dimention: 'https://img.icons8.com/dusk/128/tesseract.png',
+  google: 'https://img.icons8.com/fluency/96/google-logo.png',
+  whiteAmzon: 'https://img.icons8.com/ios-filled/50/FFFFFF/amazon.png',
+  amazon: 'https://img.icons8.com/color/96/amazon.png',
+  sheets: 'https://img.icons8.com/fluency/96/google-sheets--v1.png',
+};

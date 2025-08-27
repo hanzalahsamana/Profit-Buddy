@@ -10,6 +10,7 @@ const Button = ({
     loading = false,
     className = '',
     type = 'button',
+    disabled = false,
 }) => {
 
     const variantsClasses = {
@@ -40,10 +41,10 @@ const Button = ({
         <button
             type={type}
             onClick={action}
-            disabled={loading}
+            disabled={loading || disabled}
             className={clsx(
                 "fontDmmono relative cursor-pointer hover:opacity-95 box-border ",
-                variantsClasses?.[variant],
+                disabled ? variantsClasses?.disable : variantsClasses?.[variant],
                 sizeClasses?.[size],
                 cornerClasses?.[corner],
                 className

@@ -10,7 +10,6 @@ export const getDomainWithPadding = (values, percentage = 0.1, minFloor = [0]) =
   if (max === min) {
     const pad = Math.max(Math.abs(max) * percentage, 0);
     const paddedMin = Math.max(0, min - pad);
-    console.log(pad);
     const paddedMax = max + pad;
     return [Math.floor(paddedMin), Math.ceil(paddedMax)];
   }

@@ -16,9 +16,6 @@ import { formatNumberWithCommas } from "../../Utils/NumberUtil";
 
 const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large", showLegend = true }) => {
 
-  console.log(graphData);
-
-
   if (!graphData?.length) return (
     <div className=" w-full !h-full min-h-[150px] flex flex-col gap-0 items-center justify-center bg-primary">
       <p className="font-normal text-lg text-secondary ">Sorry, No Price History Available</p>

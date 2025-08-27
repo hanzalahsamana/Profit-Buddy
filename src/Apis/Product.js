@@ -35,10 +35,10 @@ export const searchProducts = async (searchTerm, page = 0) => {
 
 export const findProductAsin = async (querry = {}) => {
   try {
-    const query = new URLSearchParams({
-      ...querry,
-    });
-    const { data } = await axios.get(`${EndPoints.findProductAsin}?${query.toString()}`);
+    // const query = new URLSearchParams({
+    //   ...querry,
+    // });
+    const { data } = await axios.get(`${EndPoints.findProductAsin}?${querry.toString()}`);
     return data?.asins;
   } catch (error) {
     throw error;

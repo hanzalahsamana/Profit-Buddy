@@ -43,7 +43,7 @@ const ProductCard = ({ product }) => {
       <Link to={`/detail?asin=${product?.asin}`}>
         <div className='flex gap-2 md:gap-3 p-3  border border-border rounded-[10px] bg-primary transition-transform cursor-pointer h-[250px] '>
           <div className='flex flex-1 gap-2 w-full h-full col-span-4 relative'>
-            <ProductImageGrid images={images} />
+            <ProductImageGrid images={images} listPrice={info?.listPrice} />
 
             <div className='flex flex-col justify-between'>
               <p className="text-secondary pt-2 text-sm font-medium line-clamp-2" title={product?.title}>
@@ -63,7 +63,7 @@ const ProductCard = ({ product }) => {
                         Est Sales
                       </th>
                       <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
-                        Sale Cost
+                        Buy Box
                       </th>
                       <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
                         BSR Rank
@@ -75,14 +75,14 @@ const ProductCard = ({ product }) => {
                   </thead>
                   <tbody>
                     <tr className="hover:bg-accent/5 transition">
-                      <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{info?.monthlySold ? `${abbreviateNumber(info?.monthlySold)}+/mo` : 'No Record'}</td>
+                      <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{info?.monthlySold ? `${abbreviateNumber(info?.monthlySold)}+/mo` : 'Unknown'}</td>
                       <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{formatNumberWithCommas(info?.sellPrice)}</td>
-                      <td className="px-1 py-1.5 text-center text-lText border-r border-accent">#{formatNumberWithCommas(info?.sellRank, 0, false, true)}</td>
+                      <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{(info?.sellRank && info?.sellRank >= 0) ? `#${formatNumberWithCommas(info?.sellRank, 0, false, true)}` : 'Unknown'}</td>
                       <td className="px-1 py-1.5 text-center text-lText">
                         {(() => {
                           const totalFees = calculateTotalFees(product, info?.sellPrice)?.totalFees || 0;
-                          const maxCost = calculateMaxCost(info?.sellPrice, totalFees);
-                          const profit = calculateProfit(info?.sellPrice, maxCost, totalFees);
+                          // const maxCost = calculateMaxCost(info?.sellPrice, totalFees);
+                          const profit = calculateProfit(info?.sellPrice, 0, totalFees);
                           return formatNumberWithCommas(profit);
                         })()}
                       </td>
@@ -147,7 +147,7 @@ const ProductCard = ({ product }) => {
                             className="!bg-secondary !bg-opacity-100 !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !backdrop-blur-0 !shadow-lg"
                             content={
                               <div className="text-left space-y-0.5">
-                                <div className="font-medium text-white mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
+                                <div className="font-medium text-primary mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
                                 <Rating className={'text-[12px]'} count={offer?.sellerInfo?.ratingCount} rating={offer?.sellerInfo?.rating} />
                               </div>
                             }

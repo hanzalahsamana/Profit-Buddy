@@ -1,14 +1,18 @@
 import React from 'react'
 import { Tooltip } from 'react-tooltip';
+import { IconImages } from '../../Enums/Enums';
+import { useSelector } from 'react-redux';
 
-const ProductActionButtons = ({ product , className }) => {
+const ProductActionButtons = ({ product, className }) => {
 
     const { dimension } = product || {}
+    const { theme } = useSelector((state) => state.system);
+
     return (
         <div>
             <div className={`grid grid-rows-4 gap-2 w-[35px] absolute right-0 bottom-0 ${className}`}>
-                <button className='p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-pointer hover:bg-accent/40' data-tooltip-id='Dimension'>
-                    <img src="https://img.icons8.com/dusk/128/tesseract.png" alt="" />
+                <button className='p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-pointer hover:bg-accent/40' data-tooltip-id={`Dimension-${product?.asin}`}>
+                    <img src={IconImages?.dimention} alt="" />
                 </button>
                 <button
                     className="p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-pointer hover:bg-accent/40"
@@ -20,7 +24,7 @@ const ProductActionButtons = ({ product , className }) => {
                     }}
                 >
                     <img
-                        src="https://img.icons8.com/fluency/96/google-logo.png"
+                        src={IconImages?.google}
                         alt="Google Search"
                     />
                 </button>
@@ -32,14 +36,14 @@ const ProductActionButtons = ({ product , className }) => {
                         window.open(`https://www.amazon.com/dp/${product?.asin}`, "_blank");
                     }}
                 >
-                    <img src="https://img.icons8.com/color/96/amazon.png" alt="Amazon Search" />
+                    <img src={!theme ? IconImages?.amazon : IconImages?.whiteAmzon} alt="Amazon Search" />
                 </button>
                 <button className='p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-not-allowed hover:bg-accent/40'>
-                    <img src="https://img.icons8.com/fluency/96/google-sheets--v1.png" alt="" />
+                    <img src={IconImages?.sheets} alt="" />
                 </button>
             </div>
             <Tooltip
-                id="Dimension"
+                id={`Dimension-${product?.asin}`}
                 place="left"
                 className="!bg-secondary !backdrop-opacity-100 !max-w-[220px] !p-2 !text-[12px] !text-primary !items-center"
                 content={

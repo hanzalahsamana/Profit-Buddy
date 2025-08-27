@@ -1,81 +1,131 @@
-import { useEffect, useState } from 'react'
-import SellerInfo from '../Components/Widgets/SellerInfo'
-import { useSearchParams } from 'react-router-dom'
-import ProductCardLoader from '../Components/Loaders/ProductCardLoader'
-import { getSellerInfo } from '../Apis/Seller'
-import { MdOutlineSearchOff } from 'react-icons/md'
-import { FiLoader } from 'react-icons/fi'
-import { findProductAsin, getProduct } from '../Apis/Product'
-import ProductCard from '../Components/UI/ProductCard'
-import CustomCard from '../Components/UI/CustomCard'
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { FiLoader } from "react-icons/fi";
+import { MdOutlineSearchOff } from "react-icons/md";
+import { isEmpty, isEqual } from "lodash";
+
+import SellerInfo from "../Components/Widgets/SellerInfo";
+import ProductCardLoader from "../Components/Loaders/ProductCardLoader";
+import ProductCard from "../Components/UI/ProductCard";
+import SelectedFilters from "../Components/UI/SelectedFilters";
+import Button from "../Components/Controls/Button";
+
+import { getSellerInfo } from "../Apis/Seller";
+import { findProductAsin, getProduct } from "../Apis/Product";
+import { buildSellerAsinQuery } from "../Helpers/BuildQuery";
+
+import { pushSellerProducts, setSeller, setSellerAsins, setSellerCurrentPage, setSellerLoading, setSellerProducts, setSellerProductsLoading, } from "../Redux/Slices/SellerSlice";
+
+const FILTER_INITIAL = { rootCategory: [], brand: [] };
+const LIMIT = 10;
 
 const SellerProfile = () => {
     const [searchParams] = useSearchParams();
     const sellerId = searchParams.get("sellerid");
 
-    const [seller, setSeller] = useState({})
-    const [sellerLoading, setSellerLoading] = useState(false)
-    const [sellerProducts, setSellerProducts] = useState([])
-    const [sellerProductsLoading, setSellerProductsLoading] = useState(false)
-    const [productsQuery, setProductsQuery] = useState({})
-    const [sellerAsins, setSellerAsins] = useState([])
-    const [currentPage, setCurrentPage] = useState(1)
-    const limit = 10
+    const dispatch = useDispatch();
+    const { seller, sellerLoading, sellerCurrentPage, sellerProductsLoading } = useSelector((state) => state?.seller);
+    const { products = [], asins = [] } = seller || {};
+    const [productsQuery, setProductsQuery] = useState({});
+    const [queryFilterLocal, setQueryFilterLocal] = useState(FILTER_INITIAL);
 
-    const handleGetSeller = async () => {
+    /** Fetch Seller Info */
+    const handleGetSeller = useCallback(async () => {
+        if (!sellerId) return;
         try {
-            setSellerLoading(true);
+            dispatch(setSellerLoading(true));
             const response = await getSellerInfo(sellerId);
-            setSeller(response)
+            dispatch(setSeller(response));
         } catch (error) {
             console.error("Failed to fetch Seller:", error);
         } finally {
-            setSellerLoading(false);
+            dispatch(setSellerLoading(false));
         }
-    };
+    }, [dispatch, sellerId]);
 
-    const handleGetSellerAsins = async () => {
+    /** Fetch Seller ASINs */
+    const handleGetSellerAsins = useCallback(async () => {
+        if (!sellerId) return;
         try {
-            setSellerProductsLoading(true);
-            const asins = await findProductAsin({ ...productsQuery, sellerIds: sellerId });
-            if (!asins) throw ("asins not found")
-            setSellerAsins(asins)
+            dispatch(setSellerProductsLoading(true));
+            const asinList = await findProductAsin(
+                buildSellerAsinQuery(productsQuery, seller, sellerId)
+            );
+            if (!asinList) throw new Error("ASINs not found");
+
+            dispatch(setSellerAsins(asinList));
+            dispatch(setSellerCurrentPage(1));
         } catch (error) {
             console.error("Failed to fetch Seller Asins:", error);
         } finally {
-            setSellerProductsLoading(false);
+            dispatch(setSellerProductsLoading(false));
         }
-    };
-    
-    const handleGetSellerProducts = async () => {
+    }, [dispatch, productsQuery, seller, sellerId]);
+
+    /** Fetch Products */
+    const handleGetSellerProducts = useCallback(async () => {
+        if (!asins?.length) return;
         try {
-            setSellerProductsLoading(true);
-            const validPageAsins = sellerAsins?.slice((currentPage - 1) * limit, currentPage * limit);
-            console.log(validPageAsins);
-            const products = await getProduct(validPageAsins);
-            setSellerProducts(products)
+            dispatch(setSellerProductsLoading(true));
+            const start = (sellerCurrentPage - 1) * LIMIT;
+            const validPageAsins = asins.slice(start, start + LIMIT);
+
+            const productsResp = await getProduct(validPageAsins);
+            dispatch(
+                sellerCurrentPage === 1
+                    ? setSellerProducts(productsResp)
+                    : pushSellerProducts(productsResp)
+            );
         } catch (error) {
-            console.error("Failed to fetch Seller Asins:", error);
+            console.error("Failed to fetch Seller Products:", error);
         } finally {
-            setSellerProductsLoading(false);
+            dispatch(setSellerProductsLoading(false));
+        }
+    }, [dispatch, asins, sellerCurrentPage]);
+
+    /** Filter Handlers */
+    const handleFilterClick = (type, value) => {
+        setQueryFilterLocal((prev) => {
+            const currentValues = prev[type] || [];
+            return {
+                ...prev,
+                [type]: currentValues.includes(value)
+                    ? currentValues.filter((v) => v !== value)
+                    : [...currentValues, value],
+            };
+        });
+    };
+
+    const handleRemove = (type, value) => {
+        setQueryFilterLocal((prev) => ({
+            ...prev,
+            [type]: prev[type].filter((v) => v !== value),
+        }));
+    };
+
+    const handleReset = () => setQueryFilterLocal(FILTER_INITIAL);
+
+    const handleApplyFilter = () => {
+        if (!isEmpty(queryFilterLocal)) {
+            setProductsQuery(queryFilterLocal);
         }
     };
 
+    /** Effects */
     useEffect(() => {
-        if (!sellerId) return
-        handleGetSeller()
-    }, [sellerId])
+        if (sellerId && seller?.id !== sellerId) handleGetSeller();
+    }, [sellerId, handleGetSeller]);
 
     useEffect(() => {
-        if (!sellerId) return
-        handleGetSellerAsins()
-    }, [sellerId, productsQuery])
+        if (sellerId) handleGetSellerAsins();
+    }, [sellerId, productsQuery]);
 
     useEffect(() => {
-        if (!sellerAsins || !sellerAsins?.length) return
-        handleGetSellerProducts()
-    }, [sellerAsins])
+        if (asins?.length) handleGetSellerProducts();
+    }, [asins, sellerCurrentPage]);
 
+    /** UI States */
     if (sellerLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-16 text-lText bg-primary">
@@ -85,7 +135,7 @@ const SellerProfile = () => {
         );
     }
 
-    if (!seller || !Object?.keys(seller).length) {
+    if (isEmpty(seller)) {
         return (
             <div className="flex flex-col items-center justify-center py-16 text-lText">
                 <MdOutlineSearchOff className="w-8 h-8 mb-2" />
@@ -95,24 +145,49 @@ const SellerProfile = () => {
     }
 
     return (
-        <div className=' bg-lBackground p-4  flex flex-col gap-4'>
-            <SellerInfo className={'col-span-2'} seller={seller} />
+        <div className="bg-lBackground p-4 flex flex-col gap-4">
+            <SellerInfo
+                className="col-span-2"
+                seller={seller}
+                handleFilterClick={handleFilterClick}
+                queryFilter={queryFilterLocal}
+            />
 
-            <h1 className='text-[34px]/[34px] bg-primary p-4 border-border border rounded-lg text-secondary font-semibold fontDmmono'>Products</h1>
+            <SelectedFilters
+                queryFilter={queryFilterLocal}
+                handleFilterClick={handleFilterClick}
+                handleReset={handleReset}
+                handleApplyFilter={handleApplyFilter}
+                productsQuery={productsQuery}
+                queryFilterLocal={queryFilterLocal}
+            />
 
-            <div className='flex flex-col gap-4 col-span-4'>
-                {sellerProductsLoading ? [1, 2, 3, 4, 5].map((_, index) => (
-                    <ProductCardLoader key={index} />
-                )) : (
-                    sellerProducts?.map((prod, index) => {
-                        return (
-                            <ProductCard product={prod} key={index} />
-                        )
-                    })
+            {/* Products */}
+            <div className="flex flex-col gap-4 col-span-4">
+                {sellerProductsLoading && sellerCurrentPage === 1 ? (
+                    Array.from({ length: 5 }).map((_, i) => <ProductCardLoader key={i} />)
+                ) : (
+                    products.map((prod, i) => <ProductCard product={prod} key={i} />)
                 )}
             </div>
 
+            {/* Load More */}
+            {(products?.length > 0 && asins?.length > products?.length) && (
+                <div className="w-full flex justify-center">
+                    <Button
+                        label="Load More"
+                        loading={sellerProductsLoading && sellerCurrentPage > 1}
+                        corner="full"
+                        variant="secondary"
+                        size="medium"
+                        action={() =>
+                            dispatch(setSellerCurrentPage(sellerCurrentPage + 1))
+                        }
+                    />
+                </div>
+            )}
         </div>
-    )
-}
-export default SellerProfile
+    );
+};
+
+export default SellerProfile;
