@@ -38,7 +38,7 @@ export const findProductAsin = async (querry = {}) => {
     // const query = new URLSearchParams({
     //   ...querry,
     // });
-    const { data } = await axios.get(`${EndPoints.findProductAsin}?${querry.toString()}`);
+    const { data } = await axios.get(`${EndPoints.findProductAsin}?selection=${querry}`);
     return data?.asins;
   } catch (error) {
     throw error;

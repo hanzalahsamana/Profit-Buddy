@@ -2,6 +2,7 @@ import React from 'react'
 import { Tooltip } from 'react-tooltip';
 import { IconImages } from '../../Enums/Enums';
 import { useSelector } from 'react-redux';
+import { redirectToAmazonProductPage, redirectToGoogleSearch } from '../../Helpers/Redirects';
 
 const ProductActionButtons = ({ product, className }) => {
 
@@ -16,25 +17,13 @@ const ProductActionButtons = ({ product, className }) => {
                 </button>
                 <button
                     className="p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-pointer hover:bg-accent/40"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const query = encodeURIComponent(product.title);
-                        window.open(`https://www.google.com/search?q=${query}`, "_blank");
-                    }}
+                    onClick={(e) => redirectToGoogleSearch(e, product?.title)}
                 >
-                    <img
-                        src={IconImages?.google}
-                        alt="Google Search"
-                    />
+                    <img src={IconImages?.google} alt="Google Search" />
                 </button>
                 <button
                     className="p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-pointer hover:bg-accent/40"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(`https://www.amazon.com/dp/${product?.asin}`, "_blank");
-                    }}
+                    onClick={(e) => redirectToAmazonProductPage(e, product?.asin)}
                 >
                     <img src={!theme ? IconImages?.amazon : IconImages?.whiteAmzon} alt="Amazon Search" />
                 </button>
@@ -49,10 +38,10 @@ const ProductActionButtons = ({ product, className }) => {
                 content={
                     <div className="text-left space-y-0.5">
                         <div className="font-semibold mb-1 text-[13px]">Dimensions :</div>
-                        <div>Width: {dimension?.width || 0}</div>
-                        <div>Height: {dimension?.height || 0}</div>
-                        <div>Length: {dimension?.length || 0}</div>
-                        <div>Weight: {dimension?.weight || 0}</div>
+                        <div>Width: {dimension?.width || 'Unknown'}</div>
+                        <div>Height: {dimension?.height || 'Unknown'}</div>
+                        <div>Length: {dimension?.length || 'Unknown'}</div>
+                        <div>Weight: {dimension?.weight || 'Unknown'}</div>
                     </div>
                 }
             />

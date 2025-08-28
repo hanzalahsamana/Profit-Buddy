@@ -39,10 +39,10 @@ const ProfitCalculator = () => {
     return (
         <CustomCard label={'Profit Calculator'}>
             <div className='flex flex-col gap-4'>
-                <div className="border p-3 rounded-lg bg-border flex justify-between text-sm">
+                {/* <div className="border p-3 rounded-lg bg-border flex justify-between text-sm">
                     <p className="font-medium">Estimated Maximum Buy Cost:</p>
                     <p className="text-end">{formatNumberWithCommas(maxCost)}</p>
-                </div>
+                </div> */}
                 <div className='flex gap-4'>
                     <CustomInput
                         placeholder="Buy Cost"
@@ -105,47 +105,49 @@ const ProfitCalculator = () => {
                     </div>
                 </div>
 
-                <div
-                    className="border p-3 rounded-lg bg-border select-none flex justify-between text-lg hover:opacity-90 cursor-pointer"
-                    onClick={() => setIsBreakdownOpen(!isBreakdownOpen)}
-                >
-                    <p className="font-medium ">Total Fees:</p>
-                    <p className="flex gap-2 items-center">
-                        {formatNumberWithCommas(fees?.totalFees)} <IoIosArrowDown className={`${isBreakdownOpen ? 'rotate-180' : 'rotate-0'} transition-all`} />
-                    </p>
-                </div>
-                <div className={`mt-2 space-y-2 text-lText text-sm transition-all duration-500 overflow-hidden ${isBreakdownOpen ? 'max-h-[400px]' : 'max-h-0'}`}>
-                    <div className={`flex justify-between`}>
-                        <span>Referral Fee:</span>
-                        <span className='flex items-center gap-1.5'>
-                            {fees?.referralFeePercent * 100}% <PiApproximateEquals /> {formatNumberWithCommas(fees?.referralFee)}
-                        </span>
+                <div className='flex flex-col w-full'>
+                    <div
+                        className="border p-3 rounded-lg bg-border select-none flex justify-between text-lg hover:opacity-90 cursor-pointer"
+                        onClick={() => setIsBreakdownOpen(!isBreakdownOpen)}
+                    >
+                        <p className="font-medium ">Total Fees:</p>
+                        <p className="flex gap-2 items-center">
+                            {formatNumberWithCommas(fees?.totalFees)} <IoIosArrowDown className={`${isBreakdownOpen ? 'rotate-180' : 'rotate-0'} transition-all`} />
+                        </p>
                     </div>
-                    <div className={`flex justify-between`}>
-                        <span>Fulfilment Fee ({fulfillment}):</span>
-                        <span className='flex items-center gap-1.5'>
-                            {formatNumberWithCommas(fees?.fulfillmentFee)}
-                        </span>
-                    </div>
-                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span>Inbound Shipping Fee:</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.inboundShippingFee)}</span>
-                    </div>
-                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span>Storage Fee:</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.storageFee)}</span>
-                    </div>
-                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span>Preparation Fee:</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.prepFee)}</span>
-                    </div>
-                    <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
-                        <span onClick={handleTogglePlacementFeeType} className='cursor-pointer hover:opacity-85 underline capitalize'>Placement Fee ({placementFeeType}):</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.placementFee)}</span>
-                    </div>
-                    <div className={`flex justify-between`}>
-                        <span>Closing Fee:</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.closingFee)}</span>
+                    <div className={` space-y-2 text-lText text-sm transition-all duration-500 overflow-hidden ${isBreakdownOpen ? 'max-h-[400px]' : 'max-h-0'}`}>
+                        <div className={`flex justify-between pt-[20px]`}>
+                            <span>Referral Fee:</span>
+                            <span className='flex items-center gap-1.5'>
+                                {fees?.referralFeePercent * 100}% <PiApproximateEquals /> {formatNumberWithCommas(fees?.referralFee)}
+                            </span>
+                        </div>
+                        <div className={`flex justify-between`}>
+                            <span>Fulfilment Fee ({fulfillment}):</span>
+                            <span className='flex items-center gap-1.5'>
+                                {formatNumberWithCommas(fees?.fulfillmentFee)}
+                            </span>
+                        </div>
+                        <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                            <span>Inbound Shipping Fee:</span>
+                            <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.inboundShippingFee)}</span>
+                        </div>
+                        <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                            <span>Storage Fee:</span>
+                            <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.storageFee)}</span>
+                        </div>
+                        <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                            <span>Preparation Fee:</span>
+                            <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.prepFee)}</span>
+                        </div>
+                        <div className={`flex justify-between ${fulfillment === 'FBM' && 'line-through'}`}>
+                            <span onClick={handleTogglePlacementFeeType} className='cursor-pointer hover:opacity-85 underline capitalize'>Placement Fee ({placementFeeType}):</span>
+                            <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.placementFee)}</span>
+                        </div>
+                        <div className={`flex justify-between`}>
+                            <span>Closing Fee:</span>
+                            <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.closingFee)}</span>
+                        </div>
                     </div>
                 </div>
 

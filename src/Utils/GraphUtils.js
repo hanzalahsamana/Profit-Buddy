@@ -34,7 +34,8 @@ export const getEvenlySpacedTicks = (data, count) => {
   const ticks = [];
   for (let i = 0; i < count; i++) {
     const index = Math.round(i * step);
-    ticks.push(data[index].date);
+    // const formatedDate = formatDate();
+    ticks.push(data[index]?.date);
   }
 
   return ticks;
@@ -54,4 +55,19 @@ export const generateTicks = (min, max, step = 5) => {
   if (!ticks.includes(max)) ticks.push(max);
 
   return ticks;
+};
+
+export const formatDate = (date = '') => {
+  if (!date) return;
+  const locale = 'en-US';
+  const dateFormatOptions = { month: 'short', day: 'numeric' };
+
+  return new Date(date).toLocaleDateString(locale, dateFormatOptions);
+};
+export const formatTime = (date = '') => {
+  if (!date) return;
+  const locale = 'en-US';
+  const timeFormatOptions = { hour: '2-digit', minute: '2-digit' };
+
+  return new Date(date).toLocaleTimeString(locale, timeFormatOptions);
 };

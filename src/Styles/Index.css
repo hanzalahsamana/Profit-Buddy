@@ -68,6 +68,7 @@ html {
 .customScroll {
   overflow: auto;
 }
+
 .customScroll::-webkit-scrollbar {
   width: 2.5px;
   height: 2.5px;
@@ -95,4 +96,25 @@ html {
 
 .hideScroll::-webkit-scrollbar {
   display: none;
+}
+
+
+.animteUpDown {
+  animation: updown 3s ease-in-out infinite;
+}
+
+@keyframes updown {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px); /* moves up 10px */
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.dropdownShadow {
+  box-shadow: 0rem .5rem 1.5rem -.5rem color-mix(in oklab, var(--secondary) 20%, transparent), 0rem .5rem 1rem -.25rem color-mix(in oklab, var(--secondary) 5%, transparent), 0rem .1875rem .375rem 0rem color-mix(in oklab, var(--secondary) 5%, transparent), 0rem .125rem .25rem 0rem rgba(0, 0, 0, .05), 0rem .0625rem .125rem 0rem rgba(0, 0, 0, .05), 0rem 0rem 0rem .0625rem rgba(0, 0, 0, .06);
 }

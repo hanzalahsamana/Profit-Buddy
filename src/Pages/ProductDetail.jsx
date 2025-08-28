@@ -13,10 +13,11 @@ import CustomCard from '../Components/UI/CustomCard';
 import { searchProducts } from '../Apis/Product';
 import { FiLoader } from "react-icons/fi";
 import { MdOutlineSearchOff } from "react-icons/md";
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 import SellerInfo from '../Components/Widgets/SellerInfo';
 import { getProductOffers } from '../Apis/Offer';
 import AnimationWrapper from '../Components/Layout/AnimationWrapper';
+import ScoreChart from '../Components/UI/ScoreChart';
 
 
 const ProductDetail = () => {
@@ -105,12 +106,15 @@ const ProductDetail = () => {
                 <AnimationWrapper>
                     <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
                 </AnimationWrapper>
-
                 <AnimationWrapper>
-                    <CustomCard label={'Price History'}>
-                        <DynamicChart graphData={product?.graphData?.salesGraph} graphKeys={SalesGraphKeys} />
+                    <CustomCard>
+                        <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono py-[15px]'>Offer Count</h1>
+                        <DynamicChart graphData={product?.graphData?.keepaGraphData} graphKeys={OfferGraphKeys} />
+                        <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono py-[15px]'>Price History</h1>
+                        <DynamicChart graphData={product?.graphData?.keepaGraphData} graphKeys={SalesGraphKeys} />
                     </CustomCard>
                 </AnimationWrapper>
+
             </div>
 
             <div className='col-span-2 flex flex-col gap-4'>
@@ -118,12 +122,13 @@ const ProductDetail = () => {
                 <AnimationWrapper>
                     <ProfitCalculator product={product} />
                 </AnimationWrapper>
-
                 <AnimationWrapper>
-                    <CustomCard label={'Offer Count'}>
-                        <DynamicChart graphData={product?.graphData?.offerGraph} graphKeys={OfferGraphKeys} />
+                    <CustomCard label={'Buddy Score'}>
+                        <ScoreChart />
                     </CustomCard>
                 </AnimationWrapper>
+
+
             </div>
         </div>
 

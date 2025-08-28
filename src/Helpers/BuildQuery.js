@@ -12,25 +12,14 @@ export const buildSellerAsinQuery = (productsQuery, seller, sellerId) => {
   };
 
   if (productsQuery.rootCategory?.length) {
-    console.log(productsQuery.rootCategory, categoryMap);
-
-    query.rootCategory = productsQuery.rootCategory
-      .map((catName) => categoryMap[catName])
-      .filter(Boolean)
-      .join(',');
+    query.rootCategory = productsQuery.rootCategory.map((catName) => categoryMap[catName]).filter(Boolean);
   }
 
   if (productsQuery.brand?.length) {
-    query.brand = productsQuery.brand.join(',');
+    query.brand = productsQuery.brand;
   }
 
-  console.log(query);
+  const selection = encodeURIComponent(JSON.stringify(query));
 
-  return (
-    '?' +
-    Object.entries(query)
-      .filter(([_, v]) => v !== undefined && v !== null && v !== '')
-      .map(([k, v]) => `${k}=${v}`)
-      .join('&')
-  );
+  return selection;
 };

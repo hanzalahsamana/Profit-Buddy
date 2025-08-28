@@ -1,18 +1,17 @@
 import React from 'react'
 import CustomCard from '../UI/CustomCard'
 import Rating from '../UI/Rating'
-import { TbExternalLink } from "react-icons/tb";
 import Button from '../Controls/Button';
 import { LuUserRound } from "react-icons/lu";
-import { IoWarningOutline } from 'react-icons/io5';
-import { CiDeliveryTruck, CiKeyboard, CiUser } from "react-icons/ci";
+import { CiDeliveryTruck } from "react-icons/ci";
 import CopyButton from '../Controls/CopyText';
 import { SlKey } from "react-icons/sl";
 import { IconImages } from '../../Enums/Enums';
 import { useSelector } from 'react-redux';
+import { redirectToAmazonSellerPage } from '../../Helpers/Redirects';
 
 const SellerInfo = ({ className, seller, handleFilterClick, queryFilter }) => {
-        const { theme } = useSelector((state) => state.system);
+    const { theme } = useSelector((state) => state.system);
     return (
         <div className={`grid grid-cols-4 gap-4 h-auto items-start text-secondary ${className}`}>
             <CustomCard className={'col-span-2'}>
@@ -27,7 +26,7 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter }) => {
                         className='!text-secondary'
                         corner='full'
                         size='small'
-                        action={() => window.open(`https://www.amazon.com/s?me=${seller?.id}`, "_blank")}
+                        action={(e) => redirectToAmazonSellerPage(e, seller?.id)}
                         label={<span className='flex items-center gap-2'>
                             <img className='w-[20px]' src={!theme ? IconImages?.amazon : IconImages?.whiteAmzon} alt="Amazon Search" />
                             View On Amazon
@@ -55,16 +54,18 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter }) => {
 
                 </div>
             </CustomCard >
+            
             <CustomCard className={'col-span-1'} label={'Categories'}>
                 <div className='flex flex-col gap-4 max-h-[180px] overflow-auto customScroll pr-2'>
                     {seller?.categories?.map((category, idx) => (
                         <div key={idx} className='flex justify-between items-center bg-border/50 rounded-md py-2 px-3'>
-                            <p onClick={() => handleFilterClick("rootCategory", category?.name)}  className={`text-sm flex gap-2 items-center text-secondary/90 cursor-pointer hover:text-secondary/60 ${queryFilter?.rootCategory?.includes(category.name) ? "font-semibold !text-secondary" : ""}`}>{category?.name}</p>
+                            <p onClick={() => handleFilterClick("rootCategory", category?.name)} className={`text-sm flex gap-2 items-center text-secondary/90 cursor-pointer hover:text-secondary/60 ${queryFilter?.rootCategory?.includes(category.name) ? "font-semibold !text-secondary" : ""}`}>{category?.name}</p>
                             <p className='text-secondary flex items-center gap-2 text-base'>{category?.count}</p>
                         </div>
                     ))}
                 </div>
             </CustomCard>
+
             <CustomCard className={'col-span-1'} label={'Brands'}>
                 <div className='flex flex-col gap-4 max-h-[180px] overflow-auto customScroll pr-2'>
                     {seller?.brands?.map((brand, idx) => (

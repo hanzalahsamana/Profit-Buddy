@@ -11,10 +11,11 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { generateTicks, getDomainWithPadding, getEvenlySpacedTicks } from "../../Utils/GraphUtils";
+import { formatDate, generateTicks, getDomainWithPadding, getEvenlySpacedTicks } from "../../Utils/GraphUtils";
 import { formatNumberWithCommas } from "../../Utils/NumberUtil";
+import { formatTime } from './../../Utils/GraphUtils';
 
-const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large", showLegend = true }) => {
+const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large", showLegend = true, syncID = "keepa" }) => {
 
   if (!graphData?.length) return (
     <div className=" w-full !h-full min-h-[150px] flex flex-col gap-0 items-center justify-center bg-primary">
@@ -63,7 +64,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
           right: 40,
           left: size === "small" ? 40 : 20,
           bottom: 10,
-        }} >
+        }} syncId={syncID} >
           <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
           <ReferenceLine y={39} stroke="red" label="Max PV PAGE" />
           <XAxis
@@ -80,6 +81,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
               dy: 10,
             }}
             ticks={getEvenlySpacedTicks(graphData, 5)}
+            tickFormatter={(value) => formatDate(value)}
 
           />
 
@@ -96,7 +98,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
                 fill: "#000000b1",
                 fontWeight: "600"
               }}
-              // style={{ width: "40px" }}
+            // style={{ width: "40px" }}
             />
           )}
 
@@ -119,7 +121,7 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
 
               return (
                 <div className="bg-white p-2 rounded shadow-md border border-border">
-                  <p className="font-semibold mb-1 text-black">{label}</p>
+                  <p className="font-semibold mb-1 text-black">{formatDate(label)} : <span className="text-lText font-normal text-xs">{formatTime(label)}</span></p>
                   {payload.map((item, index) => {
                     const key = item.dataKey;
                     const cfg = graphKeys[key];
@@ -190,6 +192,7 @@ const CustomLegend = React.memo(({ payload, data, graphKeys, size }) => {
     <ul className="flex  gap-4 pl-4 pb-10">
       {payload?.map((entry, index) => {
         const dataKey = entry.dataKey;
+        if(!graphKeys?.[dataKey]?.label || !data ) return
         return (
           <li key={`item-${index}`} className="flex items-center gap-2">
             <span

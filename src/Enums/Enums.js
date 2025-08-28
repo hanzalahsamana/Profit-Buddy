@@ -23,6 +23,8 @@ export const SalesGraphKeys = {
 
 export const OfferGraphKeys = {
   offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'area', decimal: false },
+  //Just for creating equal gap on both graph
+  '': { label: '', symbol: '', color: '', yAxis: 'right', type: '', decimal: false },
 };
 
 //Icon Images
@@ -32,4 +34,5 @@ export const IconImages = {
   whiteAmzon: 'https://img.icons8.com/ios-filled/50/FFFFFF/amazon.png',
   amazon: 'https://img.icons8.com/color/96/amazon.png',
   sheets: 'https://img.icons8.com/fluency/96/google-sheets--v1.png',
+  robot: 'https://img.icons8.com/fluency/96/message-bot.png',
 };

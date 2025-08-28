@@ -7,6 +7,7 @@ import { searchProducts } from '../Apis/Product'
 import { toast } from 'react-toastify'
 import { pushProducts, setCurrentPage, setLoadmoreLoading, setSearchTerm } from '../Redux/Slices/ProductSlice'
 import { ProductSearchData } from '../Utils/MockData'
+import CustomerSupport from '../Components/Widgets/CustomerSupport'
 
 const Home = () => {
   const { products, currentPage, productsLoading, searchTerm, loadmoreLoading } = useSelector((state) => state?.products)
@@ -30,6 +31,8 @@ const Home = () => {
     <div className='bg-lBackground min-h-screen p-5 flex flex-col gap-4'>
 
       {/* <ProductCard product={ProductSearchData?.[0]} /> */}
+
+      <CustomerSupport/>
 
 
       {productsLoading && [1, 2, 3, 4, 5].map((_, index) => (
