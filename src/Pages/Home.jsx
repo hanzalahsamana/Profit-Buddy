@@ -32,7 +32,6 @@ const Home = () => {
 
       {/* <ProductCard product={ProductSearchData?.[0]} /> */}
 
-      <CustomerSupport/>
 
 
       {productsLoading && [1, 2, 3, 4, 5].map((_, index) => (

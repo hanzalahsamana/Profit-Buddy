@@ -6,6 +6,7 @@ import Header from './Components/Layout/Header'
 import ProductDetail from './Pages/ProductDetail'
 import ThemeProvider from './Components/Layout/ThemeProvider'
 import SellerProfile from './Pages/SellerProfile'
+import CustomerSupport from './Components/Widgets/CustomerSupport'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/detail" element={<ProductDetail />} />
           <Route path="/sellerProfile" element={<SellerProfile />} />
         </Routes>
+        <CustomerSupport />
       </div>
     </ThemeProvider>
   );
