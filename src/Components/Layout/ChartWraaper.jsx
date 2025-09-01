@@ -5,7 +5,7 @@ import Button from '../Controls/Button';
 import { getGraphData } from './../../Apis/graph';
 import { isEqual } from 'lodash';
 import { toast } from 'react-toastify';
-import GraphCardLoader from '../Loaders/graphCardLoader';
+import GraphCardLoader from '../Loaders/GraphCardLoader';
 import Example from '../UI/TestChart';
 
 const ChartWraaper = ({ keepaGraphData, asin }) => {
