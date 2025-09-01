@@ -11,7 +11,7 @@ const ProductActionButtons = ({ product, className }) => {
 
     return (
         <div>
-            <div className={`grid grid-rows-4 gap-2 w-[35px] absolute right-0 bottom-0 ${className}`}>
+            <div className={`grid grid-rows-4 gap-2 w-[35px] static right-0 bottom-0 ${className}`}>
                 <button className='p-1.5 flex items-center justify-center bg-accent/20 border border-accent rounded-md cursor-pointer hover:bg-accent/40' data-tooltip-id={`Dimension-${product?.asin}`}>
                     <img src={IconImages?.dimention} alt="" />
                 </button>

@@ -108,7 +108,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                                 className="!bg-secondary !bg-opacity-100 !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !backdrop-blur-0 !shadow-lg"
                                                 content={
                                                     <div className="text-left space-y-0.5">
-                                                        <div className="font-medium text-white mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
+                                                        <div className="font-medium text-primary mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
                                                         <Rating className={'text-[12px]'} count={offer?.sellerInfo?.ratingCount} rating={offer?.sellerInfo?.rating} />
                                                     </div>
                                                 }

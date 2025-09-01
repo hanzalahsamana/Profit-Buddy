@@ -1,9 +1,12 @@
 "use client";
+import React from "react";
 import { FaSlash } from "react-icons/fa";
 import { PieChart, Pie, Cell } from "recharts";
 
+const value = Math.floor(Math.random() * 91) + 10;
+
 const progress = [
-    { name: "Completed", value: 76 },
+    { name: "Completed", value: value }
 ];
 
 const background = [
@@ -11,40 +14,69 @@ const background = [
 ];
 
 const COLORS = [
-    getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
     '#25d89030',
 ];
 
-export default function ScoreChart() {
+
+const getColor = (v) => {
+    if (value / 10 < 4) return "#E6394640";
+    if (value / 10 < 6) return "#FF7E2940";
+    return "#25d89040";
+};
+
+const getGradientId = () => {
+    if (value / 10 < 4) {
+        return "progressGradientRed";
+    } else if (value / 10 < 6) {
+        return "progressGradientYellow";
+    }
+    return "progressGradientGreen";
+}
+const ScoreChart = () => {
+
+    console.log("abcdef");
+
+
+
     return (
         <div className="flex items-center justify-center ">
             <div className="relative">
-                <PieChart width={300} height={300}>
+                <PieChart width={150} height={150}>
                     <Pie
                         data={background}
                         cx="50%"
                         cy="50%"
-                        innerRadius={100}
-                        outerRadius={120}
+                        innerRadius={57}
+                        outerRadius={70}
                         startAngle={90}
                         endAngle={-270}
                         cornerRadius={20}
                         dataKey="value"
                     >
-                        <Cell fill={COLORS[1]} stroke="none" />
+                        <Cell fill={getColor()} stroke="none" />
                     </Pie>
 
                     <defs>
-                        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <linearGradient id="progressGradientGreen" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#24E698" />
                             <stop offset="100%" stopColor="#1DB9A0" />
+                        </linearGradient>
+
+                        <linearGradient id="progressGradientYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#FFD93D" />
+                            <stop offset="100%" stopColor="#FFC107" />
+                        </linearGradient>
+
+                        <linearGradient id="progressGradientRed" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#FF6B6B" />
+                            <stop offset="100%" stopColor="#E63946" />
                         </linearGradient>
                     </defs>
                     <svg>
                         <defs>
                             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feDropShadow dx="-1" dy="-1" stdDeviation="1.5" floodColor="#545454" floodOpacity="0.35" />
-                                <feDropShadow dx="1" dy="1" stdDeviation="1.5" floodColor="#545454" floodOpacity="0.35" />
+                                <feDropShadow dx="-1" dy="-1" stdDeviation="1" floodColor="#545454" floodOpacity="0.2" />
+                                <feDropShadow dx="1" dy="1" stdDeviation="1" floodColor="#545454" floodOpacity="0.2" />
                             </filter>
                         </defs>
                     </svg>
@@ -53,26 +85,28 @@ export default function ScoreChart() {
                         data={progress}
                         cx="50%"
                         cy="50%"
-                        innerRadius={100}
-                        outerRadius={120}
+                        innerRadius={57}
+                        outerRadius={70}
                         startAngle={90}
                         endAngle={90 - (progress[0].value / 100) * 360}
                         cornerRadius={20}
                         dataKey="value"
                         filter="url(#shadow)"
                     >
-                        <Cell fill="url(#progressGradient)" className="!shadow-xl" strokeWidth={2} stroke="none" />
+                        <Cell fill={`url(#${getGradientId(progress[0].value / 10)})`} className="!shadow-xl" strokeWidth={2} stroke="none" />
                     </Pie>
                 </PieChart>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-4xl font-bold text-secondary flex items-end ">
+                    <span className="text-2xl font-bold text-secondary flex items-end ">
                         {progress[0].value / 10}
                         <span className="inline-block rotate-[75deg] relative top-0.5 -mx-2"><FaSlash /></span>
-                        <span className="text-3xl relative top-2 ">10</span>
+                        <span className="text-xl relative top-2.5 ">10</span>
                     </span>
                 </div>
             </div>
         </div>
     );
 }
+
+export default React.memo(ScoreChart);

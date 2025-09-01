@@ -22,7 +22,7 @@ export const SalesGraphKeys = {
 };
 
 export const OfferGraphKeys = {
-  offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'area', decimal: false },
+  offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'line', decimal: false },
   //Just for creating equal gap on both graph
   '': { label: '', symbol: '', color: '', yAxis: 'right', type: '', decimal: false },
 };

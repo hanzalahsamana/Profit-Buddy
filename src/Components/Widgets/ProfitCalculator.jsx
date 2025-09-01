@@ -7,7 +7,7 @@ import CustomInput from '../Controls/CustomInput';
 import { IoIosArrowDown } from 'react-icons/io';
 import { formatNumberWithCommas } from '../../Utils/NumberUtil';
 import { PiApproximateEquals } from 'react-icons/pi';
-import { setBuyCost, setFulfillment, setPlacementFeeType, setSellPrice, setStorageMonth } from '../../Redux/Slices/profitCalcSlice';
+import { setBuyCost, setFulfillment, setPlacementFeeType, setsalePrice, setStorageMonth } from '../../Redux/Slices/profitCalcSlice';
 import CustomCard from '../UI/CustomCard';
 
 const ProfitCalculator = () => {
@@ -17,7 +17,7 @@ const ProfitCalculator = () => {
 
     const {
         buyCost,
-        sellPrice,
+        salePrice,
         storageMonth,
         fulfillment,
         fees,
@@ -34,7 +34,19 @@ const ProfitCalculator = () => {
 
         dispatch(setPlacementFeeType(nextType));
     };
+    function toCents(value) {
+        if (!value) return 0;
 
+        const str = String(value);
+
+        if (str.includes(".")) {
+            // Remove decimal point, then trim leading zeros
+            return Number(str.replace(".", "").replace(/^0+/, "")) || '';
+        } else {
+            // No decimal → return as-is
+            return Number(str);
+        }
+    }
 
     return (
         <CustomCard label={'Profit Calculator'}>
@@ -49,17 +61,31 @@ const ProfitCalculator = () => {
                         prefix={CURRENCY}
                         label="Buy Cost"
                         value={buyCost ?? ""}
-                        onChange={(e) => dispatch(setBuyCost(e.target.value))}
                         type='number'
+                        onChange={(e) => {
+                            const val = toCents(e.target.value);
+                            const formatted = val ? (val / 100).toFixed(2) : ''; // string, e.g. "40.00"
+                            dispatch(setBuyCost(formatted)); // send string
+                        }}
+                        onKeyDown={(e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault(); // block weird keys
+                        }}
                     />
                     <CustomInput
-                        placeholder="Sell Price"
+                        placeholder="Sale Price"
                         prefix={CURRENCY}
-                        label="Sell Price"
-                        value={sellPrice ?? ""}
-                        onChange={(e) => dispatch(setSellPrice(e.target.value))}
+                        label="Sale Price"
+                        value={salePrice ?? ""}
                         type='number'
                         min={0}
+                        onChange={(e) => {
+                            const val = toCents(e.target.value);
+                            const formatted = val ? (val / 100).toFixed(2) : ''; // string, e.g. "40.00"
+                            dispatch(setsalePrice(formatted)); // send string
+                        }}
+                        onKeyDown={(e) => {
+                            if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault(); // block weird keys
+                        }}
                     />
                 </div>
                 <ToggleSwitch
@@ -174,7 +200,7 @@ const ProfitCalculator = () => {
                     </div>
                     <div className={`flex justify-between`}>
                         <span>Sale Price:</span>
-                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(sellPrice * quantity)}</span>
+                        <span className='flex items-center gap-1.5'>{formatNumberWithCommas(salePrice * quantity)}</span>
                     </div>
                     <div className={`flex justify-between`}>
                         <span>Total Profit:</span>

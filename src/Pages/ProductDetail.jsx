@@ -18,6 +18,10 @@ import SellerInfo from '../Components/Widgets/SellerInfo';
 import { getProductOffers } from '../Apis/Offer';
 import AnimationWrapper from '../Components/Layout/AnimationWrapper';
 import ScoreChart from '../Components/UI/ScoreChart';
+import Example from '../Components/UI/TestChart';
+import ChartWraaper from '../Components/Layout/ChartWraaper';
+import Button from '../Components/Controls/Button';
+import { IoHome } from 'react-icons/io5';
 
 
 const ProductDetail = () => {
@@ -32,19 +36,13 @@ const ProductDetail = () => {
     const { products } = useSelector((state) => state.products);
     const { product } = useSelector((state) => state.profitCalc);
 
-    const fadeUpVariant = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5, ease: "easeOut" }
-        }
-    };
-
     const handleGetProduct = async () => {
         const found = products?.find((p) => p?.asin === asin);
+        product?.asin === asin;
         if (found) {
             dispatch(setProduct(found));
+        } else if (product && product?.asin === asin) {
+            dispatch(setProduct(product));
         } else {
             try {
                 setLoading(true);
@@ -97,38 +95,36 @@ const ProductDetail = () => {
     }
 
     return (
-        <div className='grid grid-cols-5 gap-4 h-full items-start p-4 text-secondary min-h-screen bg-lBackground'>
-            <div className='col-span-3 flex flex-col gap-4'>
+        <div className='grid grid-cols-1 lg:grid-cols-5  gap-4 h-full items-start p-4 text-secondary min-h-screen bg-lBackground'>
+            <div className='lg:col-span-3 flex flex-col gap-4'>
                 <AnimationWrapper>
                     <BasicInfo product={product} />
+                </AnimationWrapper>
+                <AnimationWrapper>
+                    <CustomCard>
+                        <ChartWraaper keepaGraphData={product?.graphData?.keepaGraphData} asin={asin} />
+                    </CustomCard>
                 </AnimationWrapper>
 
                 <AnimationWrapper>
                     <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
                 </AnimationWrapper>
-                <AnimationWrapper>
-                    <CustomCard>
-                        <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono py-[15px]'>Offer Count</h1>
-                        <DynamicChart graphData={product?.graphData?.keepaGraphData} graphKeys={OfferGraphKeys} />
-                        <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono py-[15px]'>Price History</h1>
-                        <DynamicChart graphData={product?.graphData?.keepaGraphData} graphKeys={SalesGraphKeys} />
-                    </CustomCard>
-                </AnimationWrapper>
-
             </div>
 
-            <div className='col-span-2 flex flex-col gap-4'>
-
+            <div className='lg:col-span-2 flex flex-col gap-4'>
                 <AnimationWrapper>
                     <ProfitCalculator product={product} />
                 </AnimationWrapper>
                 <AnimationWrapper>
-                    <CustomCard label={'Buddy Score'}>
-                        <ScoreChart />
+                    <CustomCard label={'Seller Central'}>
+                        <div className='flex gap-2 items-center'>
+                            <Button size='medium' className='!px-5' variant='secondary' label={<IoHome size={16} />} />
+                            <Button size='medium' className='!px-5' variant='secondary' label='Add Product' />
+                            <Button size='small' className='!px-5' variant='secondary' label='Inventory' />
+                            <Button size='medium' className='!px-5' variant='secondary' label='Orders' />
+                        </div>
                     </CustomCard>
                 </AnimationWrapper>
-
-
             </div>
         </div>
 

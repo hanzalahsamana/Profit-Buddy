@@ -1,20 +1,20 @@
 import { MIN_PROFIT, MIN_ROI, PLACEMENT_FEE_TYPES } from '../Enums/Enums';
 
-export const calculateMaxCost = (sellPrice, totalFees) => {
-  const maxCostByROI = (sellPrice - totalFees) / (1 + MIN_ROI);
+export const calculateMaxCost = (salePrice, totalFees) => {
+  const maxCostByROI = (salePrice - totalFees) / (1 + MIN_ROI);
 
-  const profit = sellPrice - totalFees - maxCostByROI;
+  const profit = salePrice - totalFees - maxCostByROI;
 
   if (profit >= MIN_PROFIT) {
     return Math.floor(maxCostByROI * 100) / 100;
   } else {
-    const maxCostByProfit = sellPrice - totalFees - MIN_PROFIT;
+    const maxCostByProfit = salePrice - totalFees - MIN_PROFIT;
     return Math.floor(maxCostByProfit * 100) / 100;
   }
 };
 
-export const getFbaFeeRange = (originalSellPrice, fbaFee) => {
-  if (originalSellPrice < 10) {
+export const getFbaFeeRange = (originalSalePrice, fbaFee) => {
+  if (originalSalePrice < 10) {
     return {
       lowestFba: Number(fbaFee.toFixed(2)),
       highestFba: Number((fbaFee + 0.77).toFixed(2)),
@@ -27,20 +27,20 @@ export const getFbaFeeRange = (originalSellPrice, fbaFee) => {
   }
 };
 
-export const calculateTotalFees = (product, sellPrice, storageMonths = 0, isFBA = true, placementFeeType = PLACEMENT_FEE_TYPES[0]) => {
+export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA = true, placementFeeType = PLACEMENT_FEE_TYPES[0]) => {
   const { referralFeePercent = 0, fbaFees = 0, prepFee = 0, closingFee = 0, inboundPlacementFee = {}, inboundShippingFee = 0 } = product?.fees || {};
 
-  const { highestFba, lowestFba } = getFbaFeeRange(product?.info?.sellPrice, fbaFees);
+  const { highestFba, lowestFba } = getFbaFeeRange(product?.info?.salePrice, fbaFees);
 
   const currentPlacementFee = inboundPlacementFee?.[placementFeeType];
 
-  const referralFee = sellPrice * referralFeePercent;
+  const referralFee = salePrice * referralFeePercent;
 
   const appliedInboundShippingFee = isFBA ? inboundShippingFee : 0;
   const storageFee = isFBA ? storageMonths * 0.75 : 0;
   const appliedPrepFee = isFBA ? prepFee : 0;
   const appliedPlacementFee = isFBA ? currentPlacementFee : 0;
-  const fulfillmentFee = isFBA ? (sellPrice < 10 ? lowestFba : highestFba) : 0;
+  const fulfillmentFee = isFBA ? (salePrice < 10 ? lowestFba : highestFba) : 0;
 
   const totalFees = referralFee + fulfillmentFee + appliedInboundShippingFee + storageFee + appliedPrepFee + appliedPlacementFee + closingFee;
 
@@ -64,16 +64,16 @@ export const calculateProfitMargin = (sellingPrice, costPrice, referralFee, fulf
   return profitMargin.toFixed(2);
 };
 
-export const calculateProfit = (sellPrice, costPrice, totalFees) => {
-  return sellPrice - costPrice - (totalFees || 0);
+export const calculateProfit = (salePrice, costPrice, totalFees) => {
+  return salePrice - costPrice - (totalFees || 0);
 };
 
 export const calculateROI = (profit, costPrice) => {
   return ((profit / costPrice) * 100).toFixed(2); // ROI %
 };
 
-export const calculateProfitAndROI = (totalFees, sellPrice, costPrice) => {
-  const profit = calculateProfit(sellPrice, costPrice, totalFees);
+export const calculateProfitAndROI = (totalFees, salePrice, costPrice) => {
+  const profit = calculateProfit(salePrice, costPrice, totalFees);
   const roi = calculateROI(profit, costPrice);
 
   return {

@@ -64,10 +64,83 @@ export const formatDate = (date = '') => {
 
   return new Date(date).toLocaleDateString(locale, dateFormatOptions);
 };
+
 export const formatTime = (date = '') => {
   if (!date) return;
   const locale = 'en-US';
   const timeFormatOptions = { hour: '2-digit', minute: '2-digit' };
 
   return new Date(date).toLocaleTimeString(locale, timeFormatOptions);
+};
+
+export const areEqual = (prevProps, nextProps) => {
+  return (
+    prevProps.size === nextProps.size &&
+    prevProps.showLegend === nextProps.showLegend &&
+    prevProps.graphKeys === nextProps.graphKeys &&
+    JSON.stringify(prevProps.graphData) === JSON.stringify(nextProps.graphData)
+  );
+};
+
+export function calculateZoomRange(left, right) {
+  if (!left || !right) return null;
+
+  const diffMs = Math.abs(right - left);
+
+  return {
+    ms: diffMs,
+    seconds: diffMs / 1000,
+    minutes: diffMs / (1000 * 60),
+    hours: diffMs / (1000 * 60 * 60),
+    days: diffMs / (1000 * 60 * 60 * 24),
+    months: diffMs / (1000 * 60 * 60 * 24 * 30), // rough estimate
+    years: diffMs / (1000 * 60 * 60 * 24 * 365), // rough estimate
+  };
+}
+
+// Formats a single tick label based on the current zoom range
+export const formatDateTick = (timestamp, left, right) => {
+  if (!left || !right) return null;
+
+  const zoomRange=  calculateZoomRange(left, right);
+  const date = new Date(timestamp);
+
+  if (zoomRange > 180 * 24 * 3600 * 1000) {
+    // > 6 months
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  } else if (zoomRange > 30 * 24 * 3600 * 1000) {
+    // > 1 month
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  } else if (zoomRange > 24 * 3600 * 1000) {
+    // > 1 day
+    return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  } else {
+    // < 1 day → show hours/mins
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+};
+
+// Generates an array of ticks depending on zoom range
+export const getAdaptiveTicks = (start, end) => {
+  const ticks = [];
+  const zoomRange = end - start;
+
+  let step;
+
+  if (zoomRange > 180 * 24 * 3600 * 1000) {
+    step = 30 * 24 * 3600 * 1000; // 1 month
+  } else if (zoomRange > 30 * 24 * 3600 * 1000) {
+    step = 7 * 24 * 3600 * 1000; // 1 week
+  } else if (zoomRange > 10 * 24 * 3600 * 1000) {
+    step = 2 * 24 * 3600 * 1000; // 2 days
+  } else if (zoomRange > 24 * 3600 * 1000) {
+    step = 24 * 3600 * 1000; // 1 day
+  } else {
+    step = 5 * 60 * 1000; // 5 minutes
+  }
+
+  for (let t = start; t <= end; t += step) {
+    ticks.push(t);
+  }
+  return ticks;
 };

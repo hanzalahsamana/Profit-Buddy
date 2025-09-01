@@ -45,7 +45,7 @@ const CustomerSupport = () => {
     }, [isOpen]);
 
     return (
-        <div className="z-[2000] bg-primary">
+        <div className="z-50 bg-primary">
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="fixed bottom-4 right-4 bg-accent/20 backdrop-blur-[2px]  border-[1.5px] animteUpDown border-accent outline-accent cursor-pointer group p-4 rounded-full shadow-lg  transition "

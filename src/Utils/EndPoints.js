@@ -7,4 +7,5 @@ export const EndPoints = {
   getProductOffer: `${BASE_URL}/get/product-offers`,
   graphImageWithProxy: `${BASE_URL}/get/graph-image`,
   findProductAsin: `${BASE_URL}/get/find-product-asins`,
+  getGraphData: `${BASE_URL}/get/graph-data`,
 };
