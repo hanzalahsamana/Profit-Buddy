@@ -17,7 +17,7 @@ const ProductImageGrid = ({ images = [], listPrice = 0 }) => {
 
     return (
         <div
-            className="grid gap-2   h-full max-w-[220px] min-w-[220px]"
+            className="grid gap-2   !h-full max-w-[220px] min-w-[220px]"
             style={{
                 gridTemplateColumns: "repeat(3, auto)",
                 gridTemplateRows: "repeat(3, auto)",

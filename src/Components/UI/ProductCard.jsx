@@ -81,7 +81,7 @@ const ProductCard = ({ product }) => {
                         <tbody>
                           <tr className="hover:bg-accent/5 transition">
                             <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{info?.monthlySold ? `${abbreviateNumber(info?.monthlySold)}+/mo` : 'Unknown'}</td>
-                            <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{info?.buybox <= 0 ? 'Unknown' : formatNumberWithCommas(info?.buybox)}</td>
+                            <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{info?.buybox <= 0 ? 'Surpressed BB' : formatNumberWithCommas(info?.buybox)}</td>
                             <td className="px-1 py-1.5 text-center text-lText border-r border-accent">{(info?.sellRank && info?.sellRank >= 0) ? `#${formatNumberWithCommas(info?.sellRank, 0, false, true)}` : 'Unknown'}</td>
                             <td className="px-1 py-1.5 text-center text-lText">
                               {(() => {
@@ -159,10 +159,10 @@ const ProductCard = ({ product }) => {
 
             <div className='flex flex-col gap-2 items-center h-full bg-white rounded-lg '>
               <div className='w-[450px] h-max overflow-hidden  '>
-                <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={SalesGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false}/>
+                <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={SalesGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />
               </div>
               <div className='w-[450px] h-max overflow-hidden  '>
-                <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={OfferGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false}/>
+                <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={OfferGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />
               </div>
             </div>
           </div >

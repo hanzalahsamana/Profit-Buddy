@@ -105,7 +105,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             <Tooltip
                                                 id={offer?.sellerInfo?.id}
                                                 place="top"
-                                                className="!bg-secondary !bg-opacity-100 !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !backdrop-blur-0 !shadow-lg"
+                                                className="!bg-secondary !z-[20] !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !shadow-none"
                                                 content={
                                                     <div className="text-left space-y-0.5">
                                                         <div className="font-medium text-primary mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>

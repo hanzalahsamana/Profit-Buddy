@@ -43,7 +43,7 @@ const Header = () => {
 
                 <div className='flex gap-2 items-center'>
                     <ToggleSwitch options={['Dark', 'Light']} selected={theme ? 'Dark' : 'Light'} onChange={(value) => dispatch(setTheme(value === 'Dark'))} />
-                    <Button size='medium' corner='full' label='Spy A Seller' action={() => setModalOpen(!modalOpen)} />
+                    <Button size='medium' corner='full' label='Store Spy' action={() => setModalOpen(!modalOpen)} />
                 </div>
 
             </div>
@@ -53,11 +53,11 @@ const Header = () => {
             <Modal
                 isOpen={modalOpen}
                 setIsOpen={setModalOpen}
-                label='SPY A Seller'
+                label='Store Spy'
                 subText='Search sellers by thier ID'
                 actions={<>
                     <Button label='Cancel' size='medium' variant='outline' />
-                    <Button type='submit' label='SPY A SELLER' size='medium' variant='secondary' action={handleSubmit} />
+                    <Button type='submit' label='Store Spy' size='medium' variant='secondary' action={handleSubmit} />
                 </>}>
                 <form onSubmit={handleSubmit}>
                     <CustomInput label={'Search Seller'} value={sellerId} onChange={(e) => setSellerId(e.target.value)} error={inputError} prefix={'Seller Id'} />

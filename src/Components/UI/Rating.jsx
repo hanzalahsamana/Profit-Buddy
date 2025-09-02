@@ -2,6 +2,7 @@ import React from 'react';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 
 const Rating = ({ rating = 0, count = 0 , className }) => {
+
   const stars = [];
 
   // Create 5 stars based on the rating value
@@ -16,9 +17,9 @@ const Rating = ({ rating = 0, count = 0 , className }) => {
   }
 
   return (
-    <div className={`flex items-center gap-2 py-0.5 ${className}`}>
+    <div className={`flex items-end gap-2 py-0.5 ${className}`}>
       <div className="flex text-[15px]">{stars}</div>
-      <span className="text-[12px] text-lText">{`(${count})`}</span>
+      <span className="text-[13px]/[13px] text-secondary">{`(${count})`}</span>
     </div>
   );
 };

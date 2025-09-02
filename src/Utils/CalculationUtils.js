@@ -28,7 +28,7 @@ export const getFbaFeeRange = (originalSalePrice, fbaFee) => {
 };
 
 export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA = true, placementFeeType = PLACEMENT_FEE_TYPES[0]) => {
-  const { referralFeePercent = 0, fbaFees = 0, prepFee = 0, closingFee = 0, inboundPlacementFee = {}, inboundShippingFee = 0 } = product?.fees || {};
+  const { referralFeePercent = 0, fbaFees = 0, prepFee = 0, closingFee = 0, storageFees = 0, inboundPlacementFee = {}, inboundShippingFee = 0 } = product?.fees || {};
 
   const { highestFba, lowestFba } = getFbaFeeRange(product?.info?.salePrice, fbaFees);
 
@@ -37,19 +37,19 @@ export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA 
   const referralFee = salePrice * referralFeePercent;
 
   const appliedInboundShippingFee = isFBA ? inboundShippingFee : 0;
-  const storageFee = isFBA ? storageMonths * 0.75 : 0;
+  const convertedStorageFee = isFBA ? storageMonths * storageFees : 0;
   const appliedPrepFee = isFBA ? prepFee : 0;
   const appliedPlacementFee = isFBA ? currentPlacementFee : 0;
   const fulfillmentFee = isFBA ? (salePrice < 10 ? lowestFba : highestFba) : 0;
 
-  const totalFees = referralFee + fulfillmentFee + appliedInboundShippingFee + storageFee + appliedPrepFee + appliedPlacementFee + closingFee;
+  const totalFees = referralFee + fulfillmentFee + appliedInboundShippingFee + convertedStorageFee + appliedPrepFee + appliedPlacementFee + closingFee;
 
   return {
     referralFeePercent,
     referralFee,
     fulfillmentFee,
     inboundShippingFee: appliedInboundShippingFee,
-    storageFee,
+    storageFee: convertedStorageFee,
     prepFee: appliedPrepFee,
     placementFee: appliedPlacementFee,
     closingFee,
@@ -82,9 +82,9 @@ export const calculateProfitAndROI = (totalFees, salePrice, costPrice) => {
   };
 };
 
-export const calculateOfferProfitAndROI = (product, offerPrice, storageMonth, fulfillment, buyCost , placementFeeType) => {
+export const calculateOfferProfitAndROI = (product, offerPrice, storageMonth, fulfillment, buyCost, placementFeeType) => {
   try {
-    const fees = calculateTotalFees(product ?? {}, Number(offerPrice) || 0, storageMonth ?? 0, fulfillment === 'FBA' ,placementFeeType );
+    const fees = calculateTotalFees(product ?? {}, Number(offerPrice) || 0, storageMonth ?? 0, fulfillment === 'FBA', placementFeeType);
 
     const { profit = 0, roi = 0 } = calculateProfitAndROI(fees?.totalFees, Number(offerPrice) || 0, Number(buyCost) || 0) || {};
 
@@ -93,4 +93,15 @@ export const calculateOfferProfitAndROI = (product, offerPrice, storageMonth, fu
     console.error('Error in safeProfitAndROI:', err);
     return { profit: 0, roi: 0 };
   }
+};
+
+export const calculateEstimatSellerAsinRevenue = (product, noOfSeller = 1) => {
+  if (!product || !product.info) return 0;
+
+  const { buybox, salePrice, monthlySold } = product.info;
+  const avgPrice = salePrice || buybox || 0;
+  const sellerSales = noOfSeller > 1 ? monthlySold / noOfSeller : monthlySold;
+  const estimatedRevenue = sellerSales * avgPrice;
+
+  return estimatedRevenue;
 };
