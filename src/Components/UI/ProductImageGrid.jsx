@@ -16,28 +16,15 @@ const ProductImageGrid = ({ images = [], listPrice = 0 }) => {
     }
 
     return (
-        <div
-            className="grid gap-2   !h-full max-w-[220px] min-w-[220px]"
-            style={{
-                gridTemplateColumns: "repeat(3, auto)",
-                gridTemplateRows: "repeat(3, auto)",
-            }}
-        >
-            {/* {sideImgs.map((img, i) => (
-                <div
-                    key={uuidv4()}
-                    className="aspect-square bg-white border border-border rounded-[8px] p-0.5 overflow-hidden"
-                    style={{ gridRowStart: i + 1 }}
-                >
-                    <img
-                        src={img || placeholder}
-                        alt={`product-thumbnail-${i + 1}`}
-                        className="w-full h-full object-contain rounded-[8px]"
-                    />
-                </div>
-            ))} */}
+        // <div
+        //     className="grid gap-2   !h-full max-w-[220px] min-w-[220px]"
+        //     style={{
+        //         gridTemplateColumns: "repeat(3, auto)",
+        //         gridTemplateRows: "repeat(3, auto)",
+        //     }}
+        // >
 
-            <div className="relative  col-span-3 row-span-3 bg-white border border-border rounded-[8px] overflow-hidden p-1">
+            <div className="relative w-[220px] max-w-[220px] h-auto min-h-full bg-white border border-border rounded-[8px] overflow-hidden p-1">
                 <img
                     src={mainImage || placeholder}
                     alt="product"
@@ -49,7 +36,7 @@ const ProductImageGrid = ({ images = [], listPrice = 0 }) => {
                     </div>
                 )}
             </div>
-        </div>
+        // </div>
     );
 }
 

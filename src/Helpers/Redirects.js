@@ -27,3 +27,21 @@ export const redirectToGoogleSearch = (e, searchTerm) => {
   const encoded = encodeURIComponent(searchTerm.trim());
   openInNewTab(e, `https://www.google.com/search?q=${encoded}`);
 };
+export const redirectToSellerCentralHome = (e) => {
+  openInNewTab(e, `https://sellercentral.amazon.com/`);
+};
+
+export const redirectToSellerCentralAddProduct = (e, asin) => {
+  if (!asin) return;
+  openInNewTab(e, `https://sellercentral.amazon.com/abis/listing/syh?asin=${asin}`);
+};
+
+export const redirectToSellerCentralInventory = (e, asin) => {
+  if (!asin) return;
+  openInNewTab(e, `https://sellercentral.amazon.com/myinventory/inventory?searchTerm=${asin}`);
+};
+
+export const redirectToSellerCentralOrders = (e, asin) => {
+  if (!asin) return;
+  openInNewTab(e, `https://sellercentral.amazon.com/orders-v3/search?q=${asin}&qt=asin`);
+};

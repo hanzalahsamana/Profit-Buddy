@@ -22,6 +22,7 @@ import Example from '../Components/UI/TestChart';
 import ChartWraaper from '../Components/Layout/ChartWraaper';
 import Button from '../Components/Controls/Button';
 import { IoHome } from 'react-icons/io5';
+import SellerCentral from '../Components/Widgets/SellerCentral';
 
 
 const ProductDetail = () => {
@@ -116,14 +117,7 @@ const ProductDetail = () => {
                     <ProfitCalculator product={product} />
                 </AnimationWrapper>
                 <AnimationWrapper>
-                    <CustomCard label={'Seller Central'}>
-                        <div className='flex gap-2 items-center'>
-                            <Button size='medium' className='!px-5' variant='secondary' label={<IoHome size={16} />} />
-                            <Button size='medium' className='!px-5' variant='secondary' label='Add Product' />
-                            <Button size='small' className='!px-5' variant='secondary' label='Inventory' />
-                            <Button size='medium' className='!px-5' variant='secondary' label='Orders' />
-                        </div>
-                    </CustomCard>
+                    <SellerCentral product={product}/>
                 </AnimationWrapper>
             </div>
         </div>

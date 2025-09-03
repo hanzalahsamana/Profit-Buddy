@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+import { formatNumberWithCommas } from '../../Utils/NumberUtil';
 
 const Rating = ({ rating = 0, count = 0 , className }) => {
 
@@ -17,9 +18,9 @@ const Rating = ({ rating = 0, count = 0 , className }) => {
   }
 
   return (
-    <div className={`flex items-end gap-2 py-0.5 ${className}`}>
+    <div className={`flex items-end gap-2 py-0.5 text-secondary ${className}`}>
       <div className="flex text-[15px]">{stars}</div>
-      <span className="text-[13px]/[13px] text-secondary">{`(${count})`}</span>
+      <span className="text-[13px]/[13px] font-medium ">{`(${formatNumberWithCommas(count , 0 , false , true)})`}</span>
     </div>
   );
 };

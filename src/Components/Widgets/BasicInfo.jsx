@@ -16,16 +16,16 @@ const BasicInfo = ({ product }) => {
 
     return (
         <CustomCard >
-            <div className='flex items-center gap-4 relative '>
-                <ProductImageGrid images={product?.images} listPrice={product?.info?.listPrice} />
+            <div className='flex  gap-4 relative '>
+                <ProductImageGrid images={product?.images} listPrice={product?.info?.listPrice}  />
                 {/* <div className=''>
                     <img src={product?.images[0]} className=' w-full h-full min-w-[250px] max-w-[250px] aspect-square bg-white rounded-lg  object-contain border border-border' alt="" />
                 </div> */}
                 <div className='flex flex-col gap-2.5 flex-1 '>
-                    <p className='font-semibold text-xl/[28px]  capitalize  tracking-tight'>{product?.title}</p>
+                    <p className='font-semibold text-xl/[28px]  capitalize line-clamp-2  tracking-tight' title={product?.title}>{product?.title}</p>
                     <div className='flex items-end h-full gap-2 flex-1'>
                         <div className='flex flex-1 flex-col gap-3 justify-between h-full'>
-                            <div className='flex gap-2 items-end'>
+                            <div className='flex flex-wrap gap-2 items-end'>
                             {product?.category && (<p className='text-[14px]/[14px] capitalize flex items-end gap-1 text-secondary font-medium'><span className='text-lText text-[14px]/[14px]'>Category:</span>{product?.category}</p>)}
                             {product?.brand && (<p className='text-[14px]/[14px] capitalize flex items-end gap-1 text-secondary font-medium'><span className='text-lText text-[14px]/[14px]'>|| Brand:</span>{product?.brand}</p>)}
                             </div>

@@ -38,12 +38,12 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter }) => {
                 <div className='pt-[20px] '>
                     <div className='flex flex-col gap-3  overflow-hidden text-sm '>
 
-                        <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
+                        {/* <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
                             <p className='text-base flex gap-2 items-center text-secondary/90'><CiDeliveryTruck strokeWidth={0} size={20} />Ships From</p>
                             <p className='text-secondary flex items-center gap-2 text-base'>{seller?.shipsFrom}</p>
-                        </div>
+                        </div> */}
                         <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
-                            <p className='text-base flex gap-2 items-center text-secondary/90'><SlKey strokeWidth={0} size={18} />Asin Counts</p>
+                            <p className='text-base flex gap-2 items-center text-secondary/90'><SlKey strokeWidth={0} size={18} />Product Counts</p>
                             <p className='text-secondary flex items-center gap-2 text-base'>{seller?.totalAsins}</p>
                         </div>
                         <div className='flex  justify-between bg-border/50 rounded-md ap-2  py-2 px-3'>

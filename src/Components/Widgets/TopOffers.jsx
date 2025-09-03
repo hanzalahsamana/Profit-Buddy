@@ -60,14 +60,14 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                     return (
                                         <tr
                                             key={index}
-                                            className="hover:bg-accent/5 text-secondary font-light transition even:bg-accent/10"
+                                            className="hover:bg-accent/20 bg-accent/5 text-secondary font-light transition "
                                         >
                                             <td className="px-1 py-1.5 text-center border-r border-accent">
                                                 {index + 1}
                                             </td>
 
-                                            <td className="px-1 py-1.5 text-center border-r border-accent">
-                                                <span data-tooltip-id={offer?.sellerInfo?.id} onClick={() => window.open(`/sellerProfile?sellerid=${encodeURIComponent(offer?.sellerInfo?.id?.trim())}`, "_blank")} className='cursor-pointer'>{offer?.seller}</span>
+                                            <td className="px-1 py-1.5 text-center border-r border-accent ">
+                                                <span className='cursor-pointer hover:text-accent' data-tooltip-id={offer?.sellerInfo?.id} onClick={() => window.open(`/sellerProfile?sellerid=${encodeURIComponent(offer?.sellerInfo?.id?.trim())}`, "_blank")}>{offer?.seller}</span>
                                             </td>
 
                                             <td className="px-1 py-1.5 text-center border-r border-accent">
@@ -105,11 +105,12 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             <Tooltip
                                                 id={offer?.sellerInfo?.id}
                                                 place="top"
-                                                className="!bg-secondary !z-[20] !p-2 !text-[12px] !text-primary !items-center !rounded-md !transition-none !shadow-none"
+                                                opacity={1}
+                                                className="!bg-secondary !z-[20] !p-2 !text-[12px] !text-primary !items-center !rounded-md  !shadow-none"
                                                 content={
-                                                    <div className="text-left space-y-0.5">
-                                                        <div className="font-medium text-primary mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
-                                                        <Rating className={'text-[12px]'} count={offer?.sellerInfo?.ratingCount} rating={offer?.sellerInfo?.rating} />
+                                                    <div className="text-left space-y-0.5 ">
+                                                        <div className="font-semibold text-primary mb-1 text-[12px]">{offer?.sellerInfo?.name}</div>
+                                                        <Rating className={'text-[12px] !text-primary'} count={offer?.sellerInfo?.ratingCount} rating={offer?.sellerInfo?.rating} />
                                                     </div>
                                                 }
                                             />

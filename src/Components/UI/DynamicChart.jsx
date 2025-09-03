@@ -85,30 +85,18 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
 
 
   return (
-    <div className={`bg-white  rounded-lg !select-none ${size === "small" ? "w-[150%] h-[180px] scale-x-[0.65] scale-y-[0.55] origin-top-left" : "w-full"} `}>
+    <div className={`bg-white  rounded-lg !select-none ${size === "small" ? "w-[150%] h-[180px] scale-x-[0.65] scale-y-[0.60] origin-top-left" : "w-full"}  `}>
       <ResponsiveContainer width="100%" height={280}>
         <ComposedChart
           data={graphData}
           syncId={syncID}
-          margin={{ top: 10, right: 40, left: size === "small" ? 40 : 20, bottom: 10, }}
+          margin={{ top: size === "small" ? 40 : 10, right: 40, left: size === "small" ? 40 : 20, bottom: 10, }}
           onMouseDown={wantsDrag ? onDragStart : undefined}
           onMouseMove={wantsDrag ? onDragMove : undefined}
           onMouseUp={wantsDrag ? onDragEnd : undefined}
         >
           <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
           <ReferenceLine y={39} stroke="red" label="Max PV PAGE" />
-          {/* <XAxis
-            dataKey="date"
-            type="number"
-            scale="time"
-            allowDataOverflow
-          
-            min={2}
-            domain={[left, right]}
-            interval={0}
-            }
-            /> */}
-
           <XAxis
             dataKey="date"
             tick={{ fontSize: size === "small" ? '17px' : '13px', fill: "#000000b1", fontWeight: "600", dx: 5, dy: 10, }}
@@ -122,8 +110,6 @@ const DynamicChart = React.memo(({ graphData = [], graphKeys = {}, size = "large
               })}
             ticks={getEvenlySpacedTicks(graphData, 5)}
           />
-          {/* ticks={getEvenlySpacedTicks(graphData, 5)} */}
-          {/* tickFormatter={(value) => formatDate(value)} */}
 
           {leftKeys.length > 0 && (
             <YAxis
