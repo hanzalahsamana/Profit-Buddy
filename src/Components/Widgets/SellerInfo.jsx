@@ -12,6 +12,7 @@ import { redirectToAmazonSellerPage } from '../../Helpers/Redirects';
 import { FiLoader } from 'react-icons/fi';
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { IoBagOutline } from 'react-icons/io5';
+import { formatNumberWithCommas } from '../../Utils/NumberUtil';
 
 const SellerInfo = ({ className, seller, handleFilterClick, queryFilter, sellerRevenue, sellerRevenueLoading }) => {
     const { theme } = useSelector((state) => state.system);
@@ -50,7 +51,7 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter, sellerR
                         </div>
                         <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
                             <p className='text-base flex gap-2 items-center text-secondary/90'><RiMoneyDollarCircleLine strokeWidth={0} size={20} />Seller Revenue</p>
-                            <p className='text-secondary flex items-center gap-2 text-base'>{sellerRevenueLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : sellerRevenue}</p>
+                            <p className='text-secondary flex items-center gap-2 text-base'>{sellerRevenueLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : formatNumberWithCommas(sellerRevenue / 100)}</p>
                         </div>
                     </div>
 
