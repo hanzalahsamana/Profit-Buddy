@@ -7,7 +7,7 @@ const GraphCardLoader = () => {
     const backgroundColor = theme ? "#ededeb90" : "#dadada";
     const foregroundColor = theme ? "#e8e8e3" : "#b6b6b6";
     return (
-        <div className='flex items-center justify-start max-w-full overflow-hidden gap-4 border border-border rounded-[12px] bg-primary h-[230px] p-3'>
+        <div className='flex items-center justify-start max-w-full overflow-hidden rounded-[8px] bg-primary h-[280px]'>
             <div className='h-full flex-1 w-full'>
                 <ContentLoader
                     speed={1}

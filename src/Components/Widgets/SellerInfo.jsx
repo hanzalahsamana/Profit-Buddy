@@ -9,8 +9,11 @@ import { SlKey } from "react-icons/sl";
 import { IconImages } from '../../Enums/Enums';
 import { useSelector } from 'react-redux';
 import { redirectToAmazonSellerPage } from '../../Helpers/Redirects';
+import { FiLoader } from 'react-icons/fi';
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { IoBagOutline } from 'react-icons/io5';
 
-const SellerInfo = ({ className, seller, handleFilterClick, queryFilter }) => {
+const SellerInfo = ({ className, seller, handleFilterClick, queryFilter, sellerRevenue, sellerRevenueLoading }) => {
     const { theme } = useSelector((state) => state.system);
     return (
         <div className={`grid grid-cols-4 gap-4 h-auto items-start text-secondary ${className}`}>
@@ -32,29 +35,28 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter }) => {
                             View On Amazon
                         </span>}
                     />
-
                 </div>
 
                 <div className='pt-[20px] '>
                     <div className='flex flex-col gap-3  overflow-hidden text-sm '>
 
-                        {/* <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
-                            <p className='text-base flex gap-2 items-center text-secondary/90'><CiDeliveryTruck strokeWidth={0} size={20} />Ships From</p>
-                            <p className='text-secondary flex items-center gap-2 text-base'>{seller?.shipsFrom}</p>
-                        </div> */}
                         <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
-                            <p className='text-base flex gap-2 items-center text-secondary/90'><SlKey strokeWidth={0} size={18} />Product Counts</p>
+                            <p className='text-base flex gap-2 items-center text-secondary/90'><IoBagOutline strokeWidth={0} size={18} />Product Counts</p>
                             <p className='text-secondary flex items-center gap-2 text-base'>{seller?.totalAsins}</p>
                         </div>
                         <div className='flex  justify-between bg-border/50 rounded-md ap-2  py-2 px-3'>
                             <p className='text-base flex gap-2 items-center text-secondary/90'><LuUserRound size={18} />Seller ID</p>
                             <p className='text-secondary flex items-center gap-2 text-base'>{seller?.id} <CopyButton className={'hover:text-secondary/50'} text={seller?.id} /></p>
                         </div>
+                        <div className='flex  justify-between bg-border/50 rounded-md ap-2   py-2 px-3'>
+                            <p className='text-base flex gap-2 items-center text-secondary/90'><RiMoneyDollarCircleLine strokeWidth={0} size={20} />Seller Revenue</p>
+                            <p className='text-secondary flex items-center gap-2 text-base'>{!sellerRevenueLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : sellerRevenue}</p>
+                        </div>
                     </div>
 
                 </div>
             </CustomCard >
-            
+
             <CustomCard className={'col-span-1'} label={'Categories'}>
                 <div className='flex flex-col gap-4 max-h-[180px] overflow-auto customScroll pr-2'>
                     {seller?.categories?.map((category, idx) => (

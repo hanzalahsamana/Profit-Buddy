@@ -11,7 +11,7 @@ import ProductCard from "../Components/UI/ProductCard";
 import SelectedFilters from "../Components/UI/SelectedFilters";
 import Button from "../Components/Controls/Button";
 
-import { getSellerInfo } from "../Apis/Seller";
+import { getSellerInfo, getSellerRevenue } from "../Apis/Seller";
 import { findProductAsin, getProduct } from "../Apis/Product";
 import { buildSellerAsinQuery } from "../Helpers/BuildQuery";
 
@@ -28,6 +28,8 @@ const SellerProfile = () => {
     const { seller, sellerLoading, sellerCurrentPage, sellerProductsLoading } = useSelector((state) => state?.seller);
     const { products = [], asins = [] } = seller || {};
     const [productsQuery, setProductsQuery] = useState({});
+    const [sellerRevenue, setSellerRevenue] = useState(0);
+    const [sellerRevenueLoading, setSellerRevenueLoading] = useState(true);
     const [queryFilterLocal, setQueryFilterLocal] = useState(FILTER_INITIAL);
 
     /** Fetch Seller Info */
@@ -84,6 +86,21 @@ const SellerProfile = () => {
         }
     }, [dispatch, asins, sellerCurrentPage]);
 
+    /** Fetch Seller Revenue */
+    const handleGetSellerRevenue = useCallback(async () => {
+        if (!asins?.length || !sellerId) return;
+        try {
+            setSellerRevenueLoading(true);
+            const validPageAsins = Array.isArray(asins) ? asins.slice(0, 90).join(",") : "";
+            const sellerRevenue = await getSellerRevenue(sellerId, validPageAsins);
+            setSellerRevenue(sellerRevenue);
+        } catch (error) {
+            console.error("Failed to fetch Seller Products:", error);
+        } finally {
+            setSellerRevenueLoading(false);
+        }
+    }, [asins]);
+
     /** Filter Handlers */
     const handleFilterClick = (type, value) => {
         setQueryFilterLocal((prev) => {
@@ -125,6 +142,10 @@ const SellerProfile = () => {
         if (asins?.length) handleGetSellerProducts();
     }, [asins, sellerCurrentPage]);
 
+    useEffect(() => {
+        if (asins?.length) handleGetSellerRevenue();
+    }, [asins]);
+
     /** UI States */
     if (sellerLoading) {
         return (
@@ -151,6 +172,8 @@ const SellerProfile = () => {
                 seller={seller}
                 handleFilterClick={handleFilterClick}
                 queryFilter={queryFilterLocal}
+                sellerRevenue={sellerRevenue}
+                sellerRevenueLoading={sellerRevenueLoading}
             />
 
             <SelectedFilters

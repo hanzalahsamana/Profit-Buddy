@@ -8,4 +8,5 @@ export const EndPoints = {
   graphImageWithProxy: `${BASE_URL}/get/graph-image`,
   findProductAsin: `${BASE_URL}/get/find-product-asins`,
   getGraphData: `${BASE_URL}/get/graph-data`,
+  getSellerRevenue: `${BASE_URL}/get/calculate-seller-revenue`,
 };

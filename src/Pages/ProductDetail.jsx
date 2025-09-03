@@ -1,28 +1,19 @@
 import { useSearchParams } from 'react-router-dom';
-import { OfferData, ProductSearchData } from '../Utils/MockData';
 import ProfitCalculator from '../Components/Widgets/ProfitCalculator';
 import { useEffect, useState } from 'react';
 import { setProduct } from '../Redux/Slices/profitCalcSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import TopOffers from '../Components/Widgets/TopOffers';
 import BasicInfo from '../Components/Widgets/BasicInfo';
-import Graphs from '../Components/Widgets/Graphs';
-import DynamicChart from '../Components/UI/DynamicChart';
-import { OfferGraphKeys, SalesGraphKeys } from '../Enums/Enums';
 import CustomCard from '../Components/UI/CustomCard';
 import { searchProducts } from '../Apis/Product';
 import { FiLoader } from "react-icons/fi";
 import { MdOutlineSearchOff } from "react-icons/md";
-import { motion } from 'framer-motion';
-import SellerInfo from '../Components/Widgets/SellerInfo';
 import { getProductOffers } from '../Apis/Offer';
 import AnimationWrapper from '../Components/Layout/AnimationWrapper';
-import ScoreChart from '../Components/UI/ScoreChart';
-import Example from '../Components/UI/TestChart';
-import ChartWraaper from '../Components/Layout/ChartWraaper';
-import Button from '../Components/Controls/Button';
-import { IoHome } from 'react-icons/io5';
 import SellerCentral from '../Components/Widgets/SellerCentral';
+import SalesAndOfferDygraphs from '../Components/Widgets/SalesAndOfferDygraphs ';
+import ChartWraaper from '../Components/Layout/ChartWraaper';
 
 
 const ProductDetail = () => {
@@ -86,7 +77,7 @@ const ProductDetail = () => {
         );
     }
 
-    if (!product) {
+    if (!product || Object.keys(product).length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-16 text-gray-500">
                 <MdOutlineSearchOff className="w-8 h-8 mb-2" />
@@ -98,11 +89,13 @@ const ProductDetail = () => {
     return (
         <div className='grid grid-cols-1 lg:grid-cols-5  gap-4 h-full items-start p-4 text-secondary min-h-screen bg-lBackground'>
             <div className='lg:col-span-3 flex flex-col gap-4'>
+
                 <AnimationWrapper>
                     <BasicInfo product={product} />
                 </AnimationWrapper>
                 <AnimationWrapper>
                     <CustomCard>
+                        {/* <SalesAndOfferDygraphs graphData={product?.graphData?.keepaGraphData} /> */}
                         <ChartWraaper keepaGraphData={product?.graphData?.keepaGraphData} asin={asin} />
                     </CustomCard>
                 </AnimationWrapper>
@@ -117,11 +110,10 @@ const ProductDetail = () => {
                     <ProfitCalculator product={product} />
                 </AnimationWrapper>
                 <AnimationWrapper>
-                    <SellerCentral product={product}/>
+                    <SellerCentral product={product} />
                 </AnimationWrapper>
             </div>
         </div>
-
     );
 }
 

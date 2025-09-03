@@ -12,3 +12,16 @@ export const getSellerInfo = async (sellerId = '') => {
     throw error;
   }
 };
+
+export const getSellerRevenue = async (sellerId = '', sellerAsins = '') => {
+  try {
+    const query = new URLSearchParams({
+      sellerId,
+      sellerAsins,
+    });
+    const { data } = await axios.get(`${EndPoints.getSellerRevenue}?${query.toString()}`);
+    return data?.sellerRevenue;
+  } catch (error) {
+    throw error;
+  }
+};

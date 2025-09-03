@@ -102,7 +102,7 @@ export function calculateZoomRange(left, right) {
 export const formatDateTick = (timestamp, left, right) => {
   if (!left || !right) return null;
 
-  const zoomRange=  calculateZoomRange(left, right);
+  const zoomRange = calculateZoomRange(left, right);
   const date = new Date(timestamp);
 
   if (zoomRange > 180 * 24 * 3600 * 1000) {
@@ -144,3 +144,45 @@ export const getAdaptiveTicks = (start, end) => {
   }
   return ticks;
 };
+
+function generateEqualTimestamps(startMs, endMs, count = 100) {
+  if (count < 2) return [startMs, endMs];
+
+  const gap = (endMs - startMs) / (count - 1);
+  const timestamps = [];
+
+  for (let i = 0; i < count; i++) {
+    timestamps.push(Math.round(startMs + gap * i));
+  }
+
+  return timestamps;
+}
+
+function findMinMax(data, keys) {
+  let min = Infinity;
+  let max = -Infinity;
+
+  for (const item of data) {
+    for (const key of keys) {
+      const value = item[key];
+      if (typeof value === 'number') {
+        if (value < min) min = value;
+        if (value > max) max = value;
+      }
+    }
+  }
+
+  return { min, max };
+}
+
+function applyPercentage(num, method, percentage) {
+  const change = (num * percentage) / 100;
+
+  if (method === 'add') {
+    return Math.ceil(num + change);
+  } else if (method === 'sub') {
+    return Math.max(0, Math.floor(num - change));
+  } else {
+    return num;
+  }
+}
