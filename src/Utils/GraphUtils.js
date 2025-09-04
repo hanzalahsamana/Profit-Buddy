@@ -56,6 +56,10 @@ export const generateTicks = (min, max, step = 5) => {
 
   return ticks;
 };
+export const formatYear = (date = '') => {
+  if (!date) return;
+  return new Date(date).getFullYear();
+};
 
 export const formatDate = (date = '') => {
   if (!date) return;

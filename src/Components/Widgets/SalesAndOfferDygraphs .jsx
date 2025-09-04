@@ -1,166 +1,291 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Dygraph from 'dygraphs';
 import 'dygraphs/dist/dygraph.css';
-import { synchronize } from 'dygraphs/dist/extras/synchronizer';
 import CustomTooltip from '../UI/Graph/CustomTooltip';
+import { formatNumberWithCommas } from '../../Utils/NumberUtil';
+import { attachTooltipSync, synchronize } from '../../Utils/DygraphSynchronizer';
+import Button from '../Controls/Button';
+import { LuRefreshCw } from 'react-icons/lu';
 
-const SalesAndOfferDygraphs = ({ graphData }) => {
+const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loading, size = 'large' }) => {
 
-      if (!graphData?.length) return (
-    <div className=" w-full border border-border !h-full min-h-[240px] flex flex-col gap-0 items-center justify-center bg-primary">
-      <p className="font-normal text-lg text-secondary ">Sorry, No Price and Offer History Available</p>
-      <p className="font-normal text-xs text-lText ">May be this product is new or is not offered by any seller</p>
-    </div>
-  );
+    if (!graphData?.length) return (
+        <div className=" w-full border border-border !h-full min-h-[240px] flex flex-col gap-0 items-center justify-center bg-primary">
+            <p className="font-normal text-lg text-secondary ">Sorry, No Price and Offer History Available</p>
+            <p className="font-normal text-xs text-lText ">May be this product is new or is not offered by any seller</p>
+        </div>
+    );
+
     const salesRef = useRef(null);
     const offerRef = useRef(null);
     const [gSales, setGSales] = useState(null);
     const [gOffer, setGOffer] = useState(null);
-    const [tooltipData, setTooltipData] = useState({
-        x: 0,
-        y: 0,
-        points: [],
-        visible: false,
-    });
-    // Colors and symbols from Recharts config
-    const salesColors = ['#f70cd0dc', '#ff5900dc', '#039BE5', '#299912dc'];
-    const salesSymbols = ['', '$', '$', '$', '']; // blank for rank or non-currency
-    const offerColors = ['#039BE5'];
-    const offerSymbols = ['', ''];
+    const [salesTooltipData, setSalesTooltipData] = useState({ x: 0, y: 0, points: [], visible: false, });
+    const [offerTooltipData, setOfferTooltipData] = useState({ x: 0, y: 0, points: [], visible: false, });
+    const [isZoomed, setIsZoomed] = useState(false);
+
+    const salesConfig = [
+        { name: "Amazon", color: "#ff5900dc", symbol: "$", strokeWidth: 2, fillGraph: true },
+        { name: "New Price", color: "#039BE5", symbol: "$", strokeWidth: 2 },
+        { name: "BuyBox", color: "#f70cd0dc", symbol: "$", strokeWidth: 2 },
+        { name: "Sales Rank", color: "#8FBC8F", symbol: "#", strokeWidth: 2, axis: "y2" },
+    ];
+
+    const offerConfig = [
+        { name: "Offer Count", color: "#88d", symbol: "", strokeWidth: 2 },
+        // { name: "", color: "", symbol: "", strokeWidth: 2, axis: "y2" },
+        // 
+        // { name: "Amazon", color: "", symbol: "", strokeWidth: 0 },
+    ];
+
+    const resetBothGraphsZoom = () => {
+        if (gSales) gSales.resetZoom();
+        if (gOffer) gOffer.resetZoom();
+        // setIsZoomed(false);
+    };
+
 
     useEffect(() => {
         if (!graphData || graphData.length === 0) return;
 
-        // Prepare data arrays
+
+        Dygraph.prototype.doZoomY_ = function (lowY, highY) {
+            // no-op: disables Y-axis zoom entirely
+        };
         const salesData = graphData.map(d => [
             new Date(d.date),
-            d.buyBox,
             d.amazon,
             d.newPrice,
+            d.buyBox,
             d.salesRank
         ]);
+
         const offerData = graphData.map(d => [
             new Date(d.date),
-            d.offerCount
+            d.offerCount,
+            // []
         ]);
 
-        // Instantiate Sales Dygraph
         const salesGraph = new Dygraph(salesRef.current, salesData, {
-            labels: ["Date", "BuyBox", "Amazon", "New Price", "Sales Rank"],
-            // legend: 'never',            // we use custom legend
+            labels: ["Date", ...salesConfig.map(s => s.name)],
             animatedZooms: true,
+
             stepPlot: true,
             gridLinePattern: [5, 5],
-
-            // Axes configuration (dual Y)
             axes: {
                 y: {
                     axisLabel: 'Price',
-                    valueFormatter: v => '$' + Number(v).toLocaleString(undefined, { maximumFractionDigits: 2 }),
-                    axisLabelFormatter: v => '$' + Number(v).toLocaleString()
+                    axisLabelWidth: 80,
+                    axisLabelFontSize: 13,
+                    axisLineColor: 'transparent',
+                    drawGrid: false,
+                    axisLineWidth: 0.1,
+                    valueFormatter: v => '$' + formatNumberWithCommas(v) || Number(v).toLocaleString(undefined, { maximumFractionDigits: 2 }),
+                    axisLabelFormatter: v => formatNumberWithCommas(v)
                 },
                 y2: {
                     axisLabel: 'Sales Rank',
+                    axisLabelWidth: 80,
+                    axisLineColor: 'transparent',
+                    axisLineWidth: 0.1,
                     independentTicks: true,
-                    valueFormatter: v => Number(v).toLocaleString(),
-                    axisLabelFormatter: v => Number(v).toLocaleString()
-                }
+                    valueFormatter: v => '#' + Number(v).toLocaleString(),
+                    axisLabelFormatter: v => '#' + Number(v).toLocaleString()
+                },
+                x: {
+                    drawAxis: true,
+                    axisLineColor: 'transparent',
+                    axisLineWidth: 0.1,
+                    axisLabelWidth: 90,
+                },
             },
-            series: {
-                'Buybox': { strokeWidth: 2 },
-                'Amazon': { strokeWidth: 2, fillGraph: true }, // for area
-                'New Price': { strokeWidth: 2 },
-                'Sales Rank': { axis: 'y2', strokeWidth: 2 }
-            },
-            legend: 'never',
+            series: salesConfig.reduce((acc, s) => {
+                acc[s.name] = {
+                    strokeWidth: s.strokeWidth,
+                    fillGraph: s.fillGraph || false,
+                    axis: s.axis || 'y'
+                };
+                return acc;
+            }, {}),
 
-            colors: salesColors,
-            // Grid lines
+            legend: 'never',
+            colors: salesConfig.map(s => s.color),
             drawXGrid: false,
             drawYGrid: true,
-            // Reference line at y=39
-            underlayCallback: (canvas, area, graph) => {
-                const yVal = 39;
-                const [x0, y0] = graph.toDomCoords(graph.getValue(0, 0), yVal);
-                canvas.save();
-                canvas.strokeStyle = 'red';
-                canvas.beginPath();
-                canvas.moveTo(area.x, y0);
-                canvas.lineTo(area.x + area.w, y0);
-                canvas.stroke();
-                canvas.fillStyle = 'red';
-                canvas.fillText("Max PV PAGE", area.x + 5, y0 - 5);
-                canvas.restore();
+            drawCallback: (g) => {
+                const ctx = g.hidden_ctx_; // canvas context used by dygraphs
+                const area = g.getArea();
+
+                ctx.save();
+                ctx.strokeStyle = "#dadada";
+                ctx.setLineDash([5, 5]);  // dashed pattern
+                ctx.lineWidth = 2;
+                ctx.strokeRect(area.x, area.y, area.w, area.h);
+                ctx.restore();
             },
-            // Zoom callback to capture range
-            zoomCallback: (minX, maxX, yRanges) => {
-                const start = new Date(minX).toLocaleDateString();
-                const end = new Date(maxX).toLocaleDateString();
-                // Here we could set state to update an external label if needed
-                console.log(`Sales zoom range: ${start} - ${end}`);
-            }
+
+            // zoomCallback: (minX, maxX, yRanges, isInitial) => {
+            //     if (setIsZoomed) {
+            //         setIsZoomed(!gSales?.isZoomed() && !gOffer?.isZoomed() ? false : true);
+            //     }
+            // }
+
         });
 
-        salesGraph.updateOptions({
-            highlightCallback: (event, x, points, row) => {
-                setTooltipData({ x: event.clientX, y: event.clientY, points, visible: true });
-            },
-            unhighlightCallback: () => {
-                setTooltipData((prev) => ({ ...prev, visible: false }));
-            },
-        });
-
-
-        // Instantiate Offer Dygraph
         const offerGraph = new Dygraph(offerRef.current, offerData, {
-            labels: ["Date", "Offer Count"],
-            // legend: 'never',
+            labels: ["Date", ...offerConfig.map(s => s.name)],
             animatedZooms: true,
+            stepPlot: true,
+            gridLinePattern: [5, 5],
+            rightGap: 90,
+            legend: 'never',
+            colors: offerConfig.map(s => s.color),
+            drawXGrid: false,
+            drawYGrid: true,
             axes: {
                 y: {
                     axisLabel: 'Offers',
+                    axisLabelWidth: 80,
+                    axisLabelFontSize: 13,
+                    axisLineColor: 'transparent',
+                    drawGrid: false,
+                    axisLineWidth: 0.1,
                     valueFormatter: v => Number(v).toLocaleString(),
                     axisLabelFormatter: v => Number(v).toLocaleString()
-                }
+                },
+                x: {
+                    drawAxis: true,
+                    axisLineColor: 'transparent',
+                    axisLineWidth: 0.1,
+                    axisLabelWidth: 90,
+                },
             },
-            series: {
-                'Offers': { strokeWidth: 3 },
+            series: offerConfig.reduce((acc, s) => {
+                acc[s.name] = {
+                    strokeWidth: s.strokeWidth,
+                    fillGraph: s.fillGraph || false,
+                    axis: s.axis || 'y'
+                };
+                return acc;
+            }, {}),
+            drawCallback: (g) => {
+                const ctx = g.hidden_ctx_; // canvas context used by dygraphs
+                const area = g.getArea();
+
+                ctx.save();
+                ctx.strokeStyle = "#dadada";
+                ctx.setLineDash([5, 5]);  // dashed pattern
+                ctx.lineWidth = 2;
+                ctx.strokeRect(area.x, area.y, area.w, area.h);
+                ctx.restore();
             },
-            colors: offerColors,
-            drawXGrid: false,
-            drawYGrid: true,
-            zoomCallback: (minX, maxX, yRanges) => {
-                const start = new Date(minX).toLocaleDateString();
-                const end = new Date(maxX).toLocaleDateString();
-                console.log(`Offer zoom range: ${start} - ${end}`);
-            }
+            // zoomCallback: (minX, maxX, yRanges, isInitial) => {
+            //     if (setIsZoomed) {
+            //         // Update zoom state: true if either graph is zoomed
+            //         setIsZoomed(!gSales?.isZoomed() && !gOffer?.isZoomed() ? false : true);
+            //     }
+            // }
         });
 
-        // Synchronize the two graphs (zoom/pan and highlight)
-        synchronize?.([salesGraph, offerGraph], {
+
+        // salesGraph.updateOptions({
+        //     highlightCallback: (event, x, points, row) => {
+        //         setSalesTooltipData({ x: event.clientX, y: event.clientY, points, visible: true });
+        //     },
+        //     unhighlightCallback: () => {
+        //         setSalesTooltipData((prev) => ({ ...prev, visible: false }));
+        //     },
+        // });
+
+        // offerGraph.updateOptions({
+        //     highlightCallback: (event, x, points, row) => {
+        //         setOfferTooltipData({
+        //             x: event.clientX,
+        //             y: event.clientY,
+        //             points,
+        //             visible: true,
+        //         });
+        //     },
+        //     unhighlightCallback: () => {
+        //         setOfferTooltipData((prev) => ({ ...prev, visible: false }));
+        //     },
+        // });
+
+        const sync = synchronize([salesGraph, offerGraph], {
             zoom: true,
             selection: true,
-            range: false
+            range: false,
         });
+
+        attachTooltipSync(
+            [salesGraph, offerGraph],
+            [setSalesTooltipData, setOfferTooltipData],
+        );
+
+        const handleZoom = () => {
+            if (!salesGraph || !offerGraph) return;
+            const zoomed = salesGraph.isZoomed() || offerGraph.isZoomed();
+            setIsZoomed(zoomed); // true if zoomed, false if reset
+        };
+
+        salesGraph.updateOptions({ zoomCallback: handleZoom });
+        offerGraph.updateOptions({ zoomCallback: handleZoom });
+
+        const totalRows = salesData.length;
+        const targetDuration = 1200;
+        const intervalTime = 30;
+        const batchSize = Math.ceil(totalRows / (targetDuration / intervalTime));
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i >= totalRows) {
+                clearInterval(interval);
+                return;
+            }
+            const nextI = Math.min(i + batchSize, totalRows);
+            salesGraph.updateOptions({
+                file: salesData.slice(0, nextI)
+            });
+            i = nextI;
+        }, intervalTime);
 
         setGSales(salesGraph);
         setGOffer(offerGraph);
 
         return () => {
             salesGraph.destroy();
+            clearInterval(interval);
             offerGraph.destroy();
+            sync.detach();
         };
     }, [graphData]);
 
-    // Helper to extract the last visible values of each series
+
+    // resetBothGraphsZoom(gSales, gOffer);
+
+    // useEffect(() => {
+    //     if (!gSales || !gOffer) return;
+
+    //     const handleZoom = () => {
+    //         setIsZoomed(gSales.isZoomed() || gOffer.isZoomed());
+    //     };
+
+    //     gSales.updateOptions({ zoomCallback: handleZoom });
+    //     gOffer.updateOptions({ zoomCallback: handleZoom });
+
+    //     return () => {
+    //         gSales.updateOptions({ zoomCallback: null });
+    //         gOffer.updateOptions({ zoomCallback: null });
+    //     };
+    // }, [gSales, gOffer]);
+
+
     const getLastValues = (graph, labels) => {
         if (!graph) return {};
         const lastIndex = graph.numRows() - 1;
         const vals = {};
         labels.forEach(label => {
-            // Dygraph column index: graph.getLabels().indexOf(label)
             const colIndex = graph.getLabels().indexOf(label);
-            if (colIndex > 0) { // skip 0 = Date
+            if (colIndex > 0) {
                 const v = graph.getValue(lastIndex, colIndex);
                 vals[label] = v != null ? v : "-";
             }
@@ -169,42 +294,67 @@ const SalesAndOfferDygraphs = ({ graphData }) => {
     };
 
 
-    const salesLabels = ["BuyBox", "Amazon", "New Price", "Sales Rank"];
-    const offerLabels = ["Offer Count"];
+    const salesLabels = salesConfig?.map((s) => s?.name);
+    const offerLabels = offerConfig?.map((s) => s?.name);
     const salesLast = getLastValues(gSales, salesLabels);
     const offerLast = getLastValues(gOffer, offerLabels);
 
     return (
-        <div>
-            {/* Sales Chart Legend */}
-            <ul className="flex gap-4">
-                {salesLabels.map((label, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: salesColors[idx] }}></span>
-                        <span className="font-medium">
-                            {label}: {salesSymbols[idx]}{salesLast[label]?.toLocaleString()}
-                        </span>
-                    </li>
-                ))}
-            </ul>
+        <div className='flex flex-col gap-4 w-full'>
+            <div className='flex justify-between items-center'>
+                <div className='flex gap-2 items-center'>
+                    <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Price History</h1>
+                </div>
+                <div className='flex gap-2 justify-center items-center'>
+                    {true && (<Button action={resetBothGraphsZoom} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
+                    {size !== 'small' && (
+                        <>
+                            <Button action={() => setCurrentFilter(7)} disabled={loading} label='7 days' corner='small' className={`!px-3 ${currentFilter === 7 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(30)} disabled={loading} label='30 days' corner='small' className={`!px-3 ${currentFilter === 30 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter("all")} disabled={loading} label='All Days' corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        </>
+                    )}
+                </div>
+            </div>
+            <div className='bg-white py-4 rounded-lg'>
+                <ul className="flex gap-4 py-2.5 px-6">
+                    {salesConfig.map((s, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-[15px]">
+                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
+                            <span className="font-medium text-[#000000b1]">
+                                {s.name}: {s.symbol}{salesLast[s.name]?.toLocaleString()}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+                <div ref={salesRef} style={{ width: '100%', height: '220px' }} />
+                {salesTooltipData.visible && (
+                    <CustomTooltip {...salesTooltipData} configs={salesConfig} />
+                )}
+            </div >
+            <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
 
-            {/* Sales Graph */}
-            <div ref={salesRef} style={{ width: '100%', height: '280px' }} />
-            <CustomTooltip {...tooltipData} />
+            <div className='bg-white py-4 rounded-lg'>
 
-            {/* Offer Chart Legend */}
-            <ul className="flex gap-4">
-                {offerLabels.map((label, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: offerColors[idx] }}></span>
-                        <span className="font-medium">
-                            {label}: {offerSymbols[idx]}{offerLast[label]?.toLocaleString()}
-                        </span>
-                    </li>
-                ))}
-            </ul>
-            {/* Offer Graph */}
-            <div ref={offerRef} style={{ width: '100%', height: '280px' }} />
+                <ul className="flex gap-4 py-2.5 px-6">
+                    {offerConfig.map((s, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-[15px]">
+                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
+                            <span className="font-medium text-[#000000b1]">
+                                {s.name}: {s.symbol}{offerLast[s.name]?.toLocaleString()}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+                <div ref={offerRef} style={{ width: '100%', height: '220px' }} />
+                {offerTooltipData.visible && (
+                    <CustomTooltip {...offerTooltipData} configs={offerConfig} />
+                )}
+
+            </div>
         </div>
     );
 };

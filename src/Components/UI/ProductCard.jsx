@@ -72,7 +72,7 @@ const ProductCard = ({ product }) => {
                           {formatNumberWithCommas(calculateEstimatSellerAsinRevenue(product, 3))}
                         </p>
                         <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>
-                          Est Seller Asin Rev
+                          Est Product Rev
                         </p>
                       </div>
                     )}
@@ -173,10 +173,13 @@ const ProductCard = ({ product }) => {
               </div>
             </div>
 
-            <div className='flex  gap-0 pl-[10px] max-w-[430px] max-h-[370px] overflow-hidden items-start h-full  rounded-lg '>
+            <div onClick={(e) => {
+              e?.preventDefault();
+              e?.stopPropagation(); 
+            }} className='flex  gap-0 pl-[10px] max-w-[430px] max-h-[370px] overflow-hidden items-start h-full  rounded-lg '>
 
               <div className='max-w-[750px] min-w-[750px] w-[750px] h-max overflow-hidden flex items-end  justify-end  '>
-                <ChartWraaper keepaGraphData={graphData?.keepaGraphData} asin={product?.asin} className='scale-[0.55] origin-top-left' size='small' />
+                <ChartWraaper keepaGraphData={graphData?.keepaGraphData} asin={product?.asin} className='scale-[0.53] origin-top-left' size='small' />
               </div>
               {/* <div className='w-[450px] h-max overflow-hidden  '>
                 <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={SalesGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />

@@ -142,9 +142,9 @@ const SellerProfile = () => {
         if (asins?.length) handleGetSellerProducts();
     }, [asins, sellerCurrentPage]);
 
-    useEffect(() => {
-        if (asins?.length) handleGetSellerRevenue();
-    }, [asins]);
+    // useEffect(() => {
+    //     if (asins?.length) handleGetSellerRevenue();
+    // }, [asins]);
 
     /** UI States */
     if (sellerLoading) {

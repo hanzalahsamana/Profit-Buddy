@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import GraphCardLoader from '../Loaders/GraphCardLoader';
 import Example from '../UI/TestChart';
 import { LuRefreshCw } from "react-icons/lu";
+import SalesAndOfferDygraphs from '../Widgets/SalesAndOfferDygraphs ';
 
 const ChartWraaper = ({ keepaGraphData, asin, size = 'large', className = '' }) => {
 
@@ -15,6 +16,7 @@ const ChartWraaper = ({ keepaGraphData, asin, size = 'large', className = '' }) 
     const [formattedGraphData, setFormattedGraphData] = useState([])
     const [loading, setLoading] = useState(false)
     const [currentFilter, setCurrentFilter] = useState('')
+    const [isZoomed, setIsZoomed] = useState(false);
 
     useEffect(() => {
         setGraphData(keepaGraphData)
@@ -58,12 +60,12 @@ const ChartWraaper = ({ keepaGraphData, asin, size = 'large', className = '' }) 
 
     return (
         <div className={`flex flex-col gap-4 w-full ${className}`}>
-            <div className='flex justify-between items-center'>
+            {/* <div className='flex justify-between items-center'>
                 <div className='flex gap-2 items-center'>
                     <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Price History</h1>
                 </div>
                 <div className='flex gap-2 justify-center items-center'>
-                    {!isEqual(formattedGraphData, graphData) && (<Button action={zoomOut} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
+                    {isZoomed && (<Button action={zoomOut} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
                     {size !== 'small' && (
                         <>
                             <Button action={() => setCurrentFilter(7)} disabled={loading} label='7 days' corner='small' className={`!px-3 ${currentFilter === 7 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
@@ -75,17 +77,18 @@ const ChartWraaper = ({ keepaGraphData, asin, size = 'large', className = '' }) 
                         </>
                     )}
                 </div>
-            </div>
+            </div> */}
 
-            {loading ? (
+            <SalesAndOfferDygraphs graphData={formattedGraphData} currentFilter={currentFilter} loading={loading} setCurrentFilter={setCurrentFilter} size={size} />
+
+            {/* {loading ? (
                 <GraphCardLoader />
             ) : (
                 <DynamicChart graphData={formattedGraphData || []} graphKeys={SalesGraphKeys} zoom={zoom} />
             )}
-            <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
             {loading ? (<GraphCardLoader />) : (
                 <DynamicChart graphData={formattedGraphData || []} graphKeys={OfferGraphKeys} zoom={zoom} />
-            )}
+            )} */}
         </div>
     )
 }

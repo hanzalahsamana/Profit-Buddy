@@ -93,15 +93,16 @@ const ProductDetail = () => {
                 <AnimationWrapper>
                     <BasicInfo product={product} />
                 </AnimationWrapper>
+
+                <AnimationWrapper>
+                    <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
+                </AnimationWrapper>
+
                 <AnimationWrapper>
                     <CustomCard>
                         {/* <SalesAndOfferDygraphs graphData={product?.graphData?.keepaGraphData} /> */}
                         <ChartWraaper keepaGraphData={product?.graphData?.keepaGraphData} asin={asin} />
                     </CustomCard>
-                </AnimationWrapper>
-
-                <AnimationWrapper>
-                    <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
                 </AnimationWrapper>
             </div>
 

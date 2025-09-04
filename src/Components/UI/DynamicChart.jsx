@@ -216,7 +216,7 @@ const CustomTooltip = React.memo(({ active, payload, label, graphKeys, graphData
             <span
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: cfg?.color }}
-            />
+            ></span>
             <span className="text-sm" style={{ color: cfg?.color }}>
               {cfg?.label}: {cfg?.symbol}{formatNumberWithCommas(item.value, cfg?.decimal ? 2 : 0, false)}
             </span>

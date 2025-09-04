@@ -1,6 +1,8 @@
 import React from 'react'
+import { formatDate, formatYear } from '../../../Utils/GraphUtils';
 
-const CustomTooltip = ({ x, y, points, visible }) => {
+const CustomTooltip = ({ x, y, points, visible, configs }) => {
+
     if (!visible) return null;
 
     return (
@@ -8,34 +10,28 @@ const CustomTooltip = ({ x, y, points, visible }) => {
             style={{
                 position: "fixed",
                 left: x + 15,
-                top: y + 15,
-                pointerEvents: "none",
-                background: "white",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                padding: "6px 10px",
-                fontSize: "12px",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                zIndex: 1000,
+                top: y+15,
             }}
+            className='bg-white z-[1000] pointer-events-none p-2 rounded shadow-lg border border-border transition-all duration-100 ease-linear'
         >
-            <p style={{ fontWeight: 600, marginBottom: 4 }}>
-                {new Date(x).toLocaleDateString()}{" "}
-                {new Date(x).toLocaleTimeString()}
+            <p className='font-semibold mb-1 text-black'>
+                {formatYear(points?.date)}, {formatDate(points?.date)} : <span className="text-lText font-normal text-xs">{new Date(points?.date).toLocaleTimeString()}</span>
             </p>
-            {points.map((p, i) => (
+            {points?.data.map((p, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <span
                         style={{
                             display: "inline-block",
-                            width: 10,
-                            height: 10,
                             borderRadius: "50%",
                             background: p.color,
                         }}
                     />
-                    <span>
-                        {p.name}: {p.yval !== null ? p.yval : "-"}
+                    <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: configs?.find(c => c.name === p.name)?.color }}
+                    ></span>
+                    <span className='text-sm' style={{ color: configs?.find(c => c.name === p.name)?.color }}>
+                        {p.name}: {configs?.find(c => c.name === p.name)?.symbol}{p.yval !== null ? p.yval : "-"}
                     </span>
                 </div>
             ))}

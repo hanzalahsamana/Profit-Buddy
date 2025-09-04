@@ -128,3 +128,11 @@ html {
     0rem 0rem 0rem .0625rem color-mix(in oklab, var(--secondary) 6%, transparent)
   ;
 }
+
+.dygraph-axis-label {
+  font-weight: 600;
+color: #000000b1 !important;
+font-size: 13px;
+padding: 0px 5px !important;
+}
+
