@@ -100,7 +100,7 @@ export const calculateEstimatSellerAsinRevenue = (product, noOfSeller = 1) => {
 
   const { buybox, salePrice, monthlySold } = product.info;
   const avgPrice = salePrice || buybox || 0;
-  const sellerSales = noOfSeller > 1 ? monthlySold / noOfSeller : monthlySold;
+  const sellerSales = noOfSeller > 1 ? monthlySold : monthlySold;
   const estimatedRevenue = sellerSales * avgPrice;
 
   return estimatedRevenue;
