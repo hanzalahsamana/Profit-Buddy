@@ -31,11 +31,12 @@ const BasicInfo = ({ product }) => {
                             </div>
                             <Rating rating={product?.reviews?.rating} count={product?.reviews?.count} />
                             <a className='text-[14px]/[14px] flex items-end gap-1 text-secondary font-medium'><span className='text-lText text-[14px]/[14px]'>ASIN:</span>{product?.asin} <CopyButton text={product?.asin} /></a>
-
-                            <div className='flex flex-col items-start gap-1.5'>
-                                <p className='text-[22px]/[22px] flex items-end gap-1 font-semibold text-secondary'>{formatNumberWithCommas(calculateEstimatSellerAsinRevenue(product, 3))}</p>
-                                <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>Est Product Rev</p>
-                            </div>
+                            {calculateEstimatSellerAsinRevenue(product) > 0 && (
+                                <div className='flex flex-col items-start gap-1.5'>
+                                    <p className='text-[22px]/[22px] flex items-end gap-1 font-semibold text-secondary'>{formatNumberWithCommas(calculateEstimatSellerAsinRevenue(product, 3))}</p>
+                                    <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>Est Product Rev</p>
+                                </div>
+                            )}
                             <div className="overflow-x-auto border-[1.5px] border-accent rounded-lg max-w-md content-end">
                                 <table className="min-w-full border border-accent rounded-lg overflow-hidden !text-sm">
                                     <thead className="bg-accent/15">

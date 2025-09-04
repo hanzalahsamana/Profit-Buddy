@@ -66,14 +66,10 @@ const ProductCard = ({ product }) => {
                     {/* {product?.brand && (<p className='text-[14px]/[14px] flex items-end gap-1 text-secondary'><span className='text-lText text-[12px]/[12px]'>Brand:</span>{product?.brand}</p>)} */}
                     <Rating rating={reviews?.rating} count={reviews?.count} />
                     <p className='text-[14px]/[14px] flex items-end gap-1 text-secondary'><span className='text-lText text-[12px]/[12px]'>ASIN:</span>{product?.asin} <CopyButton text={product.asin} /></p>
-                    {calculateEstimatSellerAsinRevenue(product, 3) > 0 && (
+                    {calculateEstimatSellerAsinRevenue(product) > 0 && (
                       <div className='flex flex-col items-start gap-1.5'>
-                        <p className='text-[22px]/[22px] flex items-end gap-1 font-semibold text-secondary'>
-                          {formatNumberWithCommas(calculateEstimatSellerAsinRevenue(product, 3))}
-                        </p>
-                        <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>
-                          Est Product Rev
-                        </p>
+                        <p className='text-[22px]/[22px] flex items-end gap-1 font-semibold text-secondary'>{formatNumberWithCommas(calculateEstimatSellerAsinRevenue(product))}</p>
+                        <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>Est Product Rev</p>
                       </div>
                     )}
                     <div className="overflow-x-auto border-[1.5px] border-accent rounded-lg max-w-md content-end">
@@ -175,7 +171,7 @@ const ProductCard = ({ product }) => {
 
             <div onClick={(e) => {
               e?.preventDefault();
-              e?.stopPropagation(); 
+              e?.stopPropagation();
             }} className='flex  gap-0 pl-[10px] max-w-[430px] max-h-[370px] overflow-hidden items-start h-full  rounded-lg '>
 
               <div className='max-w-[750px] min-w-[750px] w-[750px] h-max overflow-hidden flex items-end  justify-end  '>
