@@ -15,7 +15,6 @@ const BasicInfo = ({ product }) => {
 
 
     return (
-        <CustomCard >
             <div className='flex  gap-4 relative '>
                 <ProductImageGrid images={product?.images} listPrice={product?.info?.listPrice} />
                 {/* <div className=''>
@@ -81,7 +80,6 @@ const BasicInfo = ({ product }) => {
 
 
             </div>
-        </CustomCard>
     )
 }
 

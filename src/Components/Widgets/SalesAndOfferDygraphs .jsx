@@ -7,7 +7,7 @@ import { attachTooltipSync, synchronize } from '../../Utils/DygraphSynchronizer'
 import Button from '../Controls/Button';
 import { LuRefreshCw } from 'react-icons/lu';
 
-const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loading, size = 'large' }) => {
+const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loading, size = 'large', totalDays }) => {
 
     if (!graphData?.length) return (
         <div className=" w-full border border-border !h-full min-h-[240px] flex flex-col gap-0 items-center justify-center bg-primary">
@@ -66,10 +66,32 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             // []
         ]);
 
+        let interactionModel = {
+            ...Dygraph.defaultInteractionModel,
+        };
+
+        if (size === "small") {
+            interactionModel = {
+                ...Dygraph.defaultInteractionModel,
+                mousedown: function (event, g, context) {
+                    // block drag-to-zoom
+                    if (event.button === 0) {
+                        return;
+                    }
+                },
+                mousewheel: function (event, g, context) {
+                    // block wheel zoom
+                    event.preventDefault();
+                },
+            };
+        }
+
+
         const salesGraph = new Dygraph(salesRef.current, salesData, {
             labels: ["Date", ...salesConfig.map(s => s.name)],
             animatedZooms: true,
-
+            // zoomCallback: null,
+            interactionModel,
             stepPlot: true,
             gridLinePattern: [5, 5],
             axes: {
@@ -123,6 +145,31 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                 ctx.strokeRect(area.x, area.y, area.w, area.h);
                 ctx.restore();
             },
+            // drawCallback: (g) => {
+            //     const ctx = g.hidden_ctx_; // canvas context used by dygraphs
+            //     const area = g.getArea();
+
+            //     ctx.save();
+            //     ctx.strokeStyle = "#dadada";
+            //     ctx.setLineDash([5, 5]);  // dashed pattern
+            //     ctx.lineWidth = 2;
+            //     ctx.strokeRect(area.x, area.y, area.w, area.h);
+            //     ctx.restore();
+            // },
+
+            // underlayCallback: (ctx, area, g) => {
+            //     drawCrosshair(g);
+            // }
+            // ,
+            // highlightCallback: (event, x, points, row, seriesName) => {
+            // force redraw so underlayCallback runs
+            // points[0].seriesRow.g.updateOptions({});
+            // },
+
+            // unhighlightCallback: (event) => {
+            //     // clear selection → redraw removes crosshair
+            //     event.target.updateOptions({});
+            // },
 
             // zoomCallback: (minX, maxX, yRanges, isInitial) => {
             //     if (setIsZoomed) {
@@ -142,6 +189,26 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             colors: offerConfig.map(s => s.color),
             drawXGrid: false,
             drawYGrid: true,
+            drawCallback: (g) => {
+                const ctx = g.hidden_ctx_; // canvas context used by dygraphs
+                const area = g.getArea();
+
+                ctx.save();
+                ctx.strokeStyle = "#dadada";
+                ctx.setLineDash([5, 5]);  // dashed pattern
+                ctx.lineWidth = 2;
+                ctx.strokeRect(area.x, area.y, area.w, area.h);
+                ctx.restore();
+            },
+            // highlightCallback: (event, x, points, row, seriesName) => {
+            //     console.log("highlight" , points);
+            // },
+            // drawCallback: (g) => {
+            //     console.log("draw callback");
+
+            // },
+            // interactionModel,
+            // ticker: Dygraph.numericTicks,
             axes: {
                 y: {
                     axisLabel: 'Offers',
@@ -150,8 +217,17 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     axisLineColor: 'transparent',
                     drawGrid: false,
                     axisLineWidth: 0.1,
-                    valueFormatter: v => Number(v).toLocaleString(),
-                    axisLabelFormatter: v => Number(v).toLocaleString()
+                    valueFormatter: v => Math.round(v).toLocaleString(),
+                    axisLabelFormatter: v => Math.round(v).toLocaleString(),
+
+                    ticker: (min, max, pixels, opts, dygraph, vals) => {
+                        const ticks = [];
+                        const step = 1;
+                        for (let i = Math.ceil(min); i <= Math.floor(max); i += step) {
+                            ticks.push({ v: i, label: i.toString() });
+                        }
+                        return ticks;
+                    }
                 },
                 x: {
                     drawAxis: true,
@@ -168,23 +244,11 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                 };
                 return acc;
             }, {}),
-            drawCallback: (g) => {
-                const ctx = g.hidden_ctx_; // canvas context used by dygraphs
-                const area = g.getArea();
 
-                ctx.save();
-                ctx.strokeStyle = "#dadada";
-                ctx.setLineDash([5, 5]);  // dashed pattern
-                ctx.lineWidth = 2;
-                ctx.strokeRect(area.x, area.y, area.w, area.h);
-                ctx.restore();
-            },
-            // zoomCallback: (minX, maxX, yRanges, isInitial) => {
-            //     if (setIsZoomed) {
-            //         // Update zoom state: true if either graph is zoomed
-            //         setIsZoomed(!gSales?.isZoomed() && !gOffer?.isZoomed() ? false : true);
-            //     }
-            // }
+
+
+
+
         });
 
 
@@ -212,21 +276,24 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         // });
 
         const sync = synchronize([salesGraph, offerGraph], {
-            zoom: true,
+            zoom: size !== 'small', // disable zoom sync on small screens
             selection: true,
             range: false,
-        });
+        },size === 'small' ? 0.63 : 1);
 
         attachTooltipSync(
             [salesGraph, offerGraph],
             [setSalesTooltipData, setOfferTooltipData],
+
         );
 
         const handleZoom = () => {
             if (!salesGraph || !offerGraph) return;
             const zoomed = salesGraph.isZoomed() || offerGraph.isZoomed();
-            setIsZoomed(zoomed); // true if zoomed, false if reset
+            setIsZoomed(zoomed);
         };
+
+
 
         salesGraph.updateOptions({ zoomCallback: handleZoom });
         offerGraph.updateOptions({ zoomCallback: handleZoom });
@@ -252,32 +319,12 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         setGOffer(offerGraph);
 
         return () => {
-            salesGraph.destroy();
             clearInterval(interval);
+            salesGraph.destroy();
             offerGraph.destroy();
             sync.detach();
         };
     }, [graphData]);
-
-
-    // resetBothGraphsZoom(gSales, gOffer);
-
-    // useEffect(() => {
-    //     if (!gSales || !gOffer) return;
-
-    //     const handleZoom = () => {
-    //         setIsZoomed(gSales.isZoomed() || gOffer.isZoomed());
-    //     };
-
-    //     gSales.updateOptions({ zoomCallback: handleZoom });
-    //     gOffer.updateOptions({ zoomCallback: handleZoom });
-
-    //     return () => {
-    //         gSales.updateOptions({ zoomCallback: null });
-    //         gOffer.updateOptions({ zoomCallback: null });
-    //     };
-    // }, [gSales, gOffer]);
-
 
     const getLastValues = (graph, labels) => {
         if (!graph) return {};
@@ -303,7 +350,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         <div className='flex flex-col gap-4 w-full'>
             <div className='flex justify-between items-center'>
                 <div className='flex gap-2 items-center'>
-                    <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Price History</h1>
+                    <h1 className={`text-[24px]/[24px] text-secondary font-semibold fontDmmono`}>Price History</h1>
                 </div>
                 <div className='flex gap-2 justify-center items-center'>
                     {true && (<Button action={resetBothGraphsZoom} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
@@ -314,7 +361,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                             <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
                             <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
                             <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter("all")} disabled={loading} label='All Days' corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter("all")} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
                         </>
                     )}
                 </div>

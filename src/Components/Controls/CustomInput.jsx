@@ -36,7 +36,7 @@ const CustomInput = ({
                 )}
             >
                 {prefix && (
-                    <div className="px-3 flex justify-center items-center text-lText h-full text-[15px] bg-lBackground border-r border-border ">
+                    <div className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full text-[15px] bg-lBackground border-r border-border`}>
                         {prefix}
                     </div>
                 )}
@@ -51,14 +51,14 @@ const CustomInput = ({
                     disabled={disabled}
                     step="any"
                     className={clsx(
-                        "flex-1 bg-transparent border-none h-full outline-none px-3  w-full text-[16px] font-medium text-secondary",
+                        "flex-1 bg-transparent border-none h-full outline-none px-3  w-full text-[16px] font-medium text-secondary/70",
                         "placeholder:text-lText placeholder:font-normal"
                     )}
                     {...props}
                 />
 
                 {suffix && (
-                    <span className="px-3 flex justify-center items-center text-lText h-full text-[15px] bg-lBackground border-l border-border ">
+                    <span className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full text-[15px] bg-lBackground border-l border-border`}>
                         {suffix}
                     </span>
                 )}

@@ -51,7 +51,7 @@ const SearchProducts = () => {
                         <button
                             type="submit"
                             disabled={productsLoading}
-                            className="flex items-center gap-2 !cursor-pointer focus:outline-none"
+                            className="flex items-center gap-2 h-full px-3 !cursor-pointer focus:outline-none"
                         >
                             <IoSearch /> search
                         </button>

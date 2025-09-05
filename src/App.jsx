@@ -19,7 +19,7 @@ function App() {
           <Route path="/detail" element={<ProductDetail />} />
           <Route path="/sellerProfile" element={<SellerProfile />} />
         </Routes>
-        <CustomerSupport />
+        {/* <CustomerSupport /> */}
       </div>
     </ThemeProvider>
   );

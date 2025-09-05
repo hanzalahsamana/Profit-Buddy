@@ -5,12 +5,17 @@ const CustomTooltip = ({ x, y, points, visible, configs }) => {
 
     if (!visible) return null;
 
+    console.log(x, "📬📬📬");
+
+    let scaleFactor = 0.63;
+
+
     return (
         <div
             style={{
-                position: "fixed",
-                left: x + 15,
-                top: y+15,
+                position: "absolute",
+                left: (x + 15) / scaleFactor,
+                top: (y + 15) / scaleFactor,
             }}
             className='bg-white z-[1000] pointer-events-none p-2 rounded shadow-lg border border-border transition-all duration-100 ease-linear'
         >

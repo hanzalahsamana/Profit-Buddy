@@ -84,6 +84,7 @@ function attachSelectionHandlers(gs, prevCallbacks) {
 }
 
 function attachDragOverlaySyncX(gs) {
+  console.log('qjnsijndijnwdinjdwjndwndwjndwjn');
   let isDragging = false;
   let startX = null;
 
@@ -92,6 +93,7 @@ function attachDragOverlaySyncX(gs) {
 
     // create overlay canvas
     let overlay = parent.querySelector('.drag-overlay');
+
     if (!overlay) {
       overlay = document.createElement('canvas');
       overlay.className = 'drag-overlay';
@@ -186,7 +188,86 @@ function attachDragOverlaySyncX(gs) {
   });
 }
 
-export function synchronize(graphs, opts = { selection: true, zoom: true, range: true }) {
+const attachVerticalLine = (graphs, scaleFactor = 1) => {
+  graphs.forEach((g) => {
+    const graphDiv = g.graphDiv;
+
+    // make sure graphDiv is positioned
+    graphDiv.style.position = 'relative';
+
+    // create overlay canvas for the line
+    let movingLine = graphDiv.querySelector('.moving-line-abc');
+    if (!movingLine) {
+      movingLine = document.createElement('canvas');
+      movingLine.className = 'moving-line-abc';
+      movingLine.style.position = 'absolute';
+      movingLine.style.top = 0;
+      movingLine.style.left = 0;
+      movingLine.style.pointerEvents = 'none';
+      movingLine.width = g.width_;
+      movingLine.height = g.height_;
+      graphDiv.appendChild(movingLine);
+    }
+    const ctx = movingLine.getContext('2d');
+
+    graphDiv.addEventListener('mousemove', (e) => {
+      const rect = graphDiv.getBoundingClientRect();
+      const plotArea = g.plotter_.area;
+
+      // mouse X relative to plot area, adjusted for CSS scale
+      const mouseX = (e.clientX - rect.left) / scaleFactor - plotArea.x;
+
+      console.log(mouseX);
+      
+
+      // clamp inside plot area
+      if (mouseX < 0 || mouseX > plotArea.w) {
+        ctx.clearRect(0, 0, movingLine.width, movingLine.height);
+        return;
+      }
+
+      // clear canvas and draw vertical line
+      ctx.clearRect(0, 0, movingLine.width, movingLine.height);
+      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(mouseX + plotArea.x, plotArea.y);
+      ctx.lineTo(mouseX + plotArea.x, plotArea.y + plotArea.h);
+      ctx.stroke();
+
+      // sync to all other graphs
+      graphs.forEach((other) => {
+        if (other === g) return;
+        const otherDiv = other.graphDiv;
+        const otherCanvas = otherDiv.querySelector('.moving-line-abc');
+        if (!otherCanvas) return;
+        const otherCtx = otherCanvas.getContext('2d');
+
+        const otherPlotArea = other.plotter_.area;
+        const scaleX = mouseX / plotArea.w;
+        const otherX = scaleX * otherPlotArea.w;
+
+        otherCtx.clearRect(0, 0, otherCanvas.width, otherCanvas.height);
+        otherCtx.strokeStyle = 'rgba(0,0,0,0.6)';
+        otherCtx.lineWidth = 0.6;
+        otherCtx.beginPath();
+        otherCtx.moveTo(otherX + otherPlotArea.x, otherPlotArea.y);
+        otherCtx.lineTo(otherX + otherPlotArea.x, otherPlotArea.y + otherPlotArea.h);
+        otherCtx.stroke();
+      });
+    });
+
+    graphDiv.addEventListener('mouseleave', () => {
+      // clear line on all graphs
+      graphs.forEach((g) => {
+        const canvas = g.graphDiv.querySelector('.moving-line-abc');
+        if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      });
+    });
+  });
+};
+
+export function synchronize(graphs, opts = { selection: true, zoom: true, range: true } , scaleFactor = 1) {
   if (!graphs || graphs.length < 2) {
     throw new Error('Need at least two Dygraphs to synchronize.');
   }
@@ -211,6 +292,7 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
           attachDragOverlaySyncX(gs);
         }
         if (opts.selection) attachSelectionHandlers(gs, prevCallbacks);
+        attachVerticalLine(gs , scaleFactor);
       }
     });
   });

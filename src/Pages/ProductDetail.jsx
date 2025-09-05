@@ -14,6 +14,7 @@ import AnimationWrapper from '../Components/Layout/AnimationWrapper';
 import SellerCentral from '../Components/Widgets/SellerCentral';
 import SalesAndOfferDygraphs from '../Components/Widgets/SalesAndOfferDygraphs ';
 import ChartWraaper from '../Components/Layout/ChartWraaper';
+import ChatBuddy from '../Components/Widgets/ChatBuddy';
 
 
 const ProductDetail = () => {
@@ -91,27 +92,41 @@ const ProductDetail = () => {
             <div className='lg:col-span-3 flex flex-col gap-4'>
 
                 <AnimationWrapper>
-                    <BasicInfo product={product} />
+                    <CustomCard label={'Basic Info'}>
+                        <BasicInfo product={product} />
+                    </CustomCard>
                 </AnimationWrapper>
 
                 <AnimationWrapper>
-                    <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
+                    <CustomCard label={"Top Offers"}>
+                        <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
+                    </CustomCard>
                 </AnimationWrapper>
 
                 <AnimationWrapper>
-                    <CustomCard>
+                    <CustomCard label={'Graphs'}>
                         {/* <SalesAndOfferDygraphs graphData={product?.graphData?.keepaGraphData} /> */}
-                        <ChartWraaper keepaGraphData={product?.graphData?.keepaGraphData} asin={asin} />
+                        <ChartWraaper product={product} />
                     </CustomCard>
                 </AnimationWrapper>
             </div>
 
             <div className='lg:col-span-2 flex flex-col gap-4'>
                 <AnimationWrapper>
-                    <ProfitCalculator product={product} />
+                    <CustomCard label={'Profit Calculator'}>
+                        <ProfitCalculator product={product} />
+                    </CustomCard>
                 </AnimationWrapper>
                 <AnimationWrapper>
-                    <SellerCentral product={product} />
+                    <CustomCard label={'Seller Central'}>
+                        <SellerCentral product={product} />
+                    </CustomCard>
+
+                </AnimationWrapper>
+                <AnimationWrapper>
+                    <CustomCard label={'Chat Buddy'}>
+                        <ChatBuddy />
+                    </CustomCard>
                 </AnimationWrapper>
             </div>
         </div>

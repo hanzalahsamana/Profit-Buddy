@@ -49,7 +49,6 @@ const ProfitCalculator = () => {
     }
 
     return (
-        <CustomCard label={'Profit Calculator'}>
             <div className='flex flex-col gap-4'>
                 {/* <div className="border p-3 rounded-lg bg-border flex justify-between text-sm">
                     <p className="font-medium">Estimated Maximum Buy Cost:</p>
@@ -208,7 +207,6 @@ const ProfitCalculator = () => {
                     </div>
                 </div>
             </div>
-        </CustomCard>
     )
 }
 

@@ -3,7 +3,7 @@
 :root {
   font-family: 'Poppins', sans-serif;
   --primary: #ffffff;
-  --secondary: #171717;
+  --secondary: #000000;
   --lBackground: #fafafa;
   --lText: #666666;
   --border: #0000001a;
@@ -12,7 +12,7 @@
 
 .dark {
   --primary: #000000;
-  --secondary: #ededed;
+  --secondary: #ffffff;
   --lBackground: #171717;
   --lText: #a1a1a1;
   --border: #ffffff36;

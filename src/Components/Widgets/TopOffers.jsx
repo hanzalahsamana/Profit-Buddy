@@ -14,7 +14,6 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
     );
 
     return (
-        <CustomCard label={"Top Offers"}>
             <div className="w-full">
                 <div className="border border-accent customScroll rounded-lg overflow-hidden">
                     {offerLoading ? (
@@ -127,7 +126,6 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
 
                 </div>
             </div>
-        </CustomCard>
     );
 };
 

@@ -172,10 +172,10 @@ const ProductCard = ({ product }) => {
             <div onClick={(e) => {
               e?.preventDefault();
               e?.stopPropagation();
-            }} className='flex  gap-0 pl-[10px] max-w-[430px] max-h-[370px] overflow-hidden items-start h-full  rounded-lg '>
+            }} className='flex  gap-0 pl-[10px] max-w-[500px] max-h-[450px] overflow-hidden items-start h-full  rounded-lg '>
 
               <div className='max-w-[750px] min-w-[750px] w-[750px] h-max overflow-hidden flex items-end  justify-end  '>
-                <ChartWraaper keepaGraphData={graphData?.keepaGraphData} asin={product?.asin} className='scale-[0.53] origin-top-left' size='small' />
+                <ChartWraaper product={product} className='scale-[0.63] origin-top-left' size='small' />
               </div>
               {/* <div className='w-[450px] h-max overflow-hidden  '>
                 <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={SalesGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />
