@@ -22,6 +22,7 @@ const Button = ({
         disable: `border-[1.5px] border-border/10 bg-border/80 text-secondary/50 !cursor-not-allowed`,
         outline: `border-[1.5px] border-border bg-primary text-secondary/70 hover:border-secondary/30 `,
         text: `text-secondary`,
+        transparent: `bg-transparent border-[1.5px] border-transparent `
     }
 
     const sizeClasses = {

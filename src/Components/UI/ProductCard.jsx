@@ -46,7 +46,7 @@ const ProductCard = ({ product }) => {
   return (
     <AnimationWrapper>
       <Link to={`/detail?asin=${product?.asin}`}>
-        <div className='p-3 rounded-[10px] bg-primary transition-shadow cursor-pointer dropdownShadow border-border border'>
+        <div className='p-3 rounded-[10px] bg-primary transition-shadow cursor-pointer productCardShadow border-border border'>
           <div className='flex gap-2 md:gap-3  lg:flex-nowrap flex-wrap w-full items-center '>
             <div className='flex flex-1 gap-2 w-full col-span-4 relative h-[260px]'>
               <ProductImageGrid images={images} listPrice={info?.listPrice} />

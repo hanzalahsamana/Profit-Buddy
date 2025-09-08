@@ -1,6 +1,9 @@
 import BASE_URL from '../../config';
 
 export const EndPoints = {
+  registerUser: `${BASE_URL}/post/register`,
+  loginUser: `${BASE_URL}/post/login`,
+
   getProducts: `${BASE_URL}/get/products`,
   getSellerInfo: `${BASE_URL}/get/seller-info`,
   searchProducts: `${BASE_URL}/get/search-product`,

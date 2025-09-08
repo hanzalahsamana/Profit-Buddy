@@ -3,12 +3,14 @@ import { productsReducer } from './Slices/ProductSlice';
 import { systemReducer } from './Slices/SystemSlice';
 import { profitCalcReducer } from './Slices/profitCalcSlice';
 import { sellerReducer } from './Slices/SellerSlice';
+import { userReducer } from './Slices/UserSlice';
 
 const rootReducer = combineReducers({
   products: productsReducer,
   system: systemReducer,
   profitCalc: profitCalcReducer,
   seller: sellerReducer,
+  user: userReducer,
 });
 
 export default rootReducer;

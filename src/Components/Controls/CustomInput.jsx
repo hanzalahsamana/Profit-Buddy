@@ -8,20 +8,22 @@ const CustomInput = ({
     placeholder,
     prefix,
     suffix,
-    className,
+    className ='',
     error,
     disabled,
     name,
     type = "text",
     info,
+    inputClassName = '',
+    size = 'small',//small, large
     ...props
 }) => {
     return (
         <div className={`w-full fontDmmono ${disabled ? 'opacity-80 pointer-events-none select-none' : ''} ${className}`}>
             {label && (
                 <label
-                    htmlFor={name}
-                    className="flex gap-2 items-center  mb-2 text-sm font-medium  text-secondary"
+                    // htmlFor={name}
+                    className="flex gap-2 items-center text-base mb-1 font-semibold  text-secondary"
                 >
                     {label}
                     {info && (<InfoTooltip content={info} id={`InputInfo_${label}`} />)}
@@ -30,13 +32,15 @@ const CustomInput = ({
 
             <div
                 className={clsx(
-                    "flex border rounded-md focus-within:ring focus-within:ring-secondary h-11 transition-all overflow-hidden",
+                    "flex border rounded-md focus-within:ring focus-within:ring-secondary transition-all overflow-hidden",
                     error ? "border-red-500" : "border-border",
                     disabled && "opacity-60 cursor-not-allowed",
+                    size === 'small'? 'h-10 text-[13px]':'h-11 text-[16px]',
+                    inputClassName, 
                 )}
             >
                 {prefix && (
-                    <div className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full text-[15px] bg-lBackground border-r border-border`}>
+                    <div className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full bg-lBackground border-r border-border`}>
                         {prefix}
                     </div>
                 )}
@@ -51,14 +55,14 @@ const CustomInput = ({
                     disabled={disabled}
                     step="any"
                     className={clsx(
-                        "flex-1 bg-transparent border-none h-full outline-none px-3  w-full text-[16px] font-medium text-secondary/70",
+                        "flex-1 bg-transparent border-none h-full outline-none px-3  w-full  font-medium text-secondary/70",
                         "placeholder:text-lText placeholder:font-normal"
                     )}
                     {...props}
                 />
 
                 {suffix && (
-                    <span className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full text-[15px] bg-lBackground border-l border-border`}>
+                    <span className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full bg-lBackground border-l border-border`}>
                         {suffix}
                     </span>
                 )}

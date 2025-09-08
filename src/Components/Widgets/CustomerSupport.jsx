@@ -60,7 +60,7 @@ const CustomerSupport = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.5 }}
-                        className="fixed bottom-24 right-8 w-[350px] h-[450px] bg-primary border-[1px] border-border rounded-xl dropdownShadow flex flex-col overflow-hidden"
+                        className="fixed bottom-24 right-8 w-[350px] h-[450px] bg-primary border-[1px] border-border rounded-xl productCardShadow flex flex-col overflow-hidden"
                     >
                         <div className="flex items-center justify-between bg-primary text-secondary  p-3">
                             <div className="flex items-center gap-2">

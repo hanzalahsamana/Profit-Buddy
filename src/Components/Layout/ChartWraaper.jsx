@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DynamicChart from '../UI/DynamicChart'
 import { OfferGraphKeys, SalesGraphKeys } from '../../Enums/Enums'
 import Button from '../Controls/Button';
-import { getGraphData } from './../../Apis/graph';
+import { getGraphData } from './../../Apis/Graph';
 import { isEqual } from 'lodash';
 import { toast } from 'react-toastify';
 import GraphCardLoader from '../Loaders/GraphCardLoader';
