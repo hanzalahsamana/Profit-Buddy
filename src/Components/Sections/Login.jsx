@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 import LightLogoImage from '../../Assets/Profit Buddy AI/Sign/PNG/Black Sign.png'
 import CustomInput from './../Controls/CustomInput';
-import Checkbox from './../Controls/Checkbox';
 import Button from './../Controls/Button';
 import { loginUser } from '../../Apis/User';
 import { toast } from 'react-toastify';
@@ -23,7 +22,6 @@ const Login = () => {
     const validateForm = () => {
         const newErrors = {};
 
-        // email validation
         if (!formData.email.trim()) {
             newErrors.email = "Email is required";
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -32,7 +30,6 @@ const Login = () => {
             newErrors.email = "Email must not contain spaces";
         }
 
-        // password validation
         if (!formData.password.trim()) {
             newErrors.password = "Password is required";
         } else if (formData.password.length < 6) {

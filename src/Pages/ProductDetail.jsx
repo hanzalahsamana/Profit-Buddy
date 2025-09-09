@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import ProfitCalculator from '../Components/Widgets/ProfitCalculator';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { setProduct } from '../Redux/Slices/profitCalcSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import TopOffers from '../Components/Widgets/TopOffers';
@@ -15,6 +15,8 @@ import SellerCentral from '../Components/Widgets/SellerCentral';
 import SalesAndOfferDygraphs from '../Components/Widgets/SalesAndOfferDygraphs ';
 import ChartWraaper from '../Components/Layout/ChartWraaper';
 import ChatBuddy from '../Components/Widgets/ChatBuddy';
+import { upsertHistory } from '../Apis/History';
+import { debounce } from 'lodash';
 
 
 const ProductDetail = () => {
@@ -28,6 +30,15 @@ const ProductDetail = () => {
     const dispatch = useDispatch();
     const { products } = useSelector((state) => state.products);
     const { product } = useSelector((state) => state.profitCalc);
+    const { buyCost } = useSelector((state) => state.profitCalc);
+
+    const debouncedUpsert = useMemo(
+        () =>
+            debounce((asin, cost) => {
+                upsertHistory({ asin, buyCost: Number(cost) });
+            }, 500),
+        []
+    );
 
     const handleGetProduct = async () => {
         const found = products?.find((p) => p?.asin === asin);
@@ -63,11 +74,19 @@ const ProductDetail = () => {
         }
     };
 
+
+
     useEffect(() => {
         if (!asin) return;
         handleGetProduct();
         handleGetOffer();
     }, [asin, products]);
+
+    useEffect(() => {
+        if (!product?.asin) return;
+        debouncedUpsert(product.asin, buyCost);
+        return () => debouncedUpsert.cancel();
+    }, [buyCost, product?.asin, debouncedUpsert]);
 
     if (loading) {
         return (
@@ -128,6 +147,7 @@ const ProductDetail = () => {
                         <ChatBuddy />
                     </CustomCard>
                 </AnimationWrapper>
+
             </div>
         </div>
     );

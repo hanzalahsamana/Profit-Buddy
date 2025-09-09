@@ -1,5 +1,6 @@
 import React from 'react'
 import { formatDate, formatYear } from '../../../Utils/GraphUtils';
+import { formatNumberWithCommas } from '../../../Utils/NumberUtil';
 
 const CustomTooltip = ({ x, y, points, visible, configs }) => {
 
@@ -13,7 +14,7 @@ const CustomTooltip = ({ x, y, points, visible, configs }) => {
     return (
         <div
             style={{
-                position: "absolute",
+                position: "fixed",
                 left: x + 15,
                 top: y + 15,
             }}
@@ -36,7 +37,7 @@ const CustomTooltip = ({ x, y, points, visible, configs }) => {
                         style={{ backgroundColor: configs?.find(c => c.name === p.name)?.color }}
                     ></span>
                     <span className='text-sm' style={{ color: configs?.find(c => c.name === p.name)?.color }}>
-                        {p.name}: {configs?.find(c => c.name === p.name)?.symbol}{p.yval !== null ? p.yval : "-"}
+                        {p.name}: {configs?.find(c => c.name === p.name)?.symbol}{p.yval !== null ? formatNumberWithCommas(p.yval , configs?.find(c => c.name === p.name)?.decimal ? 2 : 0 ,false , true) : "-"}
                     </span>
                 </div>
             ))}

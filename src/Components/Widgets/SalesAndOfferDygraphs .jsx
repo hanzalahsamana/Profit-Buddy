@@ -25,14 +25,14 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
     const [isZoomed, setIsZoomed] = useState(false);
 
     const salesConfig = [
-        { name: "Amazon", color: "#ff5900dc", symbol: "$", strokeWidth: 2, fillGraph: true },
-        { name: "New Price", color: "#039BE5", symbol: "$", strokeWidth: 2 },
-        { name: "BuyBox", color: "#f70cd0dc", symbol: "$", strokeWidth: 2 },
-        { name: "Sales Rank", color: "#8FBC8F", symbol: "#", strokeWidth: 2, axis: "y2" },
+        { name: "Amazon", color: "#ff5900dc", symbol: "$", strokeWidth: 2, decimal: true, fillGraph: true, },
+        { name: "New Price", color: "#039BE5", symbol: "$", strokeWidth: 2, decimal: true, },
+        { name: "Sales Rank", color: "#8FBC8F", symbol: "#", strokeWidth: 2, decimal: false, axis: "y2" },
+        { name: "BuyBox", color: "#f70cd0dc", symbol: "$", strokeWidth: 2, decimal: true, },
     ];
 
     const offerConfig = [
-        { name: "Offer Count", color: "#88d", symbol: "", strokeWidth: 2 },
+        { name: "Offer Count", color: "#88d", symbol: "", strokeWidth: 2, decimal: false, },
         // { name: "", color: "", symbol: "", strokeWidth: 2, axis: "y2" },
         // 
         // { name: "Amazon", color: "", symbol: "", strokeWidth: 0 },
@@ -56,8 +56,8 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             new Date(d.date),
             d.amazon,
             d.newPrice,
+            d.salesRank,
             d.buyBox,
-            d.salesRank
         ]);
 
         const offerData = graphData.map(d => [
@@ -279,7 +279,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             zoom: size !== 'small', // disable zoom sync on small screens
             selection: true,
             range: false,
-        },size === 'small' ? 0.63 : 1);
+        }, size === 'small' ? 0.63 : 1);
 
         attachTooltipSync(
             [salesGraph, offerGraph],
@@ -348,24 +348,23 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
 
     return (
         <div className='flex flex-col gap-4 w-full'>
-            <div className='flex justify-between items-center'>
-                <div className='flex gap-2 items-center'>
-                    <h1 className={`text-[24px]/[24px] text-secondary font-semibold fontDmmono`}>Price History</h1>
+            {size !== 'small' && (
+                <div className='flex justify-between items-center'>
+                    <div className='flex gap-2 items-center'>
+                        <h1 className={`text-[24px]/[24px] text-secondary font-semibold fontDmmono`}>Price History</h1>
+                    </div>
+                    <div className='flex gap-2 justify-center items-center'>
+                        {true && (<Button action={resetBothGraphsZoom} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
+
+                        <Button action={() => setCurrentFilter(7)} disabled={loading} label='7 days' corner='small' className={`!px-3 ${currentFilter === 7 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        <Button action={() => setCurrentFilter(30)} disabled={loading} label='30 days' corner='small' className={`!px-3 ${currentFilter === 30 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        <Button action={() => setCurrentFilter("all")} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                    </div>
                 </div>
-                <div className='flex gap-2 justify-center items-center'>
-                    {true && (<Button action={resetBothGraphsZoom} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
-                    {size !== 'small' && (
-                        <>
-                            <Button action={() => setCurrentFilter(7)} disabled={loading} label='7 days' corner='small' className={`!px-3 ${currentFilter === 7 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter(30)} disabled={loading} label='30 days' corner='small' className={`!px-3 ${currentFilter === 30 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter("all")} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                        </>
-                    )}
-                </div>
-            </div>
+            )}
             <div className='bg-white py-4 rounded-lg'>
                 <ul className="flex gap-4 py-2.5 px-6">
                     {salesConfig.map((s, idx) => (
@@ -382,7 +381,9 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     <CustomTooltip {...salesTooltipData} configs={salesConfig} />
                 )}
             </div >
-            <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
+            {size !== 'small' && (
+                <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
+            )}
 
             <div className='bg-white py-4 rounded-lg'>
 

@@ -54,14 +54,14 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className={`inset-0 flex items-center justify-center bg-secondary/80 z-[150] p-6 fixed`}
+          className={`inset-0 flex items-center justify-center bg-primary/80  z-[150] p-6 fixed`}
           variants={backdropVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
         >
           <motion.div
-            className={`relative bg-primary rounded-lg shadow-lg max-w-[750px] max-h-[600px] w-full overflow-auto customScroll ${className}`}
+            className={`relative bg-primary rounded-xl shadow-lg border border-border max-w-[550px] max-h-[600px] w-full overflow-auto customScroll ${className}`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -77,9 +77,9 @@ const Modal = ({
             </button>
 
             {(label || subText) && (
-              <div className='flex flex-col px-4 py-4 w-full bg-lBackground border-b-[1.5px] border-border'>
+              <div className='flex flex-col gap-2 px-4 pt-4 w-full'>
                 {label && <h1 className='w-full text-secondary/90 text-[28px]/[28px] font-semibold '>{label}</h1>}
-                {subText && <p className='text-lText text-xs/[12px]'>{subText}</p>}
+                {subText && <p className='text-lText text-sm'>{subText}</p>}
               </div>
             )}
 
@@ -88,7 +88,7 @@ const Modal = ({
             </div>
 
             {actions && (
-              <div className='flex gap-2 justify-end bg-lBackground px-4 py-4 w-full border-t-[1.5px] border-border'>
+              <div className='flex gap-2 justify-end bg-lBackground px-4 py-4 w-full border-t border-border'>
                 {actions}
               </div>
             )}

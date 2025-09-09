@@ -115,7 +115,7 @@ const ProductCard = ({ product }) => {
               </div>
             </div>
 
-            <div className="flex flex-col border-[1.5px] border-accent w-[200px] rounded-lg  bg-primary h-[260px]">
+            <div className="flex flex-col border-[1.5px] border-accent w-[200px] rounded-lg bg-accent/5 h-[260px]">
               <p className="text-sm py-1 text-center bg-accent text-black font-medium rounded-t-md w-full">
                 Top Offers
               </p>
@@ -127,7 +127,7 @@ const ProductCard = ({ product }) => {
               </div>
               <div className='flex-1 overflow-auto hideScroll '>
                 {loading ? (
-                  <div className="flex flex-col items-center justify-center py-3 align-middle text-gray-500 bg-primary">
+                  <div className="flex flex-col items-center justify-center py-3 align-middle text-gray-500 bg-transparent">
                     <FiLoader className="w-6 h-6 animate-spin mb-2" />
                     <p className="text-sm">Loading Offers...</p>
                   </div>
@@ -138,7 +138,7 @@ const ProductCard = ({ product }) => {
                     </div>
                   ) : (
                     offers?.map((offer, index) => (
-                      <div key={index} className="bg-accent/5 hover:bg-accent/15 transition text-sm text-center text-lText grid grid-cols-3 ">
+                      <div key={index} className="bg-transparent hover:bg-accent/10 transition text-sm text-center text-lText grid grid-cols-3 ">
                         <p className="px-1 py-1.5 border-r border-accent font-medium">
                           <span
                             data-tooltip-id={`${offer?.sellerInfo?.id}-${index}`}

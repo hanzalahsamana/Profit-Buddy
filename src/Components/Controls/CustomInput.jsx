@@ -35,7 +35,7 @@ const CustomInput = ({
                     "flex border rounded-md focus-within:ring focus-within:ring-secondary transition-all overflow-hidden",
                     error ? "border-red-500" : "border-border",
                     disabled && "opacity-60 cursor-not-allowed",
-                    size === 'small'? 'h-10 text-[13px]':'h-11 text-[16px]',
+                    size === 'small'? 'h-10 text-[13px]':'h-11 text-[15px]',
                     inputClassName, 
                 )}
             >

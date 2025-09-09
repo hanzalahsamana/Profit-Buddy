@@ -23,6 +23,11 @@ export const isASIN = (value) => {
   return /^[A-Z0-9]{10}$/.test(value);
 };
 
+export const isSellerId = (sellerId) => {
+  const regex = /^A[A-Z0-9]{12,14}$/; // A + 12–14 alphanumeric
+  return regex.test(sellerId);
+};
+
 export const Converters = {
   gramsToPounds: (g) => g / 453.592,
   gramsToOunce: (g) => g / 28.35,

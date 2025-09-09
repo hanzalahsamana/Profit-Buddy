@@ -26,7 +26,7 @@ const profitCalcSlice = createSlice({
       const product = action.payload;
       state.product = product;
       state.salePrice = Number((product?.info?.salePrice ?? 0).toFixed(2));
-      state.buyCost = 0;
+      state.buyCost = product?.history?.buyCost || 0;
       state.storageMonth = 0;
       state.fulfillment = 'FBA';
       profitCalcSlice.caseReducers.recalculate(state);

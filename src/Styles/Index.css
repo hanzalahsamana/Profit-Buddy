@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Geist', sans-serif;
   --primary: #ffffff;
   --secondary: #000000;
   --lBackground: #fafafa;
   --lText: #666666;
   --border: #0000001a;
-  --accent: #25d890;
+  --accent: #2dcb9e;
 }
 
 .dark {

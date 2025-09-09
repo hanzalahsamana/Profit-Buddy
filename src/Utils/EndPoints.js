@@ -3,7 +3,8 @@ import BASE_URL from '../../config';
 export const EndPoints = {
   registerUser: `/post/register`,
   loginUser: `/post/login`,
-  
+  upsertHistory: '/post/upsert-history',
+
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,
   getSellerInfo: `/get/seller-info`,

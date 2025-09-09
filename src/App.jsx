@@ -12,12 +12,12 @@ import Authentication from './Pages/Authentication'
 import PrivateRoutes from './AuthRouting/PrivateRoutes'
 import PublicRoutes from './AuthRouting/PublicRoutes'
 import UserProvider from './Components/Layout/UserProvider'
+import History from './Pages/History'
 
 function App() {
   const location = useLocation();
   const hideHeaderRoutes = ["/login", "/register", "/authentication"];
   const showHeader = !hideHeaderRoutes.some(route => location.pathname.startsWith(route));
-
 
   return (
     <ThemeProvider>
@@ -31,11 +31,11 @@ function App() {
               <Route path="/authentication" element={<Authentication />} />
             </Route>
 
-            {/* Private routes */}
             <Route element={<PrivateRoutes />}>
               <Route path="/" element={<Home />} />
               <Route path="/detail" element={<ProductDetail />} />
               <Route path="/sellerProfile" element={<SellerProfile />} />
+              <Route path="/history" element={<History />} />
             </Route>
           </Routes>
         </div>
