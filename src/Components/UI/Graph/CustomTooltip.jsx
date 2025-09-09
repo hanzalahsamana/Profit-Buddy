@@ -14,8 +14,8 @@ const CustomTooltip = ({ x, y, points, visible, configs }) => {
         <div
             style={{
                 position: "absolute",
-                left: (x + 15) / scaleFactor,
-                top: (y + 15) / scaleFactor,
+                left: x + 15,
+                top: y + 15,
             }}
             className='bg-white z-[1000] pointer-events-none p-2 rounded shadow-lg border border-border transition-all duration-100 ease-linear'
         >

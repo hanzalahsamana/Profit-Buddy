@@ -1,0 +1,37 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setTheme } from "../../Redux/Slices/SystemSlice";
+import { getUserDetail } from "../../Apis/User";
+import { setUser, setUserLoading } from "../../Redux/Slices/UserSlice";
+
+export default function UserProvider({ children }) {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userToken = localStorage.getItem("ProfitBuddyToken");
+            if (!userToken) {
+                dispatch(setUser(null))
+                dispatch(setUserLoading(false))
+                return;
+            };
+
+            try {
+                dispatch(setUserLoading(true));
+                const data = await getUserDetail();
+                dispatch(setUser({ ...data?.user, token: userToken }));
+            } catch (err) {
+                localStorage.removeItem("ProfitBuddyToken");
+                dispatch(setUser(null));
+            } finally {
+                console.log("hello");
+
+                dispatch(setUserLoading(false));
+            }
+        };
+
+        fetchUser();
+    }, [dispatch]);
+
+    return children;
+}

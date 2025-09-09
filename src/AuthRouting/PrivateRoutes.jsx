@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Loader from "../Components/Loaders/Loader";
 
 const PrivateRoutes = () => {
-  const { user, userLoading } = useSelector((state)=>state?.user);
+  const { user, userLoading } = useSelector((state) => state?.user);
 
   if (userLoading) return <Loader />;
 

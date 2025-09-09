@@ -6,9 +6,9 @@ import Checkbox from './../Controls/Checkbox';
 import Button from './../Controls/Button';
 import { loginUser } from '../../Apis/User';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Login = ({ setCurrentAuthState }) => {
+const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({ email: "junaidhunani890@gmail.com", password: "123456" });
     const [loading, setLoading] = useState(false);
@@ -113,12 +113,12 @@ const Login = ({ setCurrentAuthState }) => {
 
                 <p className="text-sm text-lText text-center">
                     Don’t have an account?{" "}
-                    <span
-                        onClick={() => setCurrentAuthState(false)}
+                    <Link
+                        to={'/authentication?tab=register'}
                         className="text-accent cursor-pointer font-medium hover:text-accent/70 transition"
                     >
                         Sign up here
-                    </span>
+                    </Link>
                 </p>
             </form>
         </div>

@@ -19,9 +19,9 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter, sellerR
     return (
         <div className={`grid grid-cols-4 gap-4 h-auto items-start text-secondary ${className}`}>
             <CustomCard className={'col-span-2'}>
-                <div className='flex items-center justify-between gap-2'>
+                <div className='flex items-start justify-between gap-2'>
                     <div>
-                        <p className='text-2xl font-semibold '><span className='font-semibold text-base'></span>{seller?.name}</p>
+                        <p className='text-2xl font-semibold break-all'>{seller?.name}</p>
                         <div className='text-xl flex gap-2 items-center'><span className='font-semibold text-base'>Seller Reviews:</span> <Rating count={seller?.ratingCount} rating={seller?.rating} /></div>
                     </div>
 

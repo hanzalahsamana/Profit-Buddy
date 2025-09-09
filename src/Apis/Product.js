@@ -2,6 +2,7 @@ import axios from 'axios';
 import { EndPoints } from '../Utils/EndPoints';
 import { store } from '../Redux/Store';
 import { setProductsLoading } from '../Redux/Slices/ProductSlice';
+import { authClient } from '../Services/Axios';
 
 export const getProduct = async (asin = '') => {
   try {
@@ -10,7 +11,7 @@ export const getProduct = async (asin = '') => {
     const query = new URLSearchParams({
       asin: asinParam,
     });
-    const { data } = await axios.get(`${EndPoints.getProducts}?${query.toString()}`);
+    const { data } = await authClient.get(`${EndPoints.getProducts}?${query.toString()}`);
     return data?.products;
   } catch (error) {
     throw error;
@@ -24,7 +25,7 @@ export const searchProducts = async (searchTerm, page = 0) => {
       page: page,
     });
     store.dispatch(setProductsLoading(true));
-    const { data } = await axios.get(`${EndPoints.searchProducts}?${query.toString()}`);
+    const { data } = await authClient.get(`${EndPoints.searchProducts}?${query.toString()}`);
     return data.products;
   } catch (error) {
     throw error;
@@ -38,7 +39,7 @@ export const findProductAsin = async (querry = {}) => {
     // const query = new URLSearchParams({
     //   ...querry,
     // });
-    const { data } = await axios.get(`${EndPoints.findProductAsin}?selection=${querry}`);
+    const { data } = await authClient.get(`${EndPoints.findProductAsin}?selection=${querry}`);
     return data?.asins;
   } catch (error) {
     throw error;

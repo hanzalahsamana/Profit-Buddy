@@ -11,17 +11,17 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.currUser = action.payload;
+      state.user = action.payload;
       return state;
     },
     setLogout: (state) => {
-      state.currUser = null;
-      localStorage.removeItem('userToken');
-      state.loading = false;
+      state.user = null;
+      localStorage.removeItem('ProfitBuddyToken');
+      state.userLoading = false;
       return state;
     },
     setUserLoading: (state, action) => {
-      state.loading = action.payload;
+      state.userLoading = action.payload;
       return state;
     },
   },

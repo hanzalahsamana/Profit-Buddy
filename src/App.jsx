@@ -11,6 +11,7 @@ import CustomerSupport from './Components/Widgets/CustomerSupport'
 import Authentication from './Pages/Authentication'
 import PrivateRoutes from './AuthRouting/PrivateRoutes'
 import PublicRoutes from './AuthRouting/PublicRoutes'
+import UserProvider from './Components/Layout/UserProvider'
 
 function App() {
   const location = useLocation();
@@ -20,22 +21,25 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="max-w-[1800px] min-h-screen bg-primary">
-        {showHeader && <Header />}
+      <UserProvider>
 
-        <Routes>
-          {/* <Route element={<PublicRoutes />}>
-        <Route path="/authentication" element={<Authentication />} />
-      </Route> */}
+        <div className="max-w-[1800px] min-h-screen bg-primary">
+          {showHeader && <Header />}
 
-          {/* Private routes */}
-          {/* <Route element={<PrivateRoutes />}> */}
-          <Route path="/" element={<Home />} />
-          <Route path="/detail" element={<ProductDetail />} />
-          <Route path="/sellerProfile" element={<SellerProfile />} />
-          {/* </Route> */}
-        </Routes>
-      </div>
+          <Routes>
+            <Route element={<PublicRoutes />}>
+              <Route path="/authentication" element={<Authentication />} />
+            </Route>
+
+            {/* Private routes */}
+            <Route element={<PrivateRoutes />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/detail" element={<ProductDetail />} />
+              <Route path="/sellerProfile" element={<SellerProfile />} />
+            </Route>
+          </Routes>
+        </div>
+      </UserProvider>
     </ThemeProvider>
   );
 }

@@ -9,6 +9,7 @@ import SearchProducts from '../Widgets/SearchProducts'
 import Button from '../Controls/Button'
 import Modal from '../UI/Modal'
 import { useState } from 'react'
+import { BiLogOut } from "react-icons/bi";
 import { Link } from 'react-router-dom'
 
 const Header = () => {
@@ -44,6 +45,7 @@ const Header = () => {
                 <div className='flex gap-2 items-center'>
                     <ToggleSwitch options={['Dark', 'Light']} selected={theme ? 'Dark' : 'Light'} onChange={(value) => dispatch(setTheme(value === 'Dark'))} />
                     <Button size='medium' corner='full' label='Store Spy' action={() => setModalOpen(!modalOpen)} />
+                    <Button size='medium' className='!px-4' label={<BiLogOut size={20} />} action={() => setModalOpen(!modalOpen)} />
                 </div>
 
             </div>

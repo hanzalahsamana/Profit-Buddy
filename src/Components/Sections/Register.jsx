@@ -6,9 +6,9 @@ import Button from './../Controls/Button';
 import Checkbox from './../Controls/Checkbox';
 import { registerUser } from '../../Apis/User';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Register = ({ setCurrentAuthState }) => {
+const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -163,12 +163,12 @@ const Register = ({ setCurrentAuthState }) => {
                 {/* Switch to Login */}
                 <p className="text-sm text-lText text-center">
                     Already have an account?{" "}
-                    <span
-                        onClick={() => setCurrentAuthState(true)}
+                    <Link
+                        to={'/authentication?tab=login'}
                         className="text-accent font-medium cursor-pointer hover:text-accent/70 transition"
                     >
                         Login here
-                    </span>
+                    </Link>
                 </p>
             </form>
         </div>
