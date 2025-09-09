@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import DynamicChart from '../UI/DynamicChart'
-import { OfferGraphKeys, SalesGraphKeys } from '../../Enums/Enums'
-import Button from '../Controls/Button';
-import { getGraphData } from './../../Apis/Graph';
+import { getGraphData } from '../../Apis/Graph';
 import { isEqual } from 'lodash';
 import { toast } from 'react-toastify';
-import GraphCardLoader from '../Loaders/GraphCardLoader';
-import Example from '../UI/TestChart';
-import { LuRefreshCw } from "react-icons/lu";
 import SalesAndOfferDygraphs from '../Widgets/SalesAndOfferDygraphs ';
 
 const ChartWraaper = ({ product, size = 'large', className = '' }) => {
