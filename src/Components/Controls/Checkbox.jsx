@@ -20,16 +20,16 @@ const Checkbox = ({ checked = false, onChange = () => { }, id = "animatedCheck",
 
             <span
                 className={`relative w-[15px] h-[15px] rounded-sm border-[1.5px] flex items-center justify-center transition-colors duration-300 select-none
-        ${checked ? "bg-black border-black" : "bg-white border-gray-300"}`}
+        ${checked ? "bg-secondary border-secondary" : "bg-primary border-border"}`}
             >
                 <LuCheck
-                    className={`text-white !text-[12px] transition-opacity duration-300
+                    className={`text-primary !text-[12px] transition-opacity duration-300
           ${checked ? "opacity-100" : "opacity-0"}`}
                 />
             </span>
 
             {label && (
-                <div className="flex gap-2 items-center text-[12px] font-medium ">
+                <div className="flex gap-2 items-center text-[12px] font-medium text-secondary">
                     {label}
                     {info && (<InfoTooltip content={info} id={`InputInfo_${label}`} />)}
                 </div>

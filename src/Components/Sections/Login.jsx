@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState({ email: "junaidhunani890@gmail.com", password: "123456" });
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
