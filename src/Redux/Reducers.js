@@ -4,6 +4,7 @@ import { systemReducer } from './Slices/SystemSlice';
 import { profitCalcReducer } from './Slices/profitCalcSlice';
 import { sellerReducer } from './Slices/SellerSlice';
 import { userReducer } from './Slices/UserSlice';
+import { historyReducer } from './Slices/HistorySlice';
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   profitCalc: profitCalcReducer,
   seller: sellerReducer,
   user: userReducer,
+  history: historyReducer,
 });
 
 export default rootReducer;

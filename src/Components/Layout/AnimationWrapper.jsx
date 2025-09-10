@@ -9,9 +9,9 @@ const fadeUpVariant = {
         transition: { duration: 0.5, ease: "easeOut" }
     }
 };
-const AnimationWrapper = ({ children }) => {
+const AnimationWrapper = ({ children  , className}) => {
     return (
-        <motion.div variants={fadeUpVariant} initial="hidden" animate="visible">
+        <motion.div className={`${className}`} variants={fadeUpVariant} initial="hidden" animate="visible">
             {children}
         </motion.div>
     )

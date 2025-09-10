@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useId } from "react";
 import { FaSlash } from "react-icons/fa";
 import { PieChart, Pie, Cell } from "recharts";
 
@@ -24,22 +24,24 @@ const getColor = (v) => {
     return "#25d89040";
 };
 
-const getGradientId = () => {
-    if (value / 10 < 4) {
-        return "progressGradientRed";
-    } else if (value / 10 < 6) {
-        return "progressGradientYellow";
-    }
-    return "progressGradientGreen";
-}
-const ScoreChart = () => {
+const ScoreChart = ({ className }) => {
+
+    const uniqueId = useId();
 
     console.log("abcdef");
 
+    const getGradientId = () => {
+        if (value / 10 < 4) {
+            return `progressGradientRed-${uniqueId}`;
+        } else if (value / 10 < 6) {
+            return `progressGradientYellow-${uniqueId}`;
+        }
+        return `progressGradientGreen-${uniqueId}`;
+    }
 
 
     return (
-        <div className="flex items-center justify-center ">
+        <div className={`flex items-center justify-center ${className}`}>
             <div className="relative">
                 <PieChart width={150} height={150}>
                     <Pie
@@ -57,24 +59,24 @@ const ScoreChart = () => {
                     </Pie>
 
                     <defs>
-                        <linearGradient id="progressGradientGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <linearGradient id={`progressGradientGreen-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#24E698" />
                             <stop offset="100%" stopColor="#1DB9A0" />
                         </linearGradient>
 
-                        <linearGradient id="progressGradientYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <linearGradient id={`progressGradientYellow-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#FFD93D" />
                             <stop offset="100%" stopColor="#FFC107" />
                         </linearGradient>
 
-                        <linearGradient id="progressGradientRed" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <linearGradient id={`progressGradientRed-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#FF6B6B" />
                             <stop offset="100%" stopColor="#E63946" />
                         </linearGradient>
                     </defs>
                     <svg>
                         <defs>
-                            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <filter id={`shadow-${uniqueId}`} x="-50%" y="-50%" width="200%" height="200%">
                                 <feDropShadow dx="-1" dy="-1" stdDeviation="1" floodColor="#545454" floodOpacity="0.2" />
                                 <feDropShadow dx="1" dy="1" stdDeviation="1" floodColor="#545454" floodOpacity="0.2" />
                             </filter>
@@ -91,7 +93,7 @@ const ScoreChart = () => {
                         endAngle={90 - (progress[0].value / 100) * 360}
                         cornerRadius={20}
                         dataKey="value"
-                        filter="url(#shadow)"
+                        filter={`url(#shadow-${uniqueId})`}
                     >
                         <Cell fill={`url(#${getGradientId(progress[0].value / 10)})`} className="!shadow-xl" strokeWidth={2} stroke="none" />
                     </Pie>

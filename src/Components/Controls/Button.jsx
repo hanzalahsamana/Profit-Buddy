@@ -21,14 +21,14 @@ const Button = ({
         warn: `border-[1.5px] border-yellow-600 bg-yellow-600 text-white`,
         disable: `border-[1.5px] border-border/10 bg-border/80 text-secondary/50 !cursor-not-allowed`,
         outline: `border-[1.5px] border-border bg-primary text-secondary/70 hover:border-secondary/30 `,
-        text: `text-secondary`,
+        text: `text-secondary/70`,
         transparent: `bg-transparent border-[1.5px] border-transparent `
     }
 
     const sizeClasses = {
         large: `py-2 px-6 text-lg font-medium`,
-        medium: `!h-9 px-8 text-sm font-medium`,
-        small: `!h-8 px-6 w-max text-sm font-medium`,
+        medium: `!h-9 px-6 text-sm font-medium`,
+        small: `!h-8 px-4 w-max text-sm font-medium`,
     }
 
     const cornerClasses = {
@@ -44,7 +44,7 @@ const Button = ({
             onClick={action}
             disabled={loading || disabled}
             className={clsx(
-                "fontDmmono relative cursor-pointer hover:opacity-95 box-border  ",
+                "fontDmmono relative cursor-pointer hover:opacity-85 box-border  ",
                 disabled ? variantsClasses?.disable : variantsClasses?.[variant],
                 sizeClasses?.[size],
                 cornerClasses?.[corner],

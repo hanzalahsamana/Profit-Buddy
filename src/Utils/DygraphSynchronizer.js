@@ -84,7 +84,6 @@ function attachSelectionHandlers(gs, prevCallbacks) {
 }
 
 function attachDragOverlaySyncX(gs) {
-  console.log('qjnsijndijnwdinjdwjndwndwjndwjn');
   let isDragging = false;
   let startX = null;
 
@@ -214,19 +213,13 @@ const attachVerticalLine = (graphs, scaleFactor = 1) => {
       const rect = graphDiv.getBoundingClientRect();
       const plotArea = g.plotter_.area;
 
-      // mouse X relative to plot area, adjusted for CSS scale
       const mouseX = (e.clientX - rect.left) / scaleFactor - plotArea.x;
 
-      console.log(mouseX);
-      
-
-      // clamp inside plot area
       if (mouseX < 0 || mouseX > plotArea.w) {
         ctx.clearRect(0, 0, movingLine.width, movingLine.height);
         return;
       }
 
-      // clear canvas and draw vertical line
       ctx.clearRect(0, 0, movingLine.width, movingLine.height);
       ctx.strokeStyle = 'rgba(0,0,0,0.6)';
       ctx.lineWidth = 0.6;
@@ -235,7 +228,6 @@ const attachVerticalLine = (graphs, scaleFactor = 1) => {
       ctx.lineTo(mouseX + plotArea.x, plotArea.y + plotArea.h);
       ctx.stroke();
 
-      // sync to all other graphs
       graphs.forEach((other) => {
         if (other === g) return;
         const otherDiv = other.graphDiv;
@@ -258,7 +250,6 @@ const attachVerticalLine = (graphs, scaleFactor = 1) => {
     });
 
     graphDiv.addEventListener('mouseleave', () => {
-      // clear line on all graphs
       graphs.forEach((g) => {
         const canvas = g.graphDiv.querySelector('.moving-line-abc');
         if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);

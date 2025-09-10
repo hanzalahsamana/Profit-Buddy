@@ -48,8 +48,8 @@ const ProductCard = ({ product }) => {
       <Link to={`/detail?asin=${product?.asin}`}>
         <div className='p-3 rounded-[10px] bg-primary transition-shadow cursor-pointer productCardShadow border-border border'>
           <div className='flex gap-2 md:gap-3  lg:flex-nowrap flex-wrap w-full items-center '>
-            <div className='flex flex-1 gap-2 w-full col-span-4 relative h-[260px]'>
-              <ProductImageGrid images={images} listPrice={info?.listPrice} />
+            <div className='flex flex-col sm:flex-row flex-1 gap-2 w-full col-span-4 relative md:h-[auto]'>
+              <ProductImageGrid images={images} listPrice={info?.listPrice} className={'!aspect-square !w-[100%] !max-w-[100%] sm:!w-[200px]'} />
 
               <div className='flex flex-col flex-1 justify-evenly gap-3'>
                 <p className="text-secondary font-semibold text-sm/[20px] capitalize tracking-tight line-clamp-2" title={product?.title}>
@@ -115,7 +115,7 @@ const ProductCard = ({ product }) => {
               </div>
             </div>
 
-            <div className="flex flex-col border-[1.5px] border-accent w-[200px] rounded-lg bg-accent/5 h-[260px]">
+            <div className="hidden md:flex flex-col border-[1.5px] border-accent w-[200px] rounded-lg bg-accent/5 h-[260px]">
               <p className="text-sm py-1 text-center bg-accent text-black font-medium rounded-t-md w-full">
                 Top Offers
               </p>
@@ -172,10 +172,10 @@ const ProductCard = ({ product }) => {
             <div onClick={(e) => {
               e?.preventDefault();
               e?.stopPropagation();
-            }} className='flex  gap-0 pl-[10px] max-w-[500px] max-h-[450px] overflow-hidden items-start h-full  rounded-lg '>
+            }} className='hidden lg:flex  gap-0 pl-[10px] max-w-[350px] max-h-[300px] 2xl:max-w-[500px] 2xl:max-h-[385px] overflow-hidden items-start h-full  rounded-lg '>
 
               <div className='max-w-[750px] min-w-[750px] w-[750px] h-max overflow-hidden flex items-end  justify-end  '>
-                <ChartWraaper product={product} className='scale-[0.63] origin-top-left' size='small' />
+                <ChartWraaper product={product} className='scale-[0.48] 2xl:scale-[0.63] origin-top-left' size='small' />
               </div>
               {/* <div className='w-[450px] h-max overflow-hidden  '>
                 <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={SalesGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />

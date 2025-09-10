@@ -14,4 +14,5 @@ export const EndPoints = {
   findProductAsin: `/get/find-product-asins`,
   getGraphData: `/get/graph-data`,
   getSellerRevenue: `/get/calculate-seller-revenue`,
+  getHistory: `/get/history`,
 };

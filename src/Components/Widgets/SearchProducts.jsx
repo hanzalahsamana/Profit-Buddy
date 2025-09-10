@@ -39,7 +39,7 @@ const SearchProducts = () => {
     return (
         <form onSubmit={handleSearchProducts}>
             <p className='text-lText text-[15px] mb-2'>
-                Search Product with their Keywords, Asins or Product Code
+                Search Product with their Keywords, Asins
             </p>
             <div className='flex item-start gap-2'>
 

@@ -6,11 +6,6 @@ const CustomTooltip = ({ x, y, points, visible, configs }) => {
 
     if (!visible) return null;
 
-    console.log(x, "📬📬📬");
-
-    let scaleFactor = 0.63;
-
-
     return (
         <div
             style={{

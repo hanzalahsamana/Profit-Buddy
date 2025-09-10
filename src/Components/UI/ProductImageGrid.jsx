@@ -4,7 +4,7 @@ import { formatNumberWithCommas } from "../../Utils/NumberUtil";
 const placeholder =
     "https://via.placeholder.com/300?text=No+Image"; // your fallback placeholder
 
-const ProductImageGrid = ({ images = [], listPrice = 0 }) => {
+const ProductImageGrid = ({ images = [], listPrice = 0 , className }) => {
     const hasMainImage = Boolean(images?.[0]);
 
     let mainImage = hasMainImage ? images[0] : images[0] || placeholder;
@@ -24,7 +24,7 @@ const ProductImageGrid = ({ images = [], listPrice = 0 }) => {
         //     }}
         // >
 
-            <div className="relative w-[220px] max-w-[220px] h-auto min-h-full bg-white border border-border rounded-[8px] overflow-hidden p-1">
+            <div className={`relative w-[220px] max-w-[220px] h-auto min-h-full bg-white border border-border rounded-[8px] overflow-hidden p-1 ${className}`}>
                 <img
                     src={mainImage || placeholder}
                     alt="product"

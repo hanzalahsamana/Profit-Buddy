@@ -17,6 +17,7 @@ import ChartWraaper from '../Components/Layout/ChartWraaper';
 import ChatBuddy from '../Components/Widgets/ChatBuddy';
 import { upsertHistory } from '../Apis/History';
 import { debounce } from 'lodash';
+import ScoreChart from '../Components/UI/ScoreChart';
 
 
 const ProductDetail = () => {
@@ -107,47 +108,56 @@ const ProductDetail = () => {
     }
 
     return (
-        <div className='grid grid-cols-1 lg:grid-cols-5  gap-4 h-full items-start p-4 text-secondary min-h-screen bg-lBackground'>
-            <div className='lg:col-span-3 flex flex-col gap-4'>
+        <div className='bg-lBackground  min-h-screen'>
 
-                <AnimationWrapper>
-                    <CustomCard label={'Basic Info'}>
-                        <BasicInfo product={product} />
-                    </CustomCard>
-                </AnimationWrapper>
+            <div className='grid grid-cols-1 lg:grid-cols-5  gap-4 h-full items-start p-4 text-secondary bg-lBackground'>
+                <div className='lg:col-span-3 flex flex-col gap-4'>
 
-                <AnimationWrapper>
-                    <CustomCard label={"Top Offers"}>
-                        <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
-                    </CustomCard>
-                </AnimationWrapper>
+                    <AnimationWrapper>
+                        <CustomCard label={'Basic Info'}>
+                            <BasicInfo product={product} />
+                        </CustomCard>
+                    </AnimationWrapper>
 
-                <AnimationWrapper>
-                    <CustomCard label={'Graphs'}>
-                        {/* <SalesAndOfferDygraphs graphData={product?.graphData?.keepaGraphData} /> */}
-                        <ChartWraaper product={product} />
-                    </CustomCard>
-                </AnimationWrapper>
-            </div>
+                    <AnimationWrapper className={'block xs:hidden'} >
+                        <CustomCard label={'Score Buddy'}>
+                            <ScoreChart />
+                        </CustomCard>
+                    </AnimationWrapper>
 
-            <div className='lg:col-span-2 flex flex-col gap-4'>
-                <AnimationWrapper>
-                    <CustomCard label={'Profit Calculator'}>
-                        <ProfitCalculator product={product} />
-                    </CustomCard>
-                </AnimationWrapper>
-                <AnimationWrapper>
-                    <CustomCard label={'Seller Central'}>
-                        <SellerCentral product={product} />
-                    </CustomCard>
+                    <AnimationWrapper>
+                        <CustomCard label={"Top Offers"}>
+                            <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
+                        </CustomCard>
+                    </AnimationWrapper>
 
-                </AnimationWrapper>
-                <AnimationWrapper>
-                    <CustomCard label={'Chat Buddy'}>
-                        <ChatBuddy />
-                    </CustomCard>
-                </AnimationWrapper>
+                    <AnimationWrapper>
+                        <CustomCard label={'Graphs'}>
+                            {/* <SalesAndOfferDygraphs graphData={product?.graphData?.keepaGraphData} /> */}
+                            <ChartWraaper product={product} />
+                        </CustomCard>
+                    </AnimationWrapper>
+                </div>
 
+                <div className='lg:col-span-2 flex flex-col gap-4'>
+                    <AnimationWrapper>
+                        <CustomCard label={'Profit Calculator'}>
+                            <ProfitCalculator product={product} />
+                        </CustomCard>
+                    </AnimationWrapper>
+                    <AnimationWrapper>
+                        <CustomCard label={'Seller Central'}>
+                            <SellerCentral product={product} />
+                        </CustomCard>
+
+                    </AnimationWrapper>
+                    <AnimationWrapper>
+                        <CustomCard label={'Chat Buddy'}>
+                            <ChatBuddy />
+                        </CustomCard>
+                    </AnimationWrapper>
+
+                </div>
             </div>
         </div>
     );

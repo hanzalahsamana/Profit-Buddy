@@ -6,6 +6,8 @@ import { formatNumberWithCommas } from '../../Utils/NumberUtil';
 import { attachTooltipSync, synchronize } from '../../Utils/DygraphSynchronizer';
 import Button from '../Controls/Button';
 import { LuRefreshCw } from 'react-icons/lu';
+import PopupMenu from '../Controls/PopupMenu';
+import { IoFilter } from 'react-icons/io5';
 
 const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loading, size = 'large', totalDays }) => {
 
@@ -355,18 +357,58 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     </div>
                     <div className='flex gap-2 justify-center items-center'>
                         {true && (<Button action={resetBothGraphsZoom} label={<LuRefreshCw />} corner='small' size='small' variant='outline' className='!px-3' />)}
-
-                        <Button action={() => setCurrentFilter(7)} disabled={loading} label='7 days' corner='small' className={`!px-3 ${currentFilter === 7 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                        <Button action={() => setCurrentFilter(30)} disabled={loading} label='30 days' corner='small' className={`!px-3 ${currentFilter === 30 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                        <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                        <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                        <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                        <Button action={() => setCurrentFilter("all")} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        <div className='2xl:hidden'>
+                            <PopupMenu
+                                trigger={
+                                    <Button label={<div className='flex gap-2 items-center'><IoFilter /> Filters</div>} corner='small' className={`!px-3`} size='small' variant='outline' />
+                                }
+                                data={[
+                                    {
+                                        name: '7 days',
+                                        action: () => setCurrentFilter(7),
+                                        selected: currentFilter === 7,
+                                    },
+                                    {
+                                        name: '30 days',
+                                        action: () => setCurrentFilter(30),
+                                        selected: currentFilter === 30,
+                                    },
+                                    {
+                                        name: '90 days',
+                                        action: () => setCurrentFilter(90),
+                                        selected: currentFilter === 90,
+                                    },
+                                    {
+                                        name: '180 days',
+                                        action: () => setCurrentFilter(180),
+                                        selected: currentFilter === 180,
+                                    },
+                                    {
+                                        name: '1 year',
+                                        action: () => setCurrentFilter(365),
+                                        selected: currentFilter === 365,
+                                    },
+                                    {
+                                        name: `All (${totalDays ?? ''} Days)`,
+                                        action: () => setCurrentFilter('all'),
+                                        selected: currentFilter === "all",
+                                    },
+                                ]}
+                            />
+                        </div>
+                        <div className='hidden 2xl:flex gap-2'>
+                            <Button action={() => setCurrentFilter(7)} disabled={loading} label='7 days' corner='small' className={`!px-3 ${currentFilter === 7 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(30)} disabled={loading} label='30 days' corner='small' className={`!px-3 ${currentFilter === 30 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter("all")} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                        </div>
                     </div>
                 </div>
             )}
             <div className='bg-white py-4 rounded-lg'>
-                <ul className="flex gap-4 py-2.5 px-6">
+                <ul className="hidden sm:flex gap-4 py-2.5 px-6">
                     {salesConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
@@ -387,7 +429,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
 
             <div className='bg-white py-4 rounded-lg'>
 
-                <ul className="flex gap-4 py-2.5 px-6">
+                <ul className="hidden sm:flex gap-4 py-2.5 px-6">
                     {offerConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
