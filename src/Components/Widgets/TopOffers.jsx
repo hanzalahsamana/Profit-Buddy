@@ -25,22 +25,22 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                         <table className="min-w-full fontDmmono">
                             <thead className="bg-accent/10 sticky top-0 ">
                                 <tr>
-                                    <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
+                                    <th className="px-2.5 py-1.5 text-center font-medium text-secondary border-r border-accent">
                                         #
                                     </th>
-                                    <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
+                                    <th className="px-2.5 py-1.5 text-center font-medium text-secondary border-r border-accent">
                                         Seller
                                     </th>
-                                    <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
+                                    <th className="px-2.5 py-1.5 text-center font-medium text-secondary border-r border-accent">
                                         Stock
                                     </th>
-                                    <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
+                                    <th className="px-2.5 py-1.5 text-center font-medium text-secondary border-r border-accent">
                                         Price
                                     </th>
-                                    <th className="px-1 py-1.5 text-center font-medium text-secondary border-r border-accent">
+                                    <th className="px-2.5 py-1.5 text-center font-medium text-secondary border-r border-accent">
                                         Profit
                                     </th>
-                                    <th className="px-1 py-1.5 text-center font-medium text-secondary">
+                                    <th className="px-2.5 py-1.5 text-center font-medium text-secondary">
                                         ROI%
                                     </th>
                                 </tr>
@@ -65,20 +65,20 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                                 {index + 1}
                                             </td>
 
-                                            <td className="px-1 py-1.5 text-center border-r border-accent ">
+                                            <td className="px-2.5 py-1.5 text-center border-r border-accent ">
                                                 <span className='cursor-pointer hover:text-accent' data-tooltip-id={offer?.sellerInfo?.id} onClick={() => window.open(`/sellerProfile?sellerid=${encodeURIComponent(offer?.sellerInfo?.id?.trim())}`, "_blank")}>{offer?.seller}</span>
                                             </td>
 
-                                            <td className="px-1 py-1.5 text-center border-r border-accent">
+                                            <td className="px-2.5 py-1.5 text-center border-r border-accent">
                                                 {offer?.stock || "-"}
                                             </td>
 
-                                            <td className="px-1 py-1.5 text-center border-r border-accent">
+                                            <td className="px-2.5 py-1.5 text-center border-r border-accent">
                                                 {formatNumberWithCommas(offer?.price)}
                                             </td>
 
                                             <td
-                                                className={`px-1 py-1.5 text-center font-medium border-r border-accent  
+                                                className={`px-2.5 py-1.5 text-center font-medium border-r border-accent  
                                                     ${profit < 0
                                                         ? 'text-[red]'
                                                         : profit < MIN_PROFIT
@@ -90,7 +90,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             </td>
 
                                             <td
-                                                className={`px-1 py-1.5 text-center font-medium 
+                                                className={`px-2.5 py-1.5 text-center font-medium 
                                                   ${profit < 0
                                                         ? 'text-[red]'
                                                         : roi < MIN_ROI

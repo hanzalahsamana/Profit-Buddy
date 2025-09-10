@@ -47,7 +47,7 @@ const History = () => {
   };
 
   return (
-    <div>
+    <div className='py-4'>
       {loading && (
         <div className="flex flex-col items-center justify-center py-16 text-gray-500 bg-primary">
           <FiLoader className="w-6 h-6 animate-spin mb-2" />
@@ -93,7 +93,7 @@ const History = () => {
 
                     <div className='flex-1 flex flex-col justify-between'>
                       <div className='flex flex-col gap-3'>
-                        <p className='font-semibold text-base/[22px]  capitalize line-clamp-2  tracking-tight' title={product?.title}>{product?.title}</p>
+                        <p className='font-semibold text-base/[22px] text-secondary capitalize line-clamp-2  tracking-tight' title={product?.title}>{product?.title}</p>
 
                         <div className='flex flex-wrap gap-2 items-end'>
                           {product?.category && (<p className='text-[14px]/[14px] capitalize flex items-end gap-1 text-secondary font-medium'><span className='text-lText text-[14px]/[14px]'>Category:</span>{product?.category}</p>)}
