@@ -63,7 +63,7 @@ const HeaderMenu = () => {
                     action={() => setModalOpen(!modalOpen)}
                 />
             </div>
-            <Button size='medium' variant='accent' corner='small' className='!pl-4 pr-4 rounded-r-none' label={<div className='flex gap-2 items-center'><LuUserRound size={18} /> Profile</div>} action={() => dispatch(setLogout())} />
+            <Button size='medium' variant='accent' corner='small' className='!pl-4 pr-4 rounded-r-none !cursor-not-allowed' label={<div className='flex gap-2 items-center'><LuUserRound size={18} /> Profile</div>} action={() =>{}} />
             {/* --- Dropdown Menu (always visible, but with conditional items) --- */}
             <div className=" hidden md:block">
                 <PopupMenu
