@@ -4,6 +4,9 @@ export const EndPoints = {
   registerUser: `/post/register`,
   loginUser: `/post/login`,
   upsertHistory: '/post/upsert-history',
+  requestPasswordReset: '/post/request-password-reset',
+  verifyResetToken: '/post/verify-reset-token',
+  resetPassword: '/post/reset-password',
 
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,

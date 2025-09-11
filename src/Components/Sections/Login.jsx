@@ -6,12 +6,14 @@ import Button from './../Controls/Button';
 import { loginUser } from '../../Apis/User';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import ResetPasswordModal from '../UI/ResetPasswordModal';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [resetModalOpen, setResetModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -81,11 +83,15 @@ const Login = () => {
 
                 <CustomInput
                     type={showPassword ? "text" : "password"}
-                    name="password"
+                    name={"password"}
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    label="Password"
+                    label={
+                        <div className='flex items-end justify-between w-full'>
+                            <span className='text-secondary'>Password</span>
+                            <span className='text-accent font-normal text-sm cursor-pointer hover:opacity-70' onClick={() => setResetModalOpen(true)}>Forgot your password?</span>
+                        </div>}
                     inputClassName="!rounded-xl"
                     error={errors.password}
                     suffix={
@@ -118,6 +124,7 @@ const Login = () => {
                     </Link>
                 </p>
             </form>
+            <ResetPasswordModal isOpen={resetModalOpen} setIsOpen={setResetModalOpen} />
         </div>
     )
 }

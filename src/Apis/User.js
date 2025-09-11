@@ -27,6 +27,33 @@ export const loginUser = async (payload) => {
   }
 };
 
+export const requestPasswordReset = async (payload) => {
+  try {
+    const { data } = await publicClient.post(`${EndPoints.requestPasswordReset}`, payload);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const verifyResetToken = async (payload) => {
+  try {
+    const { data } = await publicClient.post(`${EndPoints.verifyResetToken}`, payload);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resetPassword = async (payload) => {
+  try {
+    const { data } = await publicClient.post(`${EndPoints.resetPassword}`, payload);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getUserDetail = async () => {
   try {
     const { data } = await authClient.get(`${EndPoints.getUserDetail}`);
