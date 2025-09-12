@@ -19,13 +19,12 @@ export default function UserProvider({ children }) {
             try {
                 dispatch(setUserLoading(true));
                 const data = await getUserDetail();
-                dispatch(setUser({ ...data?.user, token: userToken }));
+                dispatch(setUser(data?.user));
             } catch (err) {
-                localStorage.removeItem("ProfitBuddyToken");
+                // localStorage.removeItem("ProfitBuddyToken");
                 dispatch(setUser(null));
             } finally {
                 console.log("hello");
-
                 dispatch(setUserLoading(false));
             }
         };

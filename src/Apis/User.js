@@ -8,7 +8,7 @@ import { authClient, publicClient } from '../Services/Axios';
 export const registerUser = async (payload) => {
   try {
     const { data } = await publicClient.post(`${EndPoints.registerUser}`, payload);
-    dispatch(setUser({ ...data?.user, token: data?.token }));
+    dispatch(setUser(data?.user));
     localStorage.setItem('ProfitBuddyToken', data?.token);
     return data;
   } catch (error) {
@@ -19,7 +19,7 @@ export const registerUser = async (payload) => {
 export const loginUser = async (payload) => {
   try {
     const { data } = await publicClient.post(`${EndPoints.loginUser}`, payload);
-    dispatch(setUser({ ...data?.user, token: data?.token }));
+    dispatch(setUser(data?.user));
     localStorage.setItem('ProfitBuddyToken', data?.token);
     return data;
   } catch (error) {
@@ -57,6 +57,15 @@ export const resetPassword = async (payload) => {
 export const getUserDetail = async () => {
   try {
     const { data } = await authClient.get(`${EndPoints.getUserDetail}`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateProfile = async (payload) => {
+  try {
+    const { data } = await authClient.post(`${EndPoints.updateProfile}`, payload);
     return data;
   } catch (error) {
     throw error;

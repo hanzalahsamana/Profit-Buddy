@@ -23,7 +23,7 @@ const CustomInput = ({
             {label && (
                 <label
                     // htmlFor={name}
-                    className="flex gap-2 items-center text-base mb-1 font-semibold  text-secondary"
+                    className="flex gap-2 items-center text-base mb-1 font-medium  text-secondary/80"
                 >
                     {label}
                     {info && (<InfoTooltip content={info} id={`InputInfo_${label}`} />)}
@@ -34,7 +34,7 @@ const CustomInput = ({
                 className={clsx(
                     "flex border rounded-md focus-within:ring focus-within:ring-secondary transition-all overflow-hidden",
                     error ? "border-red-500" : "border-border",
-                    disabled && "opacity-60 cursor-not-allowed",
+                    disabled && "opacity-60 !cursor-not-allowed",
                     size === 'small'? 'h-10 text-[13px]':'h-11 text-[15px]',
                     inputClassName, 
                 )}
@@ -62,7 +62,7 @@ const CustomInput = ({
                 />
 
                 {suffix && (
-                    <span className={` ${typeof prefix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full bg-lBackground border-l border-border`}>
+                    <span className={` ${typeof suffix === "string" ? 'px-3' : ''} flex justify-center items-center text-lText h-full bg-lBackground border-l border-border`}>
                         {suffix}
                     </span>
                 )}

@@ -63,8 +63,7 @@ const HeaderMenu = () => {
                     action={() => setModalOpen(!modalOpen)}
                 />
             </div>
-            <Button size='medium' variant='accent' corner='small' className='!pl-4 pr-4 rounded-r-none !cursor-not-allowed' label={<div className='flex gap-2 items-center'><LuUserRound size={18} /> Profile</div>} action={() =>{}} />
-            {/* --- Dropdown Menu (always visible, but with conditional items) --- */}
+            <Button size='medium' variant='accent' corner='small' className='!pl-4 pr-4 rounded-r-none' label={<div className='flex gap-2 items-center'><LuUserRound size={18} />Account</div>} action={() => navigate('/account?tab=profile')} />
             <div className=" hidden md:block">
                 <PopupMenu
                     trigger={

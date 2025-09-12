@@ -7,6 +7,7 @@ export const EndPoints = {
   requestPasswordReset: '/post/request-password-reset',
   verifyResetToken: '/post/verify-reset-token',
   resetPassword: '/post/reset-password',
+  updateProfile: '/post/update-profile',
 
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,

@@ -13,12 +13,12 @@ import PrivateRoutes from './AuthRouting/PrivateRoutes'
 import PublicRoutes from './AuthRouting/PublicRoutes'
 import UserProvider from './Components/Layout/UserProvider'
 import History from './Pages/History'
-import Profile from './Pages/Profile'
 import ResetPassword from './Pages/ResetPassword'
+import Account from './Pages/Account'
 
 function App() {
   const location = useLocation();
-  const hideHeaderRoutes = ["/login", "/register", "/authentication" , "/reset-password"];
+  const hideHeaderRoutes = ["/login", "/register", "/authentication", "/reset-password", "/account"];
   const showHeader = !hideHeaderRoutes.some(route => location.pathname.startsWith(route));
 
   return (
@@ -29,17 +29,18 @@ function App() {
           {showHeader && <Header />}
 
           <Routes>
+            <Route path="/reset-password" element={<ResetPassword />} />
+
             <Route element={<PublicRoutes />}>
               <Route path="/authentication" element={<Authentication />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
-
+            
             <Route element={<PrivateRoutes />}>
               <Route path="/" element={<Home />} />
               <Route path="/detail" element={<ProductDetail />} />
               <Route path="/sellerProfile" element={<SellerProfile />} />
               <Route path="/history" element={<History />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/account" element={<Account />} />
             </Route>
           </Routes>
         </div>

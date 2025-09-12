@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from './Modal'
 import CustomInput from '../Controls/CustomInput'
 import Button from '../Controls/Button'
 import axios from 'axios'
 import { requestPasswordReset } from '../../Apis/User'
 
-const ResetPasswordModal = ({ isOpen, setIsOpen }) => {
+const ResetPasswordModal = ({ isOpen, setIsOpen, preFilledEmail = null }) => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [emailSendStatus, setEmailSendStatus] = useState({ success: false, message: '' })
@@ -33,14 +33,26 @@ const ResetPasswordModal = ({ isOpen, setIsOpen }) => {
         }
     }
 
+    const onClose = () => {
+        setEmailSendStatus({ success: false, message: '' })
+        setError('')
+    }
+
+    useEffect(() => {
+        if (preFilledEmail) {
+            setEmail(preFilledEmail)
+        }
+    }, [preFilledEmail])
+
     return (
         <Modal
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            label='Reset Password'
-            subText='Enter your email address, and we’ll send you a link to reset your password.'
+            label={preFilledEmail ? 'Change Password' : ' Reset Password'}
+            subText='We’ll send you a link to reset your password.'
+            extraFuntion={onClose}
             actions={<>
-                <Button label='Cancel' size='medium' variant='outline' action={() => setIsOpen(false)} />
+                <Button label='Cancel' size='medium' variant='outline' action={() => { onClose(); setIsOpen(false) }} />
                 <Button
                     type='button'
                     label={'Send Reset Link'}
@@ -60,6 +72,7 @@ const ResetPasswordModal = ({ isOpen, setIsOpen }) => {
                 <CustomInput
                     name="email"
                     value={email}
+                    disabled={!!preFilledEmail}
                     onChange={(e) => { setError(''); setEmail(e.target.value) }}
                     placeholder="e.g. abc@example.com"
                     label="Email"
