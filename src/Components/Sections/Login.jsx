@@ -14,6 +14,8 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [resetModalOpen, setResetModalOpen] = useState(false);
+    const [loginStatus, setLoginStatus] = useState({ success: false, message: '' })
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -47,13 +49,17 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setLoginStatus({ success: false, message: '' })
+
             if (!validateForm()) return;
             setLoading(true)
             await loginUser(formData)
             navigate("/")
-        } catch (error) {
+        } catch (err) {
+            console.error(err);
+            const message = err.response ? err.response.data.message : err.message
+            setLoginStatus({ success: false, message })
             setLoading(false)
-            toast.error(error.response ? error.response.data.message : error.message);
         }
     };
 
@@ -70,6 +76,12 @@ const Login = () => {
                     <p className='text-secondary text-center font-bold text-2xl/[26px]'>Welcome back</p>
                     <p className='text-lText text-center font- text-sm'>Please enter your details to login</p>
                 </div>
+
+                {loginStatus?.message && (
+                    <div className={`flex flex-col gap-4 text-xs py-2 px-4 rounded-lg font-normal ${loginStatus?.success ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'} `}>
+                        {loginStatus?.message}
+                    </div>
+                )}
 
                 <CustomInput
                     name="email"

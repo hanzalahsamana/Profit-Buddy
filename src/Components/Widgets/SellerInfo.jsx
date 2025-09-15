@@ -18,7 +18,7 @@ const SellerInfo = ({ className, seller, handleFilterClick, queryFilter, sellerR
     const { theme } = useSelector((state) => state.system);
     return (
         <div className={`grid grid-cols-4 gap-4 h-auto items-start text-secondary ${className}`}>
-            <CustomCard className={'col-span-2'}>
+            <CustomCard className={'col-span-2'} label={'Seller Info'}>
                 <div className='flex items-start justify-between gap-2'>
                     <div>
                         <p className='text-2xl font-semibold break-all'>{seller?.name}</p>

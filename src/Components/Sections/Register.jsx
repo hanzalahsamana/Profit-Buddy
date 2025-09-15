@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [registerStatus, setRegisterStatus] = useState({ success: false, message: '' })
     const navigate = useNavigate();
 
 
@@ -61,20 +62,24 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setRegisterStatus({ success: false, message: '' })
             if (!validateForm()) return;
             setLoading(true)
-            await registerUser({ email: formData?.email, password: formData?.password, terms: formData?.terms })
-            navigate("/")
-        } catch (error) {
+            const data = await registerUser({ email: formData?.email, password: formData?.password, terms: formData?.terms })
+            setRegisterStatus({ success: true, message: data?.message })
+        } catch (err) {
+            console.error(err);
+            const message = err.response ? err.response.data.message : err.message
+            setRegisterStatus({ success: false, message })
+        } finally {
             setLoading(false)
-            toast.error(error.response ? error.response.data.message : error.message);
         }
     };
 
     return (
-        <div className='flex items-center w-screen h-screen hideScroll justify-center bg-lBackground px-4'>
+        <div className='flex items-center w-screen min-h-screen !py-3  hideScroll justify-center bg-lBackground px-4'>
             <form
-                className='flex flex-col gap-4 w-full px-5 py-4 max-w-[400px] bg-primary shadow-md rounded-xl border border-border'
+                className='flex flex-col gap-4 w-full px-5 py-4 max-w-[400px]   bg-primary shadow-md rounded-xl border border-border'
                 onSubmit={handleSubmit}
             >
                 {/* Logo */}
@@ -83,12 +88,20 @@ const Register = () => {
                 </div>
 
                 {/* Headings */}
-                <div className='flex flex-col items-center'>
+                <div className='flex-1 flex flex-col items-center'>
                     <p className='text-secondary text-center font-bold text-2xl/[26px]'>Create an account</p>
                     <p className='text-lText text-center font- text-sm'>Please fill in the details to get started</p>
                 </div>
 
                 {/* Email */}
+
+                {registerStatus?.message && (
+                    <div className={`flex flex-col gap-4 text-xs  py-2 px-4 rounded-lg font-normal ${registerStatus?.success ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'} `}>
+                        {registerStatus?.message}
+                    </div>
+                )}
+
+                {/* <div className='flex-1 overflow-y-auto customScroll flex flex-col gap-4'> */}
                 <CustomInput
                     name='email'
                     placeholder='abc@example.com'
@@ -148,6 +161,7 @@ const Register = () => {
                     />
                     {errors.terms && <p className="text-red-500 text-xs mt-1">{errors.terms}</p>}
                 </div>
+                {/* </div> */}
 
                 {/* Submit */}
                 <Button

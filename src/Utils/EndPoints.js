@@ -8,6 +8,9 @@ export const EndPoints = {
   verifyResetToken: '/post/verify-reset-token',
   resetPassword: '/post/reset-password',
   updateProfile: '/post/update-profile',
+  verifyEmail: 'post/verify-email',
+  requestDeleteAccount: 'post/request-delete-account',
+  deleteAccount: 'post/delete-account',
 
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,

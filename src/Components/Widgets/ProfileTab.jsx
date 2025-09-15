@@ -6,12 +6,14 @@ import { updateProfile } from '../../Apis/User';
 import { toast } from 'react-toastify';
 import { setUser } from '../../Redux/Slices/UserSlice';
 import ResetPasswordModal from '../UI/ResetPasswordModal';
+import DeleteAccountModal from '../UI/DeleteAccountModal';
 
 const ProfileTab = () => {
     const { user } = useSelector((state) => state?.user);
     const [userName, setUserName] = useState('');
     const [loading, setLoading] = useState(false);
     const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
+    const [deleteAccountModalOpen, setDeleteAccountModalOpen] = useState(false);
 
     const dispatch = useDispatch()
 
@@ -78,10 +80,12 @@ const ProfileTab = () => {
                         variant="danger"
                         label="Delete Account"
                         size="medium"
+                        action={() => setDeleteAccountModalOpen(true)}
                     />
                 </div>
             </div>
             <ResetPasswordModal preFilledEmail={user?.email} isOpen={changePasswordModalOpen} setIsOpen={setChangePasswordModalOpen} />
+            <DeleteAccountModal isOpen={deleteAccountModalOpen} setIsOpen={setDeleteAccountModalOpen} />
 
         </div>
     )

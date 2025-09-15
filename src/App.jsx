@@ -15,10 +15,12 @@ import UserProvider from './Components/Layout/UserProvider'
 import History from './Pages/History'
 import ResetPassword from './Pages/ResetPassword'
 import Account from './Pages/Account'
+import DeleteAccountPage from './Pages/DeleteAccount'
+import VerifyEmailPage from './Pages/VerifyEmail'
 
 function App() {
   const location = useLocation();
-  const hideHeaderRoutes = ["/login", "/register", "/authentication", "/reset-password", "/account"];
+  const hideHeaderRoutes = ["/authentication", "/reset-password", "/account", "/verify", "/delete-account"];
   const showHeader = !hideHeaderRoutes.some(route => location.pathname.startsWith(route));
 
   return (
@@ -30,17 +32,19 @@ function App() {
 
           <Routes>
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify" element={<VerifyEmailPage />} />
 
             <Route element={<PublicRoutes />}>
               <Route path="/authentication" element={<Authentication />} />
             </Route>
-            
+
             <Route element={<PrivateRoutes />}>
               <Route path="/" element={<Home />} />
               <Route path="/detail" element={<ProductDetail />} />
               <Route path="/sellerProfile" element={<SellerProfile />} />
               <Route path="/history" element={<History />} />
               <Route path="/account" element={<Account />} />
+              <Route path="/delete-account" element={<DeleteAccountPage />} />
             </Route>
           </Routes>
         </div>

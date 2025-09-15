@@ -8,8 +8,15 @@ import { authClient, publicClient } from '../Services/Axios';
 export const registerUser = async (payload) => {
   try {
     const { data } = await publicClient.post(`${EndPoints.registerUser}`, payload);
-    dispatch(setUser(data?.user));
-    localStorage.setItem('ProfitBuddyToken', data?.token);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const verifyEmail = async (payload) => {
+  try {
+    const { data } = await publicClient.post(`${EndPoints.verifyEmail}`, payload);
     return data;
   } catch (error) {
     throw error;
@@ -48,6 +55,24 @@ export const verifyResetToken = async (payload) => {
 export const resetPassword = async (payload) => {
   try {
     const { data } = await publicClient.post(`${EndPoints.resetPassword}`, payload);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteAccount = async (payload) => {
+  try {
+    const { data } = await authClient.post(`${EndPoints.deleteAccount}`, payload);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestDeleteAccount = async (payload) => {
+  try {
+    const { data } = await authClient.post(`${EndPoints.requestDeleteAccount}`, payload);
     return data;
   } catch (error) {
     throw error;
