@@ -23,9 +23,16 @@ export const SalesGraphKeys = {
 
 export const OfferGraphKeys = {
   offerCount: { label: 'Offer Count', symbol: '', color: '#039BE5', yAxis: 'left', type: 'line', decimal: false },
-  //Just for creating equal gap on both graph
-  '': { label: '', symbol: '', color: '', yAxis: 'right', type: '', decimal: false },
 };
+
+export const SalesConfig = [
+  { name: 'Amazon', color: '#ff8400', lightColor: '#fff3d6', symbol: '$', strokeWidth: 2, decimal: true, fillGraph: true },
+  { name: 'New Price', color: '#8888dd', lightColor: '#e6e6ff', symbol: '$', strokeWidth: 2, decimal: true },
+  { name: 'Sales Rank', color: '#8FBC8F', lightColor: '#eef7ee', symbol: '#', strokeWidth: 2, decimal: false, axis: 'y2' },
+  { name: 'BuyBox', color: '#ff00b4', lightColor: '#facfed', symbol: '$', strokeWidth: 2, decimal: true },
+];
+
+export const OfferCountConfig = [{ name: 'Offer Count', color: '#8888dd', lightColor: '#f0f0fb', symbol: '', strokeWidth: 2, decimal: false }];
 
 //Icon Images
 export const IconImages = {

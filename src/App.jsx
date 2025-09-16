@@ -17,6 +17,7 @@ import ResetPassword from './Pages/ResetPassword'
 import Account from './Pages/Account'
 import DeleteAccountPage from './Pages/DeleteAccount'
 import VerifyEmailPage from './Pages/VerifyEmail'
+import PaymentPage from './Components/Widgets/CheckoutForm'
 
 function App() {
   const location = useLocation();
@@ -45,6 +46,7 @@ function App() {
               <Route path="/history" element={<History />} />
               <Route path="/account" element={<Account />} />
               <Route path="/delete-account" element={<DeleteAccountPage />} />
+              <Route path="/checkout" element={<PaymentPage />} />
             </Route>
           </Routes>
         </div>

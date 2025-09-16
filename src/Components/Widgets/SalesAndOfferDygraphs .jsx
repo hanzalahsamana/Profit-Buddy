@@ -8,6 +8,7 @@ import Button from '../Controls/Button';
 import { LuRefreshCw } from 'react-icons/lu';
 import PopupMenu from '../Controls/PopupMenu';
 import { IoFilter } from 'react-icons/io5';
+import { OfferCountConfig, SalesConfig } from '../../Enums/Enums';
 
 const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loading, size = 'large', totalDays }) => {
 
@@ -26,24 +27,11 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
     const [offerTooltipData, setOfferTooltipData] = useState({ x: 0, y: 0, points: [], visible: false, });
     const [isZoomed, setIsZoomed] = useState(false);
 
-    const salesConfig = [
-        { name: "Amazon", color: "#ff5900dc", symbol: "$", strokeWidth: 2, decimal: true, fillGraph: true, },
-        { name: "New Price", color: "#039BE5", symbol: "$", strokeWidth: 2, decimal: true, },
-        { name: "Sales Rank", color: "#8FBC8F", symbol: "#", strokeWidth: 2, decimal: false, axis: "y2" },
-        { name: "BuyBox", color: "#f70cd0dc", symbol: "$", strokeWidth: 2, decimal: true, },
-    ];
 
-    const offerConfig = [
-        { name: "Offer Count", color: "#88d", symbol: "", strokeWidth: 2, decimal: false, },
-        // { name: "", color: "", symbol: "", strokeWidth: 2, axis: "y2" },
-        // 
-        // { name: "Amazon", color: "", symbol: "", strokeWidth: 0 },
-    ];
 
     const resetBothGraphsZoom = () => {
         if (gSales) gSales.resetZoom();
         if (gOffer) gOffer.resetZoom();
-        // setIsZoomed(false);
     };
 
 
@@ -54,6 +42,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         Dygraph.prototype.doZoomY_ = function (lowY, highY) {
             // no-op: disables Y-axis zoom entirely
         };
+
         const salesData = graphData.map(d => [
             new Date(d.date),
             d.amazon,
@@ -65,7 +54,6 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         const offerData = graphData.map(d => [
             new Date(d.date),
             d.offerCount,
-            // []
         ]);
 
         let interactionModel = {
@@ -76,13 +64,11 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             interactionModel = {
                 ...Dygraph.defaultInteractionModel,
                 mousedown: function (event, g, context) {
-                    // block drag-to-zoom
                     if (event.button === 0) {
                         return;
                     }
                 },
                 mousewheel: function (event, g, context) {
-                    // block wheel zoom
                     event.preventDefault();
                 },
             };
@@ -90,12 +76,25 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
 
 
         const salesGraph = new Dygraph(salesRef.current, salesData, {
-            labels: ["Date", ...salesConfig.map(s => s.name)],
+            labels: ["Date", ...SalesConfig.map(s => s.name)],
             animatedZooms: true,
-            // zoomCallback: null,
             interactionModel,
             stepPlot: true,
-            gridLinePattern: [5, 5],
+            gridLinePattern: [],
+            gridLineColor: '#cccccc',
+            legend: 'never',
+            colors: SalesConfig.map(s => s.color),
+            drawXGrid: true,
+            drawYGrid: true,
+            drawCallback: (g) => {
+                const ctx = g.hidden_ctx_;
+                const area = g.getArea();
+                ctx.save();
+                ctx.strokeStyle = "#8a8a8a";
+                ctx.lineWidth = 3;
+                ctx.strokeRect(area.x, area.y, area.w, area.h);
+                ctx.restore();
+            },
             axes: {
                 y: {
                     axisLabel: 'Price',
@@ -123,7 +122,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     axisLabelWidth: 90,
                 },
             },
-            series: salesConfig.reduce((acc, s) => {
+            series: SalesConfig.reduce((acc, s) => {
                 acc[s.name] = {
                     strokeWidth: s.strokeWidth,
                     fillGraph: s.fillGraph || false,
@@ -132,85 +131,31 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                 return acc;
             }, {}),
 
-            legend: 'never',
-            colors: salesConfig.map(s => s.color),
-            drawXGrid: false,
-            drawYGrid: true,
-            drawCallback: (g) => {
-                const ctx = g.hidden_ctx_; // canvas context used by dygraphs
-                const area = g.getArea();
 
-                ctx.save();
-                ctx.strokeStyle = "#dadada";
-                ctx.setLineDash([5, 5]);  // dashed pattern
-                ctx.lineWidth = 2;
-                ctx.strokeRect(area.x, area.y, area.w, area.h);
-                ctx.restore();
-            },
-            // drawCallback: (g) => {
-            //     const ctx = g.hidden_ctx_; // canvas context used by dygraphs
-            //     const area = g.getArea();
-
-            //     ctx.save();
-            //     ctx.strokeStyle = "#dadada";
-            //     ctx.setLineDash([5, 5]);  // dashed pattern
-            //     ctx.lineWidth = 2;
-            //     ctx.strokeRect(area.x, area.y, area.w, area.h);
-            //     ctx.restore();
-            // },
-
-            // underlayCallback: (ctx, area, g) => {
-            //     drawCrosshair(g);
-            // }
-            // ,
-            // highlightCallback: (event, x, points, row, seriesName) => {
-            // force redraw so underlayCallback runs
-            // points[0].seriesRow.g.updateOptions({});
-            // },
-
-            // unhighlightCallback: (event) => {
-            //     // clear selection → redraw removes crosshair
-            //     event.target.updateOptions({});
-            // },
-
-            // zoomCallback: (minX, maxX, yRanges, isInitial) => {
-            //     if (setIsZoomed) {
-            //         setIsZoomed(!gSales?.isZoomed() && !gOffer?.isZoomed() ? false : true);
-            //     }
-            // }
 
         });
 
         const offerGraph = new Dygraph(offerRef.current, offerData, {
-            labels: ["Date", ...offerConfig.map(s => s.name)],
+            labels: ["Date", ...OfferCountConfig.map(s => s.name)],
             animatedZooms: true,
+            interactionModel,
             stepPlot: true,
-            gridLinePattern: [5, 5],
+            gridLinePattern: [],
+            gridLineColor: '#cccccc',
             rightGap: 90,
             legend: 'never',
-            colors: offerConfig.map(s => s.color),
-            drawXGrid: false,
+            colors: OfferCountConfig.map(s => s.color),
+            drawXGrid: true,
             drawYGrid: true,
             drawCallback: (g) => {
-                const ctx = g.hidden_ctx_; // canvas context used by dygraphs
+                const ctx = g.hidden_ctx_;
                 const area = g.getArea();
-
                 ctx.save();
-                ctx.strokeStyle = "#dadada";
-                ctx.setLineDash([5, 5]);  // dashed pattern
-                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#8a8a8a";
+                ctx.lineWidth = 3;
                 ctx.strokeRect(area.x, area.y, area.w, area.h);
                 ctx.restore();
             },
-            // highlightCallback: (event, x, points, row, seriesName) => {
-            //     console.log("highlight" , points);
-            // },
-            // drawCallback: (g) => {
-            //     console.log("draw callback");
-
-            // },
-            // interactionModel,
-            // ticker: Dygraph.numericTicks,
             axes: {
                 y: {
                     axisLabel: 'Offers',
@@ -221,15 +166,6 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     axisLineWidth: 0.1,
                     valueFormatter: v => Math.round(v).toLocaleString(),
                     axisLabelFormatter: v => Math.round(v).toLocaleString(),
-
-                    ticker: (min, max, pixels, opts, dygraph, vals) => {
-                        const ticks = [];
-                        const step = 1;
-                        for (let i = Math.ceil(min); i <= Math.floor(max); i += step) {
-                            ticks.push({ v: i, label: i.toString() });
-                        }
-                        return ticks;
-                    }
                 },
                 x: {
                     drawAxis: true,
@@ -238,7 +174,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     axisLabelWidth: 90,
                 },
             },
-            series: offerConfig.reduce((acc, s) => {
+            series: OfferCountConfig.reduce((acc, s) => {
                 acc[s.name] = {
                     strokeWidth: s.strokeWidth,
                     fillGraph: s.fillGraph || false,
@@ -247,38 +183,11 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                 return acc;
             }, {}),
 
-
-
-
-
         });
 
 
-        // salesGraph.updateOptions({
-        //     highlightCallback: (event, x, points, row) => {
-        //         setSalesTooltipData({ x: event.clientX, y: event.clientY, points, visible: true });
-        //     },
-        //     unhighlightCallback: () => {
-        //         setSalesTooltipData((prev) => ({ ...prev, visible: false }));
-        //     },
-        // });
-
-        // offerGraph.updateOptions({
-        //     highlightCallback: (event, x, points, row) => {
-        //         setOfferTooltipData({
-        //             x: event.clientX,
-        //             y: event.clientY,
-        //             points,
-        //             visible: true,
-        //         });
-        //     },
-        //     unhighlightCallback: () => {
-        //         setOfferTooltipData((prev) => ({ ...prev, visible: false }));
-        //     },
-        // });
-
         const sync = synchronize([salesGraph, offerGraph], {
-            zoom: size !== 'small', // disable zoom sync on small screens
+            zoom: size !== 'small',
             selection: true,
             range: false,
         }, size === 'small' ? 0.63 : 1);
@@ -286,7 +195,6 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         attachTooltipSync(
             [salesGraph, offerGraph],
             [setSalesTooltipData, setOfferTooltipData],
-
         );
 
         const handleZoom = () => {
@@ -295,33 +203,39 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             setIsZoomed(zoomed);
         };
 
-
-
         salesGraph.updateOptions({ zoomCallback: handleZoom });
         offerGraph.updateOptions({ zoomCallback: handleZoom });
 
         const totalRows = salesData.length;
         const targetDuration = 1200;
-        const intervalTime = 30;
-        const batchSize = Math.ceil(totalRows / (targetDuration / intervalTime));
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i >= totalRows) {
-                clearInterval(interval);
-                return;
-            }
-            const nextI = Math.min(i + batchSize, totalRows);
+        let startTime = null;
+
+        function animateGraphs(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            const progress = Math.min(elapsed / targetDuration, 1);
+            const nextI = Math.floor(progress * totalRows);
+
             salesGraph.updateOptions({
                 file: salesData.slice(0, nextI)
             });
-            i = nextI;
-        }, intervalTime);
+
+            offerGraph.updateOptions({
+                file: offerData.slice(0, nextI)
+            });
+
+            if (progress < 1) {
+                requestAnimationFrame(animateGraphs);
+            }
+        }
+
+        requestAnimationFrame(animateGraphs);
 
         setGSales(salesGraph);
         setGOffer(offerGraph);
 
         return () => {
-            clearInterval(interval);
             salesGraph.destroy();
             offerGraph.destroy();
             sync.detach();
@@ -342,14 +256,13 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         return vals;
     };
 
-
-    const salesLabels = salesConfig?.map((s) => s?.name);
-    const offerLabels = offerConfig?.map((s) => s?.name);
+    const salesLabels = SalesConfig?.map((s) => s?.name);
+    const offerLabels = OfferCountConfig?.map((s) => s?.name);
     const salesLast = getLastValues(gSales, salesLabels);
     const offerLast = getLastValues(gOffer, offerLabels);
 
     return (
-        <div className='flex flex-col gap-4 w-full'>
+        <div className='flex flex-col gap-3 w-full'>
             {size !== 'small' && (
                 <div className='flex justify-between items-center'>
                     <div className='flex gap-2 items-center'>
@@ -407,9 +320,9 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                     </div>
                 </div>
             )}
-            <div className='bg-white py-4 rounded-lg'>
+            <div className='bg-white py-2 rounded-lg'>
                 <ul className="hidden sm:flex gap-4 py-2.5 px-6">
-                    {salesConfig.map((s, idx) => (
+                    {SalesConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
                             <span className="font-medium text-[#000000b1]">
@@ -418,19 +331,19 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                         </li>
                     ))}
                 </ul>
-                <div ref={salesRef} style={{ width: '100%', height: '220px' }} />
+                <div ref={salesRef} style={{ width: '100%', height: '240px' }} />
                 {salesTooltipData.visible && (
-                    <CustomTooltip {...salesTooltipData} configs={salesConfig} />
+                    <CustomTooltip {...salesTooltipData} configs={SalesConfig} />
                 )}
             </div >
-            {size !== 'small' && (
+            {/* {size !== 'small' && (
                 <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
-            )}
+            )} */}
 
-            <div className='bg-white py-4 rounded-lg'>
+            <div className='bg-white py-2 rounded-lg'>
 
                 <ul className="hidden sm:flex gap-4 py-2.5 px-6">
-                    {offerConfig.map((s, idx) => (
+                    {OfferCountConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
                             <span className="font-medium text-[#000000b1]">
@@ -439,9 +352,9 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                         </li>
                     ))}
                 </ul>
-                <div ref={offerRef} style={{ width: '100%', height: '220px' }} />
+                <div ref={offerRef} style={{ width: '100%', height: '240px' }} />
                 {offerTooltipData.visible && (
-                    <CustomTooltip {...offerTooltipData} configs={offerConfig} />
+                    <CustomTooltip {...offerTooltipData} configs={OfferCountConfig} />
                 )}
 
             </div>

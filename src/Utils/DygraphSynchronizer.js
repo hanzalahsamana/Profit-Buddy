@@ -258,7 +258,7 @@ const attachVerticalLine = (graphs, scaleFactor = 1) => {
   });
 };
 
-export function synchronize(graphs, opts = { selection: true, zoom: true, range: true } , scaleFactor = 1) {
+export function synchronize(graphs, opts = { selection: true, zoom: true, range: true }, scaleFactor = 1) {
   if (!graphs || graphs.length < 2) {
     throw new Error('Need at least two Dygraphs to synchronize.');
   }
@@ -283,7 +283,7 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
           attachDragOverlaySyncX(gs);
         }
         if (opts.selection) attachSelectionHandlers(gs, prevCallbacks);
-        attachVerticalLine(gs , scaleFactor);
+        attachVerticalLine(gs, scaleFactor);
       }
     });
   });
@@ -320,20 +320,24 @@ export function attachTooltipSync(graphs, setTooltipDatas) {
       highlightCallback: (event, x, points, row) => {
         graphs.forEach((other, j) => {
           const rowIndex = other.getRowForX(x);
+          const rect = other.graphDiv.getBoundingClientRect();
+
           let tooltipData = {
             date: null,
             data: [],
+            rect, // pass rect so tooltip can anchor to chart
           };
 
           if (rowIndex !== null) {
-            const labels = other.getLabels(); // ['Date', 'series1', ...]
-            tooltipData.date = other.getValue(rowIndex, 0); // get the date of this row
+            const labels = other.getLabels();
+            tooltipData.date = other.getValue(rowIndex, 0);
 
             for (let col = 1; col < labels.length; col++) {
               const yVal = other.getValue(rowIndex, col);
               if (yVal == null) continue;
 
               const xVal = other.getValue(rowIndex, 0);
+              // toDomCoords returns pixel coords relative to the graphDiv (DOM).
               const [canvasX, canvasY] = other.toDomCoords(xVal, yVal);
 
               tooltipData.data.push({
@@ -343,24 +347,16 @@ export function attachTooltipSync(graphs, setTooltipDatas) {
                 col,
                 canvasx: canvasX,
                 canvasy: canvasY,
+                // optionally: color: other.getPropertiesForSeries ? other.getPropertiesForSeries(labels[col]).color : undefined
               });
             }
           }
 
-          // Determine tooltip position
-          let tx = event.clientX;
-          let ty = event.clientY;
-          if (tooltipData.data.length > 0) {
-            const rect = other.graphDiv.getBoundingClientRect();
-            tx = rect.left + tooltipData.data[0].canvasx;
-            ty = rect.top + tooltipData.data[0].canvasy;
-          }
-
+          // set tooltip state for this graph index j
           setTooltipDatas[j]({
-            x: tx,
-            y: ty,
-            points: { ...tooltipData },
-            visible: true,
+            rect, // bounding rect of the graphDiv
+            points: tooltipData,
+            visible: tooltipData.data.length > 0,
           });
         });
       },

@@ -113,30 +113,32 @@ const ProductDetail = () => {
             <div className='grid grid-cols-1 lg:grid-cols-5  gap-4 h-full items-start p-4 text-secondary bg-lBackground'>
                 <div className='lg:col-span-3 flex flex-col gap-4'>
 
+
                     <AnimationWrapper>
                         <CustomCard label={'Basic Info'}>
                             <BasicInfo product={product} />
                         </CustomCard>
                     </AnimationWrapper>
 
-                    <AnimationWrapper className={'block xs:hidden'} >
+                    {/* <AnimationWrapper className={'block xs:hidden'} >
                         <CustomCard label={'Score Buddy'}>
                             <ScoreChart />
                         </CustomCard>
-                    </AnimationWrapper>
+                    </AnimationWrapper> */}
 
                     <AnimationWrapper>
-                        <CustomCard label={"Top Offers"}>
+                        <CustomCard label={"Store Spy"}>
                             <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
                         </CustomCard>
                     </AnimationWrapper>
-
+                    
                     <AnimationWrapper>
                         <CustomCard label={'Graphs'}>
-                            {/* <SalesAndOfferDygraphs graphData={product?.graphData?.keepaGraphData} /> */}
                             <ChartWraaper product={product} />
                         </CustomCard>
                     </AnimationWrapper>
+
+
                 </div>
 
                 <div className='lg:col-span-2 flex flex-col gap-4'>

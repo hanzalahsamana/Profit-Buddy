@@ -33,7 +33,7 @@ const BasicInfo = ({ product }) => {
                         {calculateEstimatSellerAsinRevenue(product) > 0 && (
                             <div className='flex flex-col items-start gap-1.5'>
                                 <p className='text-[22px]/[22px] flex items-end gap-1 font-semibold text-secondary'>{formatNumberWithCommas(calculateEstimatSellerAsinRevenue(product, 3))}</p>
-                                <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>Est Product Rev</p>
+                                <p className='text-lText font-medium text-[14px]/[14px] tracking-tight'>EST Monthly Product Rev</p>
                             </div>
                         )}
                         <div className="overflow-x-auto border-[1.5px] border-accent rounded-lg max-w-md content-end">
@@ -72,9 +72,9 @@ const BasicInfo = ({ product }) => {
                         </div>
                     </div>
                     <div className='flex items-end gap-2 '>
-                        <div className='hidden xs:block'>
+                        {/* <div className='hidden xs:block'>
                             <ScoreChart />
-                        </div>
+                        </div> */}
                         <ProductActionButtons product={product} />
                     </div>
                 </div>

@@ -48,15 +48,6 @@ const ChartWraaper = ({ product, size = 'large', className = '' }) => {
     return (
         <div className={`flex flex-col gap-4 w-full ${className}`}>
             <SalesAndOfferDygraphs graphData={formattedGraphData} currentFilter={currentFilter} loading={loading} setCurrentFilter={setCurrentFilter} size={size} totalDays={historyLength} />
-
-            {/* {loading ? (
-                <GraphCardLoader />
-            ) : (
-                <DynamicChart graphData={formattedGraphData || []} graphKeys={SalesGraphKeys} zoom={zoom} />
-            )}
-            {loading ? (<GraphCardLoader />) : (
-                <DynamicChart graphData={formattedGraphData || []} graphKeys={OfferGraphKeys} zoom={zoom} />
-            )} */}
         </div>
     )
 }

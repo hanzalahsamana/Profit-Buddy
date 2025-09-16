@@ -6,12 +6,12 @@ import { redirectToSellerCentralAddProduct, redirectToSellerCentralHome, redirec
 
 const SellerCentral = ({ product }) => {
     return (
-            <div className='flex flex-wrap gap-2 items-center'>
-                <Button action={(e) => redirectToSellerCentralHome(e)} size='medium' className='!px-5' variant='secondary' label={<IoHome size={16} />} />
-                <Button action={(e) => redirectToSellerCentralAddProduct(e, product?.asin)} size='medium' className='!px-5' variant='secondary' label='Add Product' />
-                <Button action={(e) => redirectToSellerCentralInventory(e, product?.asin)} size='small' className='!px-5' variant='secondary' label='Inventory' />
-                <Button action={(e) => redirectToSellerCentralOrders(e, product?.asin)} size='medium' className='!px-5' variant='secondary' label='Orders' />
-            </div>
+        <div className='flex flex-wrap gap-2 items-center'>
+            <Button action={(e) => redirectToSellerCentralHome(e)} size='medium' className='!px-5' variant='secondary' label={<IoHome size={16} />} />
+            <Button action={(e) => redirectToSellerCentralAddProduct(e, product?.asin)} size='medium' className='!px-5' variant='secondary' label='Add Product' />
+            <Button action={(e) => redirectToSellerCentralInventory(e, product?.asin)} size='medium' className='!px-5' variant='secondary' label='Inventory' />
+            <Button action={(e) => redirectToSellerCentralOrders(e, product?.asin)} size='medium' className='!px-5' variant='secondary' label='Orders' />
+        </div>
     )
 }
 

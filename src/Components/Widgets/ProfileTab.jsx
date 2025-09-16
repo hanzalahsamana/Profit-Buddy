@@ -55,7 +55,7 @@ const ProfileTab = () => {
                 />
                 <div>
                     <p className="text-base font-medium  text-secondary/80">Email</p>
-                    <p className="text-lText ">{user?.email}</p>
+                    <p className="text-lText text-lg">{user?.email}</p>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@ const ProfileTab = () => {
                     <p className="text-base/[20px] font-medium  text-secondary/80">Password</p>
                     <p className="text-sm  text-lText pb-2">Changing your password will log you out from all devices.</p>
                     <Button
-                        corner="none"
+                        corner="small"
                         variant="secondary"
                         label="Change Password"
                         size="medium"
@@ -76,7 +76,7 @@ const ProfileTab = () => {
                 <div className="flex flex-col w-full justify-center gap-1">
                     <p className="text-base font-medium  text-secondary/80">Account</p>
                     <Button
-                        corner="none"
+                        corner="small"
                         variant="danger"
                         label="Delete Account"
                         size="medium"

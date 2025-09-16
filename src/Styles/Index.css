@@ -168,3 +168,7 @@ html {
     transform: translateX(-80%);
   }
 }
+
+input:-webkit-autofill {
+  transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+}

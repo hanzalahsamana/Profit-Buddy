@@ -190,3 +190,17 @@ function applyPercentage(num, method, percentage) {
     return num;
   }
 }
+
+export const lightenColor = (hex, amount = 0.7) => {
+  const bigint = parseInt(hex.replace('#', ''), 16);
+  let r = (bigint >> 16) & 255;
+  let g = (bigint >> 8) & 255;
+  let b = bigint & 255;
+
+  // interpolate towards white
+  r = Math.round(r + (255 - r) * amount);
+  g = Math.round(g + (255 - g) * amount);
+  b = Math.round(b + (255 - b) * amount);
+
+  return `rgb(${r}, ${g}, ${b})`;
+};

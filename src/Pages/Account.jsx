@@ -5,9 +5,10 @@ import { FiUser, FiCreditCard, FiDollarSign, FiSettings } from "react-icons/fi";
 import ProfileTab from "../Components/Widgets/ProfileTab";
 import SubscriptionTab from './../Components/Widgets/SubscriptionTab';
 import BillingTab from './../Components/Widgets/BillingTab';
-import { Link, useSearchParams } from "react-router-dom";
-import { IoCloseOutline } from "react-icons/io5";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { IoArrowBack, IoCloseOutline } from "react-icons/io5";
 import AccountTabsWrapper from "../Components/Layout/AccountTabsWrapper";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const tabs = [
   { name: "Profile", value: "profile", icon: FiUser },
@@ -17,6 +18,7 @@ const tabs = [
 ];
 const Account = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const tabParam = searchParams.get("tab");
 
   const [activeTab, setActiveTab] = useState(tabParam || 'profile');
@@ -26,7 +28,14 @@ const Account = () => {
   }, [tabParam]);
 
   return (
-    <div className="bg-lBackground min-h-screen w-[100%] relative flex flex-col gap-7 p-4 md:p-10">
+    <div className="bg-lBackground min-h-screen w-[100%] relative flex flex-col gap-7 px-4 py-8 md:px-10">
+
+      {/* <div > */}
+      <button onClick={() => navigate("/")} className="flex items-center justify-end w-max gap-2 cursor-pointer hover:opacity-75 transition-all">
+        <IoArrowBack strokeWidth={4} size={24} />
+        <p className="text-[28px]/[28px] font-semibold">Manage Account</p>
+      </button>
+      {/* </div> */}
       <div className="w-[100%] grid grid-cols-3 relative overflow-hidden items-center border bg-primary border-border h-[50px] rounded-xl">
         {tabs.map(({ name, value, icon: Icon }) => (
           <Link

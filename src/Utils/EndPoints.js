@@ -11,6 +11,8 @@ export const EndPoints = {
   verifyEmail: 'post/verify-email',
   requestDeleteAccount: 'post/request-delete-account',
   deleteAccount: 'post/delete-account',
+  deleteAccount: 'post/delete-account',
+  createSubscription: 'post/create-subscription',
 
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,
