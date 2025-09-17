@@ -134,11 +134,9 @@ const ProductDetail = () => {
                     
                     <AnimationWrapper>
                         <CustomCard label={'Graphs'}>
-                            <ChartWraaper product={product} />
+                            <ChartWraaper product={product} size='large' />
                         </CustomCard>
                     </AnimationWrapper>
-
-
                 </div>
 
                 <div className='lg:col-span-2 flex flex-col gap-4'>

@@ -49,6 +49,7 @@ function attachSelectionHandlers(gs, prevCallbacks) {
     g.updateOptions(
       {
         highlightCallback: function (event, x, points, row, seriesName) {
+          return null;
           if (block) return;
           block = true;
           gs.forEach((other, j) => {
@@ -174,12 +175,13 @@ function attachDragOverlaySyncX(gs) {
       });
     });
 
-    canvas.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
       isDragging = false;
       startX = null;
 
       gs.forEach((other) => {
-        const overlay2 = other.graphDiv.querySelector('.drag-overlay');
+        if (!other?.graphDiv) return;
+        const overlay2 = other?.graphDiv?.querySelector('.drag-overlay');
         const ctx2 = overlay2.getContext('2d');
         ctx2.clearRect(0, 0, overlay2.width, overlay2.height);
       });
@@ -221,8 +223,9 @@ const attachVerticalLine = (graphs, scaleFactor = 1) => {
       }
 
       ctx.clearRect(0, 0, movingLine.width, movingLine.height);
-      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
-      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = 'rgb(128, 128, 128)';
+      ctx.lineWidth = 1.5;
+      movingLine.style.zIndex = 10;
       ctx.beginPath();
       ctx.moveTo(mouseX + plotArea.x, plotArea.y);
       ctx.lineTo(mouseX + plotArea.x, plotArea.y + plotArea.h);
@@ -240,8 +243,9 @@ const attachVerticalLine = (graphs, scaleFactor = 1) => {
         const otherX = scaleX * otherPlotArea.w;
 
         otherCtx.clearRect(0, 0, otherCanvas.width, otherCanvas.height);
-        otherCtx.strokeStyle = 'rgba(0,0,0,0.6)';
-        otherCtx.lineWidth = 0.6;
+        ctx.strokeStyle = 'rgb(128, 128, 128)';
+        ctx.lineWidth = 1.5;
+        movingLine.style.zIndex = 10;
         otherCtx.beginPath();
         otherCtx.moveTo(otherX + otherPlotArea.x, otherPlotArea.y);
         otherCtx.lineTo(otherX + otherPlotArea.x, otherPlotArea.y + otherPlotArea.h);
@@ -282,7 +286,7 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
           attachZoomHandlers(gs, opts, prevCallbacks);
           attachDragOverlaySyncX(gs);
         }
-        if (opts.selection) attachSelectionHandlers(gs, prevCallbacks);
+        // if (opts.selection) attachSelectionHandlers(gs, prevCallbacks);
         attachVerticalLine(gs, scaleFactor);
       }
     });
@@ -302,6 +306,9 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
             unhighlightCallback: prevCallbacks[i]?.unhighlightCallback || null,
           });
         }
+
+        console.log('ye chala ');
+
         const ov = g.graphDiv.querySelector('.drag-overlay');
         if (ov) {
           const ctx = ov.getContext('2d');
@@ -313,57 +320,113 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
     },
   };
 }
-
 export function attachTooltipSync(graphs, setTooltipDatas) {
+  const lastValidData = Array(graphs.length).fill(null);
+
   graphs.forEach((g, i) => {
-    g.updateOptions({
-      highlightCallback: (event, x, points, row) => {
-        graphs.forEach((other, j) => {
-          const rowIndex = other.getRowForX(x);
-          const rect = other.graphDiv.getBoundingClientRect();
+    g.graphDiv.addEventListener('mousemove', (e) => {
+      const plotArea = g.plotter_.area;
+      const rect = g.graphDiv.getBoundingClientRect();
 
-          let tooltipData = {
-            date: null,
-            data: [],
-            rect, // pass rect so tooltip can anchor to chart
-          };
+      // Mouse X relative to entire graph + relative to plot area
+      const absoluteX = e.clientX - rect.left;
+      const relativeX = absoluteX - plotArea.x;
+      if (relativeX < 0 || relativeX > plotArea.w) return; // ignore outside graph area
 
-          if (rowIndex !== null) {
-            const labels = other.getLabels();
-            tooltipData.date = other.getValue(rowIndex, 0);
+      const yPixel = e.clientY - rect.top;
 
-            for (let col = 1; col < labels.length; col++) {
-              const yVal = other.getValue(rowIndex, col);
-              if (yVal == null) continue;
+      const [dataX] = g.toDataCoords(relativeX + 85, yPixel);
 
-              const xVal = other.getValue(rowIndex, 0);
-              // toDomCoords returns pixel coords relative to the graphDiv (DOM).
-              const [canvasX, canvasY] = other.toDomCoords(xVal, yVal);
+      graphs.forEach((other, j) => {
+        let rowIndex = other.getRowForX(dataX);
+        let isExact = true;
 
-              tooltipData.data.push({
-                name: labels[col],
-                yval: yVal,
-                row: rowIndex,
-                col,
-                canvasx: canvasX,
-                canvasy: canvasY,
-                // optionally: color: other.getPropertiesForSeries ? other.getPropertiesForSeries(labels[col]).color : undefined
-              });
+        if (rowIndex === null) {
+          isExact = false;
+          let closestIndex = null;
+          let minDiff = Infinity;
+
+          for (let k = 0; k < other.numRows(); k++) {
+            const rowX = other.getValue(k, 0);
+
+            if (rowX > dataX) continue; // ⬅️ Skip all future points
+
+            const diff = dataX - rowX; // No need for Math.abs, since rowX <= dataX
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestIndex = k;
             }
           }
 
-          // set tooltip state for this graph index j
-          setTooltipDatas[j]({
-            rect, // bounding rect of the graphDiv
-            points: tooltipData,
-            visible: tooltipData.data.length > 0,
-          });
-        });
-      },
+          if (closestIndex !== null) rowIndex = closestIndex;
+        }
 
-      unhighlightCallback: () => {
-        setTooltipDatas.forEach((setTooltip) => setTooltip((prev) => ({ ...prev, visible: false })));
-      },
+        const otherRect = other.graphDiv.getBoundingClientRect();
+
+        let tooltipData = {
+          xPixel: absoluteX,
+          date: dataX,
+          data: [],
+          rect: otherRect,
+          isExact,
+        };
+
+        if (rowIndex !== null) {
+          const labels = other.getLabels();
+          const xVal = other.getValue(rowIndex, 0);
+          // tooltipData.date = xVal;
+
+          const y1Range = other.yAxisRange(0);
+          const y2Range = other.yAxisRange(1);
+
+          const seriesOpts = other.getOption('series') || {};
+
+          for (let col = 1; col < labels.length; col++) {
+            let yVal = other.getValue(rowIndex, col);
+            if (yVal == null) continue;
+
+            // normalize if series uses y2 axis
+            const axis = seriesOpts[labels[col]]?.axis;
+            let yValForCoord = yVal;
+            if (axis === 'y2' && y2Range) {
+              const [y1Min, y1Max] = y1Range;
+              const [y2Min, y2Max] = y2Range;
+              const ratio = (yVal - y2Min) / (y2Max - y2Min);
+              yValForCoord = y1Min + ratio * (y1Max - y1Min);
+            }
+
+            const [canvasX, canvasY] = other.toDomCoords(xVal, yValForCoord);
+
+            tooltipData.data.push({
+              name: labels[col],
+              yval: yVal,
+              row: rowIndex,
+              col,
+              canvasx: canvasX,
+              canvasy: canvasY,
+            });
+          }
+
+          lastValidData[j] = tooltipData;
+        } else if (lastValidData[j]) {
+          tooltipData = {
+            ...lastValidData[j],
+            date: dataX,
+            xPixel: absoluteX ,
+            isExact: false,
+          };
+        }
+
+        setTooltipDatas[j]({
+          rect: otherRect,
+          points: tooltipData,
+          visible: true,
+        });
+      });
+    });
+
+    g.graphDiv.addEventListener('mouseleave', () => {
+      setTooltipDatas.forEach((setTooltip) => setTooltip((prev) => ({ ...prev, visible: false })));
     });
   });
 }

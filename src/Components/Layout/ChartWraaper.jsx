@@ -6,6 +6,9 @@ import SalesAndOfferDygraphs from '../Widgets/SalesAndOfferDygraphs ';
 
 const ChartWraaper = ({ product, size = 'large', className = '' }) => {
 
+    console.log(product.asin, "🚚🚚");
+
+
     const { asin, historyLength } = product || {}
     const { keepaGraphData } = product?.graphData || {}
 
@@ -47,16 +50,16 @@ const ChartWraaper = ({ product, size = 'large', className = '' }) => {
 
     return (
         <div className={`flex flex-col gap-4 w-full ${className}`}>
-            <SalesAndOfferDygraphs graphData={formattedGraphData} currentFilter={currentFilter} loading={loading} setCurrentFilter={setCurrentFilter} size={size} totalDays={historyLength} />
+            <SalesAndOfferDygraphs graphData={formattedGraphData} productInfo={product?.info} currentFilter={currentFilter} loading={loading} setCurrentFilter={setCurrentFilter} size={size} totalDays={historyLength} />
         </div>
     )
 }
 
 export default React.memo(ChartWraaper, (prevProps, nextProps) => {
     return (
-        prevProps.asin === nextProps.asin &&
+        prevProps.product.asin === nextProps.product.asin &&
         prevProps.size === nextProps.size &&
         prevProps.className === nextProps.className &&
-        isEqual(prevProps.keepaGraphData, nextProps.keepaGraphData)
+        isEqual(prevProps.product?.graphData?.keepaGraphData, nextProps.product?.graphData?.keepaGraphData)
     )
 })

@@ -72,7 +72,7 @@ export const formatDate = (date = '') => {
 export const formatTime = (date = '') => {
   if (!date) return;
   const locale = 'en-US';
-  const timeFormatOptions = { hour: '2-digit', minute: '2-digit' };
+  const timeFormatOptions = { hour: '2-digit',   hour12: false, minute: '2-digit' };
 
   return new Date(date).toLocaleTimeString(locale, timeFormatOptions);
 };

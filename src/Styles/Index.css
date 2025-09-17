@@ -172,3 +172,7 @@ html {
 input:-webkit-autofill {
   transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
 }
+
+.abc{
+  color: #80808051;
+}

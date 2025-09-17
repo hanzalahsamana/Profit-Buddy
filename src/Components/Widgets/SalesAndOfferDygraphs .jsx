@@ -10,7 +10,7 @@ import PopupMenu from '../Controls/PopupMenu';
 import { IoFilter } from 'react-icons/io5';
 import { OfferCountConfig, SalesConfig } from '../../Enums/Enums';
 
-const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loading, size = 'large', totalDays }) => {
+const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurrentFilter, loading, size = 'large', totalDays }) => {
 
     if (!graphData?.length) return (
         <div className=" w-full border border-border !h-full min-h-[240px] flex flex-col gap-0 items-center justify-center bg-primary">
@@ -80,11 +80,13 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             animatedZooms: true,
             interactionModel,
             stepPlot: true,
+            highlightCircleSize: 0,
             gridLinePattern: [],
             gridLineColor: '#cccccc',
             legend: 'never',
             colors: SalesConfig.map(s => s.color),
             drawXGrid: true,
+            // yRangePad: 25,
             drawYGrid: true,
             drawCallback: (g) => {
                 const ctx = g.hidden_ctx_;
@@ -141,8 +143,10 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             interactionModel,
             stepPlot: true,
             gridLinePattern: [],
+            highlightCircleSize: 0,
             gridLineColor: '#cccccc',
             rightGap: 90,
+            // yRangePad: 25,
             legend: 'never',
             colors: OfferCountConfig.map(s => s.color),
             drawXGrid: true,
@@ -158,6 +162,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
             },
             axes: {
                 y: {
+
                     axisLabel: 'Offers',
                     axisLabelWidth: 80,
                     axisLabelFontSize: 13,
@@ -178,7 +183,7 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                 acc[s.name] = {
                     strokeWidth: s.strokeWidth,
                     fillGraph: s.fillGraph || false,
-                    axis: s.axis || 'y'
+                    axis: s.axis || 'y',
                 };
                 return acc;
             }, {}),
@@ -242,27 +247,27 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
         };
     }, [graphData]);
 
-    const getLastValues = (graph, labels) => {
-        if (!graph) return {};
-        const lastIndex = graph.numRows() - 1;
-        const vals = {};
-        labels.forEach(label => {
-            const colIndex = graph.getLabels().indexOf(label);
-            if (colIndex > 0) {
-                const v = graph.getValue(lastIndex, colIndex);
-                vals[label] = v != null ? v : "-";
-            }
-        });
-        return vals;
-    };
+    // const getLastValues = (graph, labels) => {
+    //     if (!graph) return {};
+    //     const lastIndex = graph.numRows() - 1;
+    //     const vals = {};
+    //     labels.forEach(label => {
+    //         const colIndex = graph.getLabels().indexOf(label);
+    //         if (colIndex > 0) {
+    //             const v = graph.getValue(lastIndex, colIndex);
+    //             vals[label] = v != null ? v : null;
+    //         }
+    //     });
+    //     return vals;
+    // };
 
-    const salesLabels = SalesConfig?.map((s) => s?.name);
-    const offerLabels = OfferCountConfig?.map((s) => s?.name);
-    const salesLast = getLastValues(gSales, salesLabels);
-    const offerLast = getLastValues(gOffer, offerLabels);
+    // const salesLabels = SalesConfig?.map((s) => s?.name);
+    // const offerLabels = OfferCountConfig?.map((s) => s?.name);
+    // const salesLast = getLastValues(gSales, salesLabels);
+    // const offerLast = getLastValues(gOffer, offerLabels);
 
     return (
-        <div className='flex flex-col gap-3 w-full'>
+        <div className='flex flex-col gap-4 w-full'>
             {size !== 'small' && (
                 <div className='flex justify-between items-center'>
                     <div className='flex gap-2 items-center'>
@@ -303,8 +308,8 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                                     },
                                     {
                                         name: `All (${totalDays ?? ''} Days)`,
-                                        action: () => setCurrentFilter('all'),
-                                        selected: currentFilter === "all",
+                                        action: () => setCurrentFilter(totalDays ?? 10000),
+                                        selected: currentFilter === totalDays,
                                     },
                                 ]}
                             />
@@ -315,23 +320,31 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                             <Button action={() => setCurrentFilter(90)} disabled={loading} label='90 days' corner='small' className={`!px-3 ${currentFilter === 90 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
                             <Button action={() => setCurrentFilter(180)} disabled={loading} label='180 days' corner='small' className={`!px-3 ${currentFilter === 180 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
                             <Button action={() => setCurrentFilter(365)} disabled={loading} label='1 Year' corner='small' className={`!px-3 ${currentFilter === 365 && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
-                            <Button action={() => setCurrentFilter("all")} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === "all" && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
+                            <Button action={() => setCurrentFilter(totalDays ?? 10000)} disabled={loading} label={`All (${totalDays ?? ''} Days)`} corner='small' className={`!px-3 ${currentFilter === totalDays && !loading ? "!border-accent !text-accent" : ""}`} size='small' variant='outline' />
                         </div>
                     </div>
                 </div>
             )}
-            <div className='bg-white py-2 rounded-lg'>
+            <div className='bg-white py-2 rounded-lg z-20'>
                 <ul className="hidden sm:flex gap-4 py-2.5 px-6">
                     {SalesConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
                             <span className="font-medium text-[#000000b1]">
-                                {s.name}: {s.symbol}{salesLast[s.name]?.toLocaleString()}
+                                {s.name}:{" "}
+                                {(!productInfo?.[s.key] || productInfo?.[s.key] < 0) ? (
+                                    <i className='font-normal text-xs'>No Record</i>
+                                ) : (
+                                    <>
+                                        {s.symbol}
+                                        {productInfo?.[s.key]?.toLocaleString()}
+                                    </>
+                                )}
                             </span>
                         </li>
                     ))}
                 </ul>
-                <div ref={salesRef} style={{ width: '100%', height: '240px' }} />
+                <div ref={salesRef} style={{ width: '100%', height: size === 'large' ? '260px' : '240px' }} />
                 {salesTooltipData.visible && (
                     <CustomTooltip {...salesTooltipData} configs={SalesConfig} />
                 )}
@@ -340,19 +353,27 @@ const SalesAndOfferDygraphs = ({ graphData, currentFilter, setCurrentFilter, loa
                 <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
             )} */}
 
-            <div className='bg-white py-2 rounded-lg'>
+            <div className={`bg-white py-2 rounded-lg z-10 ${size === 'large' ? 'mt-6':''}`}>
 
                 <ul className="hidden sm:flex gap-4 py-2.5 px-6">
                     {OfferCountConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
                             <span className="font-medium text-[#000000b1]">
-                                {s.name}: {s.symbol}{offerLast[s.name]?.toLocaleString()}
+                                {s.name}:{" "}
+                                {(!productInfo?.[s.key] || productInfo?.[s.key] < 0) ? (
+                                    <i className='font-normal text-xs'>No Record</i>
+                                ) : (
+                                    <>
+                                        {s.symbol}
+                                        {productInfo?.[s.key]?.toLocaleString()}
+                                    </>
+                                )}
                             </span>
                         </li>
                     ))}
                 </ul>
-                <div ref={offerRef} style={{ width: '100%', height: '240px' }} />
+                <div ref={offerRef} style={{ width: '100%', height: size === 'small' ? '240px' : '260px' }} />
                 {offerTooltipData.visible && (
                     <CustomTooltip {...offerTooltipData} configs={OfferCountConfig} />
                 )}
