@@ -127,16 +127,17 @@ const ProductDetail = () => {
                     </AnimationWrapper> */}
 
                     <AnimationWrapper>
+                        <CustomCard label={'Graphs'}>
+                            <ChartWraaper product={product} size='large' />
+                        </CustomCard>
+                    </AnimationWrapper>
+                    
+                    <AnimationWrapper>
                         <CustomCard label={"Store Spy"}>
                             <TopOffers product={product} productOffers={productOffers} offerLoading={offerLoading} />
                         </CustomCard>
                     </AnimationWrapper>
                     
-                    <AnimationWrapper>
-                        <CustomCard label={'Graphs'}>
-                            <ChartWraaper product={product} size='large' />
-                        </CustomCard>
-                    </AnimationWrapper>
                 </div>
 
                 <div className='lg:col-span-2 flex flex-col gap-4'>
@@ -149,7 +150,6 @@ const ProductDetail = () => {
                         <CustomCard label={'Seller Central'}>
                             <SellerCentral product={product} />
                         </CustomCard>
-
                     </AnimationWrapper>
                     <AnimationWrapper>
                         <CustomCard label={'Chat Buddy'}>

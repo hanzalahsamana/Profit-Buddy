@@ -71,8 +71,8 @@ export default function ResetPasswordPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("hello" , validateForm());
-        
+        console.log("hello", validateForm());
+
         if (!validateForm()) return;
         try {
             setSubmitting(true);
@@ -173,6 +173,16 @@ export default function ResetPasswordPage() {
                     type='submit'
                     loading={submitting}
                 />
+
+                <p className="text-sm text-lText text-center">
+                    Dont want to rest?{" "}
+                    <Link
+                        to={'/authentication?tab=login'}
+                        className="text-accent font-medium cursor-pointer hover:text-accent/70 transition"
+                    >
+                        Login here
+                    </Link>
+                </p>
 
             </form >
         </div >
