@@ -36,3 +36,15 @@ export const Converters = {
   mmToCm: (mm) => mm / 10,
   mmToMeter: (mm) => mm / 1000,
 };
+
+export const toCents = (value) => {
+  if (!value) return 0;
+
+  const str = String(value);
+
+  if (str.includes('.')) {
+    return Number(str.replace('.', '').replace(/^0+/, '')) || '';
+  } else {
+    return Number(str);
+  }
+};

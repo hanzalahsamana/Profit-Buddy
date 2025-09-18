@@ -9,6 +9,7 @@ const initialState = {
   salePrice: 0,
   storageMonth: 0,
   fulfillment: 'FBA',
+  fbmFee: 0,
   placementFeeType: PLACEMENT_FEE_TYPES[0], // minimal , partial , optimized
 
   // derived values
@@ -54,8 +55,19 @@ const profitCalcSlice = createSlice({
       state.storageMonth = action.payload;
       profitCalcSlice.caseReducers.recalculate(state);
     },
+
     setFulfillment(state, action) {
       state.fulfillment = action.payload;
+      profitCalcSlice.caseReducers.recalculate(state);
+    },
+
+    setFbmFee(state, action) {
+      const val = action.payload;
+      if (val === '') {
+        state.fbmFee = '';
+      } else {
+        state.fbmFee = val < 0 ? 0 : val; // clamp at 0
+      }
       profitCalcSlice.caseReducers.recalculate(state);
     },
 
@@ -67,11 +79,10 @@ const profitCalcSlice = createSlice({
 
     // place to recalc all derived values
     recalculate(state) {
-      const fees = calculateTotalFees(state.product, state.salePrice, state.storageMonth, state.fulfillment === 'FBA', state.placementFeeType);
+
+      const fees = calculateTotalFees(state.product, state.salePrice, state.storageMonth, state.fulfillment === 'FBA', state.fbmFee, state.placementFeeType);
       state.fees = fees;
-
       state.maxCost = calculateMaxCost(state.salePrice, fees?.totalFees);
-
       const { profit, roi } = calculateProfitAndROI(fees?.totalFees, state.salePrice, state.buyCost);
 
       state.profit = profit;
@@ -80,6 +91,6 @@ const profitCalcSlice = createSlice({
   },
 });
 
-export const { setProduct, setBuyCost, setsalePrice, setStorageMonth, setFulfillment, recalculate, setPlacementFeeType } = profitCalcSlice.actions;
+export const { setProduct, setBuyCost, setsalePrice, setStorageMonth, setFulfillment, setFbmFee, recalculate, setPlacementFeeType } = profitCalcSlice.actions;
 
 export const profitCalcReducer = profitCalcSlice.reducer;

@@ -27,7 +27,10 @@ export const getFbaFeeRange = (originalSalePrice, fbaFee) => {
   }
 };
 
-export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA = true, placementFeeType = PLACEMENT_FEE_TYPES[0]) => {
+export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA = true, fbmFee = 0, placementFeeType = PLACEMENT_FEE_TYPES[0]) => {
+
+  console.log(fbmFee , storageMonths);
+  
   const { referralFeePercent = 0, fbaFees = 0, prepFee = 0, closingFee = 0, storageFees = 0, inboundPlacementFee = {}, inboundShippingFee = 0 } = product?.fees || {};
 
   const { highestFba, lowestFba } = getFbaFeeRange(product?.info?.salePrice, fbaFees);
@@ -40,7 +43,7 @@ export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA 
   const convertedStorageFee = isFBA ? storageMonths * storageFees : 0;
   const appliedPrepFee = isFBA ? prepFee : 0;
   const appliedPlacementFee = isFBA ? currentPlacementFee : 0;
-  const fulfillmentFee = isFBA ? (salePrice < 10 ? lowestFba : highestFba) : 0;
+  const fulfillmentFee = isFBA ? (salePrice < 10 ? lowestFba : highestFba) : Number(fbmFee);
 
   const totalFees = referralFee + fulfillmentFee + appliedInboundShippingFee + convertedStorageFee + appliedPrepFee + appliedPlacementFee + closingFee;
 
@@ -82,9 +85,9 @@ export const calculateProfitAndROI = (totalFees, salePrice, costPrice) => {
   };
 };
 
-export const calculateOfferProfitAndROI = (product, offerPrice, storageMonth, fulfillment, buyCost, placementFeeType) => {
+export const calculateOfferProfitAndROI = (product, offerPrice, storageMonth, fulfillment, fbmFee = 0, buyCost, placementFeeType) => {
   try {
-    const fees = calculateTotalFees(product ?? {}, Number(offerPrice) || 0, storageMonth ?? 0, fulfillment === 'FBA', placementFeeType);
+    const fees = calculateTotalFees(product ?? {}, Number(offerPrice) || 0, storageMonth ?? 0, fulfillment === 'FBA', fbmFee ?? 0, placementFeeType);
 
     const { profit = 0, roi = 0 } = calculateProfitAndROI(fees?.totalFees, Number(offerPrice) || 0, Number(buyCost) || 0) || {};
 

@@ -333,7 +333,7 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
                             <span className="font-medium text-[#000000b1]">
                                 {s.name}:{" "}
                                 {(!productInfo?.[s.key] || productInfo?.[s.key] < 0) ? (
-                                    <i className='font-normal text-xs'>No Record</i>
+                                    <i className='font-normal text-xs'>{s.notFoundText ?? 'No Record'}</i>
                                 ) : (
                                     <>
                                         {s.symbol}
@@ -353,7 +353,7 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
                 <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
             )} */}
 
-            <div className={`bg-white py-2 rounded-lg z-10 ${size === 'large' ? 'mt-6':''}`}>
+            <div className={`bg-white py-2 rounded-lg z-10 ${size === 'large' ? 'mt-6' : ''}`}>
 
                 <ul className="hidden sm:flex gap-4 py-2.5 px-6">
                     {OfferCountConfig.map((s, idx) => (

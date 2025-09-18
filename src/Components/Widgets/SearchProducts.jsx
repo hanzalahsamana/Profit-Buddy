@@ -39,14 +39,14 @@ const SearchProducts = () => {
     return (
         <form onSubmit={handleSearchProducts}>
             <p className='text-lText text-[15px] mb-2'>
-                Search Product with their Keywords, Asins
+                Search Product with their Keywords, Asins, Upcs
             </p>
             <div className='flex item-start gap-2'>
 
                 <CustomInput
                     value={searchQuery}
                     onChange={(e) => setSearchQuerry(e.target.value)}
-                    placeholder={'e.g. #B0053HBJBE OR Watch'}
+                    placeholder={'e.g. #B0053HBJBE OR Title'}
                     prefix={
                         <button
                             type="submit"

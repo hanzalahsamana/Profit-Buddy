@@ -29,7 +29,7 @@ export const SalesConfig = [
   { name: 'Amazon', key: 'amazonPrice', color: '#ff8400', lightColor: '#fff3d6', symbol: '$', strokeWidth: 2, decimal: true, fillGraph: true },
   { name: 'New Price', key: 'newPrice', color: '#8888dd', lightColor: '#f0f0fb', symbol: '$', strokeWidth: 2, decimal: true },
   { name: 'Sales Rank', key: 'sellRank', color: '#8FBC8F', lightColor: '#eef7ee', symbol: '#', strokeWidth: 2, decimal: false, axis: 'y2' },
-  { name: 'BuyBox', key: 'buybox', color: '#ff00b4', lightColor: '#facfed', symbol: '$', strokeWidth: 2, decimal: true },
+  { name: 'BuyBox', key: 'buybox', color: '#ff00b4', lightColor: '#facfed', symbol: '$', strokeWidth: 2, decimal: true , notFoundText:'Suppressed'},
 ];
 
 export const OfferCountConfig = [{ name: 'Offer Count', key: 'offerCount', color: '#8888dd', lightColor: '#f0f0fb', symbol: '', strokeWidth: 2, decimal: false }];

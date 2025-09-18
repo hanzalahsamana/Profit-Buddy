@@ -28,6 +28,10 @@ const History = () => {
     dispatch(setHistoryLoading(true));
     try {
       const data = await getHistory({ page, limit });
+      const totalPages = Math.ceil(data?.totalCount / limit);
+      if (totalPages < page) {
+        return handlePageChange(totalPages)
+      }
       dispatch(
         setHistoryData({
           products: data.products,
@@ -54,7 +58,7 @@ const History = () => {
           <p className="text-sm">Loading History...</p>
         </div>
       )}
-      {!loading &&  !products?.length && (
+      {!loading && !products?.length && (
         <div className="flex flex-col items-center justify-center py-16 text-gray-500">
           <MdOutlineSearchOff className="w-8 h-8 mb-2" />
           <p className="text-sm">Oops, looks like history does not exist.</p>
