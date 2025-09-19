@@ -1,47 +1,54 @@
 import React from 'react';
 import { formatDate, formatTime, formatYear, lightenColor } from '../../../Utils/GraphUtils';
 import { formatNumberWithCommas } from '../../../Utils/NumberUtil';
+import { ScaleFactors } from '../../../Enums/Enums';
 
 // A CustomTooltip that assigns up to 4 tooltips to the four quadrants
 // (top-left, top-right, bottom-left, bottom-right) and tries to avoid
 // overlaps. Connector lines are drawn from the data point to the tooltip.
 
 
-export default function CustomTooltip({ rect, points, visible, configs }) {
+export default function CustomTooltip({ rect, points, visible, configs, size = 'large' }) {
+
+    const scaleFactor = ScaleFactors?.[size] || 1
+    
     if (!visible || !points) return null;
     if (!rect) return null;
 
     const chartW = rect.width;
     const chartH = rect.height;
-    if (points?.xPixel > chartW - 95) return;
+    // if (points?.xPixel > chartW - 95 || points?.xPixel < 88) return;
     const containerStyle = {
         position: 'absolute',
+        // top:0,
+        // left:0,
         left: Math.round(rect.left + window.scrollX),
         top: Math.round(rect.top + window.scrollY),
         width: Math.round(chartW),
         height: Math.round(chartH),
         pointerEvents: 'none',
         zIndex: 1000,
+        // backgroundColor:'red',
     };
 
     // Tooltip size (keep in sync with your classes)
-    const TT_W = 80;
-    const TT_H = 43;
+    const TT_W = 80 * scaleFactor;
+    const TT_H = 43 * scaleFactor;
     const GAP = 6; // minimal gap when nudging
 
     // helper: compute clamped canvas px/py (same as your original logic)
     const normalizePoint = (p) => {
-        const px = Math.max(20, Math.min(chartW - 0, Math.round(points?.xPixel)));
-        const py = Math.max(20, Math.min(chartH - 0, Math.round(p.canvasy)));
+        const px = Math.max((20 * scaleFactor), Math.min(chartW - 0, Math.round(points?.xPixel)));
+        const py = Math.max((20 * scaleFactor), Math.min(chartH - 0, Math.round(p.canvasy)));
         return { px, py };
     };
 
     // map quadrant -> function that returns {left, top} for tooltip placement
     const quadrantPlacement = {
-        'top-left': (x, y) => ({ left: x - TT_W - 20, top: y - TT_H - 20 }),
-        'top-right': (x, y) => ({ left: x + 20, top: y - TT_H - 20 }),
-        'bottom-left': (x, y) => ({ left: x - TT_W - 20, top: y + 20 }),
-        'bottom-right': (x, y) => ({ left: x + 20, top: y + 20 }),
+        'top-left': (x, y) => ({ left: x - TT_W - (20 * scaleFactor), top: y - TT_H - (20 * scaleFactor) }),
+        'top-right': (x, y) => ({ left: x + (20 * scaleFactor), top: y - TT_H - (20 * scaleFactor) }),
+        'bottom-left': (x, y) => ({ left: x - TT_W - (20 * scaleFactor), top: y + (20 * scaleFactor) }),
+        'bottom-right': (x, y) => ({ left: x + (20 * scaleFactor), top: y + (20 * scaleFactor) }),
     };
 
     // ensure we stay inside chart bounds when placing tooltip
@@ -151,13 +158,11 @@ export default function CustomTooltip({ rect, points, visible, configs }) {
         }
     }
 
-    // helper to draw connector between point (start) and tooltip center (end)
     const connectorStyle = (sx, sy, tx, ty, color = 'gray') => {
         const dx = tx - sx;
         const dy = ty - sy;
         const len = Math.hypot(dx, dy);
         const angle = Math.atan2(dy, dx);
-        // console.log( Math.max(0, len));
 
         return {
             position: 'absolute',
@@ -173,11 +178,15 @@ export default function CustomTooltip({ rect, points, visible, configs }) {
     };
 
     return (
-        <div style={containerStyle} className="pointer-events-none transition-all ">
-            {/* Header (kept your original header box) */}
+        <div style={containerStyle} className="pointer-events-none  origin-top-left transition-all ">
             {configs.length !== 1 && (
 
-                <div style={{ position: 'absolute', left: points?.xPixel - 60, bottom: -52 }} className="bg-white text-sm text-nowrap p-1 rounded shadow border border-gray-300 z-30">
+                <div style={{
+                    position: 'absolute',
+                    left: points?.xPixel - 60,
+                    bottom: -52,
+                    transform: `scale(${scaleFactor})`,
+                }} className="bg-white text-sm text-nowrap p-1 rounded shadow border border-gray-300 z-30">
 
                     <p className='font-semibold text-black'>
                         {formatYear(points?.date)}, {formatDate(points?.date)} :
@@ -205,7 +214,7 @@ export default function CustomTooltip({ rect, points, visible, configs }) {
 
                 return (
                     <React.Fragment key={i}>
-                        <div style={connStyle} className="rounded-full" />
+                        <div style={connStyle} className="rounded-full " />
 
                         <div
                             className="transition-none ease-linear duration-75 w-[80px] h-[40px] flex flex-col text-sm p-1 shadow border"
@@ -218,6 +227,7 @@ export default function CustomTooltip({ rect, points, visible, configs }) {
                                 pointerEvents: 'none',
                                 whiteSpace: 'nowrap',
                                 zIndex: 10,
+                                transform: `scale(${scaleFactor})`,
                             }}
                         >
                             <span className="text-[#767676] text-xs/[12px]">{a.raw.name}</span>

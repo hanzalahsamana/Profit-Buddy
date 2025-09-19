@@ -24,7 +24,6 @@ export default function UserProvider({ children }) {
                 // localStorage.removeItem("ProfitBuddyToken");
                 dispatch(setUser(null));
             } finally {
-                console.log("hello");
                 dispatch(setUserLoading(false));
             }
         };

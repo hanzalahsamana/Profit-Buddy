@@ -8,7 +8,7 @@ import Button from '../Controls/Button';
 import { LuRefreshCw } from 'react-icons/lu';
 import PopupMenu from '../Controls/PopupMenu';
 import { IoFilter } from 'react-icons/io5';
-import { OfferCountConfig, SalesConfig } from '../../Enums/Enums';
+import { OfferCountConfig, SalesConfig, ScaleFactors } from '../../Enums/Enums';
 
 const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurrentFilter, loading, size = 'large', totalDays }) => {
 
@@ -26,6 +26,8 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
     const [salesTooltipData, setSalesTooltipData] = useState({ x: 0, y: 0, points: [], visible: false, });
     const [offerTooltipData, setOfferTooltipData] = useState({ x: 0, y: 0, points: [], visible: false, });
     const [isZoomed, setIsZoomed] = useState(false);
+    const scaleFactor = ScaleFactors?.[size] || 1
+
 
 
 
@@ -53,7 +55,7 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
 
         const offerData = graphData.map(d => [
             new Date(d.date),
-            d.offerCount,
+            d.offerCount ?? null,
         ]);
 
         let interactionModel = {
@@ -195,11 +197,12 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
             zoom: size !== 'small',
             selection: true,
             range: false,
-        }, size === 'small' ? 0.63 : 1);
+        }, scaleFactor);
 
         attachTooltipSync(
             [salesGraph, offerGraph],
             [setSalesTooltipData, setOfferTooltipData],
+            scaleFactor
         );
 
         const handleZoom = () => {
@@ -210,7 +213,6 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
 
         salesGraph.updateOptions({ zoomCallback: handleZoom });
         offerGraph.updateOptions({ zoomCallback: handleZoom });
-
         const totalRows = salesData.length;
         const targetDuration = 1200;
         let startTime = null;
@@ -222,13 +224,15 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
             const progress = Math.min(elapsed / targetDuration, 1);
             const nextI = Math.floor(progress * totalRows);
 
-            salesGraph.updateOptions({
-                file: salesData.slice(0, nextI)
-            });
+            if (nextI > 0) {
+                salesGraph.updateOptions({
+                    file: salesData.slice(0, nextI)
+                });
 
-            offerGraph.updateOptions({
-                file: offerData.slice(0, nextI)
-            });
+                offerGraph.updateOptions({
+                    file: offerData.slice(0, nextI).map(row => [row[0], row[1] ?? null])
+                });
+            }
 
             if (progress < 1) {
                 requestAnimationFrame(animateGraphs);
@@ -325,8 +329,8 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
                     </div>
                 </div>
             )}
-            <div className='bg-white py-2 rounded-lg z-20'>
-                <ul className="hidden sm:flex gap-4 py-2.5 px-6">
+            <div className={`bg-white py-2 rounded-lg z-20 ${size === 'small' ? 'max-h-[210px]' : ''}`}>
+                <ul style={{ transform: `scale(${scaleFactor})`, }} className="hidden origin-top-left sm:flex gap-4 py-2.5 px-6">
                     {SalesConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
@@ -344,18 +348,13 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
                         </li>
                     ))}
                 </ul>
-                <div ref={salesRef} style={{ width: '100%', height: size === 'large' ? '260px' : '240px' }} />
-                {salesTooltipData.visible && (
-                    <CustomTooltip {...salesTooltipData} configs={SalesConfig} />
-                )}
+                <div ref={salesRef} className='origin-top-left' style={{ width: '100%', height: size === 'small' ? '240px' : '260px', transform: `scale(${scaleFactor})`, }} />
+                <CustomTooltip {...salesTooltipData} configs={SalesConfig} size={size} />
             </div >
-            {/* {size !== 'small' && (
-                <h1 className='text-[24px]/[24px] text-secondary font-semibold fontDmmono'>Offer Count</h1>
-            )} */}
 
-            <div className={`bg-white py-2 rounded-lg z-10 ${size === 'large' ? 'mt-6' : ''}`}>
+            <div className={`bg-white py-2 rounded-lg z-10 ${size === 'small' ? 'max-h-[210px]' : 'mt-6'}`}>
 
-                <ul className="hidden sm:flex gap-4 py-2.5 px-6">
+                <ul style={{ transform: `scale(${scaleFactor})`, }} className="hidden origin-top-left sm:flex gap-4 py-2.5 px-6">
                     {OfferCountConfig.map((s, idx) => (
                         <li key={idx} className="flex items-center gap-2 text-[15px]">
                             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }}></span>
@@ -373,10 +372,8 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
                         </li>
                     ))}
                 </ul>
-                <div ref={offerRef} style={{ width: '100%', height: size === 'small' ? '240px' : '260px' }} />
-                {offerTooltipData.visible && (
-                    <CustomTooltip {...offerTooltipData} configs={OfferCountConfig} />
-                )}
+                <div ref={offerRef} className='origin-top-left' style={{ width: '100%', height: size === 'small' ? '240px' : '260px', transform: `scale(${scaleFactor})`, }} />
+                <CustomTooltip {...offerTooltipData} configs={OfferCountConfig} size={size} />
 
             </div>
         </div>

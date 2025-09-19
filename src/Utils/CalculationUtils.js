@@ -29,8 +29,6 @@ export const getFbaFeeRange = (originalSalePrice, fbaFee) => {
 
 export const calculateTotalFees = (product, salePrice, storageMonths = 0, isFBA = true, fbmFee = 0, placementFeeType = PLACEMENT_FEE_TYPES[0]) => {
 
-  console.log(fbmFee , storageMonths);
-  
   const { referralFeePercent = 0, fbaFees = 0, prepFee = 0, closingFee = 0, storageFees = 0, inboundPlacementFee = {}, inboundShippingFee = 0 } = product?.fees || {};
 
   const { highestFba, lowestFba } = getFbaFeeRange(product?.info?.salePrice, fbaFees);

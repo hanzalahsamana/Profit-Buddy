@@ -71,8 +71,6 @@ export default function ResetPasswordPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("hello", validateForm());
-
         if (!validateForm()) return;
         try {
             setSubmitting(true);

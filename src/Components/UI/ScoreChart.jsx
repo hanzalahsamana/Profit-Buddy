@@ -28,8 +28,6 @@ const ScoreChart = ({ className }) => {
 
     const uniqueId = useId();
 
-    console.log("abcdef");
-
     const getGradientId = () => {
         if (value / 10 < 4) {
             return `progressGradientRed-${uniqueId}`;

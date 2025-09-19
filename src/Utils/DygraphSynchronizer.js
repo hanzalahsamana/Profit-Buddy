@@ -307,8 +307,6 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
           });
         }
 
-        console.log('ye chala ');
-
         const ov = g.graphDiv.querySelector('.drag-overlay');
         if (ov) {
           const ctx = ov.getContext('2d');
@@ -320,22 +318,26 @@ export function synchronize(graphs, opts = { selection: true, zoom: true, range:
     },
   };
 }
-export function attachTooltipSync(graphs, setTooltipDatas) {
+
+export function attachTooltipSync(graphs, setTooltipDatas, scaleFactor = 1) {
   const lastValidData = Array(graphs.length).fill(null);
 
   graphs.forEach((g, i) => {
     g.graphDiv.addEventListener('mousemove', (e) => {
       const plotArea = g.plotter_.area;
       const rect = g.graphDiv.getBoundingClientRect();
-
-      // Mouse X relative to entire graph + relative to plot area
       const absoluteX = e.clientX - rect.left;
-      const relativeX = absoluteX - plotArea.x;
-      if (relativeX < 0 || relativeX > plotArea.w) return; // ignore outside graph area
+
+
+      const relativeX = absoluteX - plotArea.x * scaleFactor;
+      if (relativeX < 0 || relativeX > plotArea.w * scaleFactor) {
+        setTooltipDatas.forEach((setTooltip) => setTooltip((prev) => ({ ...prev, visible: false })));
+        return;
+      } // ignore outside graph area
 
       const yPixel = e.clientY - rect.top;
 
-      const [dataX] = g.toDataCoords(relativeX + 85, yPixel);
+      const [dataX] = g.toDataCoords(relativeX / scaleFactor + 85, yPixel);
 
       graphs.forEach((other, j) => {
         let rowIndex = other.getRowForX(dataX);
@@ -374,7 +376,6 @@ export function attachTooltipSync(graphs, setTooltipDatas) {
         if (rowIndex !== null) {
           const labels = other.getLabels();
           const xVal = other.getValue(rowIndex, 0);
-          // tooltipData.date = xVal;
 
           const y1Range = other.yAxisRange(0);
           const y2Range = other.yAxisRange(1);
@@ -402,8 +403,8 @@ export function attachTooltipSync(graphs, setTooltipDatas) {
               yval: yVal,
               row: rowIndex,
               col,
-              canvasx: canvasX,
-              canvasy: canvasY,
+              canvasx: canvasX * scaleFactor,
+              canvasy: canvasY * scaleFactor,
             });
           }
 
@@ -412,7 +413,7 @@ export function attachTooltipSync(graphs, setTooltipDatas) {
           tooltipData = {
             ...lastValidData[j],
             date: dataX,
-            xPixel: absoluteX ,
+            xPixel: absoluteX / scaleFactor,
             isExact: false,
           };
         }

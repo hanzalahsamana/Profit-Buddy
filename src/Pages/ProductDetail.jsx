@@ -152,10 +152,11 @@ const ProductDetail = () => {
                         </CustomCard>
                     </AnimationWrapper>
                     <AnimationWrapper>
-                        <CustomCard label={'Chat Buddy'}>
+                        <CustomCard label={'AI Buddy'}>
                             <ChatBuddy />
                         </CustomCard>
                     </AnimationWrapper>
+                    
 
                 </div>
             </div>

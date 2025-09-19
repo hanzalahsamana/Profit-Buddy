@@ -43,3 +43,9 @@ export const IconImages = {
   sheets: 'https://img.icons8.com/fluency/96/google-sheets--v1.png',
   robot: 'https://img.icons8.com/fluency/96/message-bot.png',
 };
+
+export const ScaleFactors = {
+  "large":1,
+  "small":0.63,
+  "xsmall":0.50,
+}
