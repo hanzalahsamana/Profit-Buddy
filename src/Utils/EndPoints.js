@@ -24,4 +24,5 @@ export const EndPoints = {
   getGraphData: `/get/graph-data`,
   getSellerRevenue: `/get/calculate-seller-revenue`,
   getHistory: `/get/history`,
+  aiChat: `/get/ai-chat`,
 };

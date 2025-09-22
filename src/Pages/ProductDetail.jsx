@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TopOffers from '../Components/Widgets/TopOffers';
 import BasicInfo from '../Components/Widgets/BasicInfo';
 import CustomCard from '../Components/UI/CustomCard';
-import { searchProducts } from '../Apis/Product';
+import { getProduct, searchProducts } from '../Apis/Product';
 import { FiLoader } from "react-icons/fi";
 import { MdOutlineSearchOff } from "react-icons/md";
 import { getProductOffers } from '../Apis/Offer';
@@ -51,7 +51,7 @@ const ProductDetail = () => {
         } else {
             try {
                 setLoading(true);
-                const result = await searchProducts(asin);
+                const result = await getProduct(asin);
                 if (result?.length) {
                     dispatch(setProduct(result[0]));
                 }

@@ -1,78 +1,120 @@
-import { useEffect, useState } from "react";
+// PaymentPage.jsx
+import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { EndPoints } from "../../Utils/EndPoints";
-import BASE_URL from "../../../config";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements
+} from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-function CheckoutForm({ priceId, email }) {
-    
-    const stripe = useStripe();
-    const elements = useElements();
-    const [clientSecret, setClientSecret] = useState("");
+function CheckoutForm({ customerId, priceId }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [errorMsg, setErrorMsg] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const createSubscription = async () => {
-            // Create PaymentIntent on backend
-            const res = await fetch(`${BASE_URL}/${EndPoints.createSubscription}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ priceId, email, paymentMethodId: "pm_card_visa" }), // Test card
-            });
-            const data = await res.json();
-            setClientSecret(data.clientSecret);
-        };
-        createSubscription();
-    }, [priceId, email]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!stripe || !elements) return;
+    setLoading(true);
+    setErrorMsg("");
 
-        const { error } = await stripe.confirmPayment({
-            elements,
-            confirmParams: { return_url: `${window.location.origin}/success` },
-        });
+    try {
+      // 1️⃣ Get card details from CardElement
+      const cardElement = elements.getElement(CardElement);
+      const { error: pmError, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+        billing_details: { name: "Customer Name" }, // Replace with real user name
+      });
 
-        if (error) alert(error.message);
-    };
+      if (pmError) {
+        setErrorMsg(pmError.message);
+        setLoading(false);
+        return;
+      }
 
-    if (!clientSecret) return <div>Loading...</div>;
+      // 2️⃣ Call backend to create subscription with paymentMethod.id
+      const res = await fetch("http://localhost:2000/api/v1/post/create-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId,
+          priceId,
+          paymentMethodId: paymentMethod.id
+        }),
+      });
 
-    return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white shadow-xl rounded-2xl">
-            <PaymentElement />
-            <button type="submit" disabled={!stripe} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg w-full">
-                Subscribedd
-            </button>
-        </form>
-    );
+      const data = await res.json();
+      if (data.error) {
+        setErrorMsg(data.error.message);
+        setLoading(false);
+        return;
+      }
+
+      const clientSecret = data.clientSecret;
+
+      // 3️⃣ Confirm payment on client
+      const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret);
+      if (confirmError) {
+        setErrorMsg(confirmError.message);
+      } else if (paymentIntent.status === "succeeded") {
+        setSuccess(true);
+      }
+    } catch (err) {
+      setErrorMsg(err.message);
+    }
+
+    setLoading(false);
+  };
+
+  if (success) {
+    return <p>✅ Subscription active! Payment succeeded.</p>;
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <CardElement />
+      <button type="submit" disabled={!stripe || loading}>
+        {loading ? "Processing..." : "Subscribe"}
+      </button>
+      {errorMsg && <div style={{ color: "red" }}>{errorMsg}</div>}
+    </form>
+  );
 }
 
 export default function PaymentPage() {
-    const [priceId, setPriceId] = useState("price_1S7tu6Q2jkTuccFDPE9f4OOJ");
-    const [email, setEmail] = useState("test@example.com");
+  const [customerId, setCustomerId] = useState(null);
 
-    return (
-        <Elements stripe={stripePromise}>
-            <div className="max-w-lg mx-auto mt-10">
-                <h2 className="text-2xl font-bold mb-4">Subscribe to ProfitBuddyAI</h2>
+  useEffect(() => {
+    // 1️⃣ Create a Stripe Customer
+    const createCustomer = async () => {
+      const res = await fetch("http://localhost:2000/api/v1/post/create-customer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "customer@example.com", name: "John Doe" }),
+      });
+      const data = await res.json();
+      setCustomerId(data.customerId);
+    };
+    createCustomer();
+  }, []);
 
-                {/* Plan Selection */}
-                <select
-                    value={priceId}
-                    onChange={(e) => setPriceId(e.target.value)}
-                    className="mb-4 p-2 border rounded w-full"
-                >
-                    <option value="prod_T41xMBOEf6C9JN">Basic Plan - $34.99/mo</option>
-                    <option value="price_test_basic_yearly">Basic Plan - $249.99/yr</option>
-                    <option value="prod_T41yQS1En12xtf">Business Plan - $49.99/mo</option>
-                    <option value="price_test_business_yearly">Business Plan - $399.99/yr</option>
-                </select>
+  // 2️⃣ Use actual Price IDs from Stripe dashboard
+  const BASIC_MONTHLY_PRICE_ID = "price_1S7tu6Q2jkTuccFDPE9f4OOJ";
 
-                <CheckoutForm priceId={priceId} email={email} />
-            </div>
-        </Elements>
-    );
+  return (
+    <Elements stripe={stripePromise}>
+      {customerId ? (
+        <CheckoutForm customerId={customerId} priceId={BASIC_MONTHLY_PRICE_ID} />
+      ) : (
+        <p>Loading customer...</p>
+      )}
+    </Elements>
+  );
 }

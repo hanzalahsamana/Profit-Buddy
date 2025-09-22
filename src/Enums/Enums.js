@@ -4,11 +4,14 @@ export const Project_Name = 'profit buddy';
 export const KEEPA_EPOCH_START_MINUTES = 21564000;
 
 //minimum valid product criteria
-export const MIN_ROI = 0.25;
-export const MIN_PROFIT = 3.0;
+export const MIN_ROI = 0.25; // 25%
+export const MIN_PROFIT = 3.0; // $3
 
-//Place Fee Types
+// Fee Types
 export const PLACEMENT_FEE_TYPES = ['minimal', 'partial', 'optimized'];
+export const CRITERIA_FOR_LOWEST_REFERRAL_FEE = 15; // $15
+export const LOWEST_REFERRAL_PERC = 0.08; // 8%
+export const HIGHEST_REFERRAL_PERC = 0.15; // 15%
 
 //currency
 export const CURRENCY = '$';
@@ -28,8 +31,8 @@ export const OfferGraphKeys = {
 export const SalesConfig = [
   { name: 'Amazon', key: 'amazonPrice', color: '#ff8400', lightColor: '#fff3d6', symbol: '$', strokeWidth: 2, decimal: true, fillGraph: true },
   { name: 'New Price', key: 'newPrice', color: '#8888dd', lightColor: '#f0f0fb', symbol: '$', strokeWidth: 2, decimal: true },
-  { name: 'Sales Rank', key: 'sellRank', color: '#8FBC8F', lightColor: '#eef7ee', symbol: '#', strokeWidth: 2, decimal: false, axis: 'y2' },
-  { name: 'BuyBox', key: 'buybox', color: '#ff00b4', lightColor: '#facfed', symbol: '$', strokeWidth: 2, decimal: true , notFoundText:'Suppressed'},
+  { name: 'Sales Rank', key: 'sellRank', color: '#8FBC8F', lightColor: '#eef7ee', symbol: '#', strokeWidth: 2, decimal: false, axis: 'y2',notFoundText: 'Unknown' },
+  { name: 'BuyBox', key: 'buybox', color: '#ff00b4', lightColor: '#facfed', symbol: '$', strokeWidth: 2, decimal: true, notFoundText: 'Suppressed' },
 ];
 
 export const OfferCountConfig = [{ name: 'Offer Count', key: 'offerCount', color: '#8888dd', lightColor: '#f0f0fb', symbol: '', strokeWidth: 2, decimal: false }];
@@ -45,7 +48,7 @@ export const IconImages = {
 };
 
 export const ScaleFactors = {
-  "large":1,
-  "small":0.63,
-  "xsmall":0.50,
-}
+  large: 1,
+  small: 0.63,
+  xsmall: 0.5,
+};

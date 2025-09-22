@@ -68,7 +68,7 @@ const TopOffers = ({ product, productOffers, offerLoading }) => {
                                             </td>
 
                                             <td className="px-2.5 py-1.5 text-center border-r border-accent ">
-                                                <span className='cursor-pointer hover:text-accent' data-tooltip-id={offer?.sellerInfo?.id} onClick={() => window.open(`/sellerProfile?sellerid=${encodeURIComponent(offer?.sellerInfo?.id?.trim())}`, "_blank")}>{offer?.seller}</span>
+                                                <span className='cursor-pointer hover:text-accent' data-tooltip-id={`seller-${offer?.sellerInfo?.id}`} onClick={() => window.open(`/sellerProfile?sellerid=${encodeURIComponent(offer?.sellerInfo?.id?.trim())}`, "_blank")}>{offer?.seller}</span>
                                             </td>
 
                                             <td className="px-2.5 py-1.5 text-center border-r border-accent">

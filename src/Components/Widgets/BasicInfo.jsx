@@ -16,7 +16,7 @@ const BasicInfo = ({ product }) => {
 
     return (
         <div className='flex flex-col sm:flex-row  gap-4 relative '>
-            <ProductImageGrid images={product?.images} listPrice={product?.info?.listPrice} className={'!aspect-square !w-[100%] !max-w-[100%] sm:!w-[200px]'} />
+            <ProductImageGrid images={product?.images} listPrice={product?.info?.buybox} className={'!aspect-square !w-[100%] !max-w-[100%] sm:!w-[200px]'} />
             {/* <div className=''>
                     <img src={product?.images[0]} className=' w-full h-full min-w-[250px] max-w-[250px] aspect-square bg-white rounded-lg  object-contain border border-border' alt="" />
                 </div> */}

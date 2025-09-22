@@ -51,7 +51,7 @@ const ProductCard = ({ product }) => {
           <div className='flex gap-2 md:gap-3  lg:flex-nowrap flex-wrap w-full items-center '>
             <div className='flex flex-1 gap-3'>
               <div className=' flex flex-col sm:flex-row flex-1 gap-2 w-full col-span-4 relative md:h-[auto]'>
-                <ProductImageGrid images={images} listPrice={info?.listPrice} className={'!aspect-square !w-[100%] !max-w-[100%] sm:!w-[200px]'} />
+                <ProductImageGrid images={images} listPrice={info?.buybox} className={'!aspect-square !w-[100%] !max-w-[100%] sm:!w-[200px]'} />
 
                 <div className='flex flex-col flex-1 justify-evenly gap-3'>
                   <p className="text-secondary font-semibold text-sm/[20px] capitalize tracking-tight line-clamp-2" title={product?.title}>

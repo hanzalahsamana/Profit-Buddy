@@ -108,7 +108,7 @@ const SalesAndOfferDygraphs = ({ graphData, productInfo, currentFilter, setCurre
                     drawGrid: false,
                     axisLineWidth: 0.1,
                     valueFormatter: v => '$' + formatNumberWithCommas(v) || Number(v).toLocaleString(undefined, { maximumFractionDigits: 2 }),
-                    axisLabelFormatter: v => formatNumberWithCommas(v)
+                    axisLabelFormatter: v => formatNumberWithCommas(v),
                 },
                 y2: {
                     axisLabel: 'Sales Rank',

@@ -18,7 +18,7 @@ const SearchProducts = () => {
     const handleSearchProducts = async (e) => {
         e.preventDefault();
         if (isASIN(searchQuery)) {
-            navigate(`/detail?asin=${searchQuery}`);
+           return navigate(`/detail?asin=${searchQuery}`);
         } else {
             navigate(`/`);
         }
