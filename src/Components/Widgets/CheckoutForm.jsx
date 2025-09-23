@@ -1,120 +1,80 @@
-// PaymentPage.jsx
-import React, { useState, useEffect } from "react";
+"use client";
+import { useState, useEffect } from "react";
+import { Elements, useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements
-} from "@stripe/react-stripe-js";
+import { toast } from "react-toastify";
+import { createSubscription } from "../../Apis/Subscription";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-function CheckoutForm({ customerId, priceId }) {
+const PaymentFormInner = ({ clientSecret }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [errorMsg, setErrorMsg] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!stripe || !elements) return;
 
-    setLoading(true);
-    setErrorMsg("");
-
+    setIsProcessing(true);
     try {
-      // 1️⃣ Get card details from CardElement
-      const cardElement = elements.getElement(CardElement);
-      const { error: pmError, paymentMethod } = await stripe.createPaymentMethod({
-        type: "card",
-        card: cardElement,
-        billing_details: { name: "Customer Name" }, // Replace with real user name
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.href, // stays on same page
+        },
       });
 
-      if (pmError) {
-        setErrorMsg(pmError.message);
-        setLoading(false);
-        return;
-      }
-
-      // 2️⃣ Call backend to create subscription with paymentMethod.id
-      const res = await fetch("http://localhost:2000/api/v1/post/create-subscription", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerId,
-          priceId,
-          paymentMethodId: paymentMethod.id
-        }),
-      });
-
-      const data = await res.json();
-      if (data.error) {
-        setErrorMsg(data.error.message);
-        setLoading(false);
-        return;
-      }
-
-      const clientSecret = data.clientSecret;
-
-      // 3️⃣ Confirm payment on client
-      const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret);
-      if (confirmError) {
-        setErrorMsg(confirmError.message);
-      } else if (paymentIntent.status === "succeeded") {
-        setSuccess(true);
-      }
+      if (error) toast.error(error.message);
+      else if (paymentIntent?.status === "succeeded") toast.success("Payment successful!");
     } catch (err) {
-      setErrorMsg(err.message);
+      toast.error(err.message || "Something went wrong.");
+    } finally {
+      setIsProcessing(false);
     }
-
-    setLoading(false);
   };
-
-  if (success) {
-    return <p>✅ Subscription active! Payment succeeded.</p>;
-  }
 
   return (
     <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={!stripe || loading}>
-        {loading ? "Processing..." : "Subscribe"}
+      <PaymentElement className="mb-6" />
+      <button
+        type="submit"
+        disabled={isProcessing || !stripe || !elements}
+        className="w-full py-3 bg-black text-white text-lg font-semibold rounded-md disabled:bg-backgroundC"
+      >
+        {isProcessing ? "Processing..." : "Pay Now"}
       </button>
-      {errorMsg && <div style={{ color: "red" }}>{errorMsg}</div>}
     </form>
   );
-}
+};
 
-export default function PaymentPage() {
-  const [customerId, setCustomerId] = useState(null);
+const PaymentForm = () => {
+  const [clientSecret, setClientSecret] = useState(null);
 
   useEffect(() => {
-    // 1️⃣ Create a Stripe Customer
-    const createCustomer = async () => {
-      const res = await fetch("http://localhost:2000/api/v1/post/create-customer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "customer@example.com", name: "John Doe" }),
-      });
-      const data = await res.json();
-      setCustomerId(data.customerId);
+    const fetchClientSecret = async () => {
+      try {
+        const response = await createSubscription({ planName: "business_month" });
+        if (response?.clientSecret) setClientSecret(response.clientSecret);
+        else toast.error("Failed to initialize payment.");
+      } catch (err) {
+        toast.error("Could not fetch payment details.");
+      }
     };
-    createCustomer();
+    fetchClientSecret();
   }, []);
 
-  // 2️⃣ Use actual Price IDs from Stripe dashboard
-  const BASIC_MONTHLY_PRICE_ID = "price_1S7tu6Q2jkTuccFDPE9f4OOJ";
+  if (!clientSecret) return <p className="text-center mt-6">Loading payment form...</p>;
 
   return (
-    <Elements stripe={stripePromise}>
-      {customerId ? (
-        <CheckoutForm customerId={customerId} priceId={BASIC_MONTHLY_PRICE_ID} />
-      ) : (
-        <p>Loading customer...</p>
-      )}
+    <Elements stripe={stripePromise} options={{ clientSecret }}>
+      <div className="bg-backgroundC flex justify-center items-center">
+        <div className="w-full max-w-[600px] p-8 bg-white ">
+          <PaymentFormInner clientSecret={clientSecret}  />
+        </div>
+      </div>
     </Elements>
   );
-}
+};
+
+export default PaymentForm;
