@@ -6,6 +6,7 @@ import { createSubscription } from '../../Apis/Subscription'
 import { setUserSubscription } from '../../Redux/Slices/UserSlice'
 import { useDispatch } from 'react-redux'
 import { COUPON_CODE_PREFIX } from '../../Enums/Enums'
+import { useNavigate } from 'react-router-dom'
 
 const ApplyCouponModal = ({ isOpen, setIsOpen }) => {
     const [loading, setLoading] = useState(false)
@@ -14,7 +15,9 @@ const ApplyCouponModal = ({ isOpen, setIsOpen }) => {
     const [couponCode, setCouponCode] = useState('')
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const handleApplyCoupon = async () => {
         setError('')
@@ -28,6 +31,8 @@ const ApplyCouponModal = ({ isOpen, setIsOpen }) => {
             const data = await createSubscription({ couponCode: `${COUPON_CODE_PREFIX}${couponCode}` })
             dispatch(setUserSubscription(data?.subscription))
             setCouponCodeStatus({ success: true, message: data?.message })
+            await sleep(1000);
+            navigate('/')
         } catch (err) {
             console.error(err);
             const message = err.response ? err.response.data.message : err.message
