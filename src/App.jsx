@@ -17,16 +17,14 @@ import ResetPassword from './Pages/ResetPassword'
 import Account from './Pages/Account'
 import DeleteAccountPage from './Pages/DeleteAccount'
 import VerifyEmailPage from './Pages/VerifyEmail'
-import PaymentForm from './Components/Widgets/CheckoutForm'
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
 import Plans from './Pages/Plans'
+import Checkout from './Pages/Checkout'
+import SubscriptionRoute from './AuthRouting/SubscriptionRoutes'
 
 function App() {
   const location = useLocation();
-  const hideHeaderRoutes = ["/authentication", "/reset-password", "/account", "/verify", "/delete-account", "/checkout", "/plans"];
+  const hideHeaderRoutes = ["/authentication", "/reset-password", "/account", "/verify", "/delete-account", "/checkout"];
   const showHeader = !hideHeaderRoutes.some(route => location.pathname.startsWith(route));
-  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 
   return (
@@ -39,20 +37,24 @@ function App() {
           <Routes>
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/verify" element={<VerifyEmailPage />} />
-            <Route path="/plans" element={<Plans />} />
 
             <Route element={<PublicRoutes />}>
               <Route path="/authentication" element={<Authentication />} />
             </Route>
+
+            <Route element={<SubscriptionRoute />}>
+              <Route path="/plans" element={<Plans />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/delete-account" element={<DeleteAccountPage />} />
+            </Route>
+
 
             <Route element={<PrivateRoutes />}>
               <Route path="/" element={<Home />} />
               <Route path="/detail" element={<ProductDetail />} />
               <Route path="/sellerProfile" element={<SellerProfile />} />
               <Route path="/history" element={<History />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/delete-account" element={<DeleteAccountPage />} />
-              <Route path="/checkout" element={<PaymentForm />} />
             </Route>
           </Routes>
         </div>

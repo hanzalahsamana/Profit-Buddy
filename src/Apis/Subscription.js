@@ -10,3 +10,13 @@ export const createSubscription = async (payload) => {
     throw err;
   }
 };
+
+export const cancelSubscription = async () => {
+  try {
+    const { data } = await authClient.post(EndPoints.cancelSubscription);
+    return data;
+  } catch (err) {
+    console.error('Failed to upsert history:', err);
+    throw err;
+  }
+};

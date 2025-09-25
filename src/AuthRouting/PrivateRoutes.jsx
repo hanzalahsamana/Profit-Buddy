@@ -1,4 +1,3 @@
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loader from "../Components/Loaders/Loader";
@@ -8,7 +7,16 @@ const PrivateRoutes = () => {
 
   if (userLoading) return <Loader />;
 
-  return user ? <Outlet /> : <Navigate to="/authentication?tab=login" replace />;
+  if (!user) return <Navigate to="/authentication?tab=login" replace />;
+
+  const sub = user.currentSubscription;
+  const now = new Date();
+
+  if (!sub || sub.status !== "active" || (sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) < now)) {
+    return <Navigate to="/plans" replace />;
+  }
+
+  return <Outlet />;
 };
 
-export default PrivateRoutes;
+export default PrivateRoutes

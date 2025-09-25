@@ -8,7 +8,19 @@ const PublicRoutes = () => {
 
   if (userLoading) return <Loader />;
 
-  return !user ? <Outlet /> : <Navigate to="/" replace />;
+  const sub = user?.currentSubscription;
+  const now = new Date();
+
+  if (user && sub?.status === "active" && (!sub.currentPeriodEnd || new Date(sub.currentPeriodEnd) >= now)) {
+    return <Navigate to="/" replace />;
+  }
+  
+  if (user) {
+    return <Navigate to="/plans" replace />;
+  }
+
+  return <Outlet />;
 };
+
 
 export default PublicRoutes;

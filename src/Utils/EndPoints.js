@@ -13,6 +13,7 @@ export const EndPoints = {
   deleteAccount: 'post/delete-account',
   deleteAccount: 'post/delete-account',
   createSubscription: 'post/create-subscription',
+  cancelSubscription: 'post/cancel-subscription',
 
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,

@@ -152,7 +152,7 @@ const ProductDetail = () => {
                         </CustomCard>
                     </AnimationWrapper>
                     <AnimationWrapper>
-                        <CustomCard label={'AI Buddy'}>
+                        <CustomCard label={'AI Buddy'} actio={<p className='text-lText text-sm'>20 / 100 Chat Limit</p>}>
                             <ChatBuddy />
                         </CustomCard>
                     </AnimationWrapper>

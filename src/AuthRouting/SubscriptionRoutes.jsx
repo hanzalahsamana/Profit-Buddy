@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Loader from "../Components/Loaders/Loader";
 import { useSelector } from "react-redux";
 
@@ -7,11 +7,14 @@ const SubscriptionRoute = () => {
 
     if (userLoading) return <Loader />;
 
-    if (!user) return <Navigate to="/login" />;
+    if (!user) return <Navigate to="/login" replace />;
 
-    if (user.currentSubscription && user?.currentSubscription?.status === "active") {
-        return <Navigate to="/" />;
-    }
+    const sub = user.currentSubscription;
+    const now = new Date();
+
+    // if (user && sub?.status === "active" && (!sub.currentPeriodEnd || new Date(sub.currentPeriodEnd) >= now)) {
+    //     return <Navigate to="/" replace />;
+    // }
 
     return <Outlet />;
 };

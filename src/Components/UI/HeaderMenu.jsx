@@ -1,27 +1,26 @@
-import React from 'react'
-import PopupMenu from '../Controls/PopupMenu'
-import Button from '../Controls/Button'
-import ToggleSwitch from '../Controls/ToggleSwitch'
-import { setTheme } from '../../Redux/Slices/SystemSlice'
-import { useState } from 'react'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import PopupMenu from '../Controls/PopupMenu';
+import Button from '../Controls/Button';
+import ToggleSwitch from '../Controls/ToggleSwitch';
+import Modal from './Modal';
+import CustomInput from '../Controls/CustomInput';
+import { setTheme } from '../../Redux/Slices/SystemSlice';
+import { setLogout } from '../../Redux/Slices/UserSlice';
 import { BiLogOut } from "react-icons/bi";
-import { setLogout } from '../../Redux/Slices/UserSlice'
-import { LuHistory, LuUserRound } from 'react-icons/lu'
-import { TbSpy } from 'react-icons/tb'
-import { MdOutlineDarkMode, MdOutlineLightMode, MdOutlineNightlight } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { IoChevronDownOutline } from 'react-icons/io5'
-import Modal from './Modal'
-import CustomInput from '../Controls/CustomInput'
-import { isSellerId } from '../../Utils/NumberUtil'
+import { LuHistory, LuUserRound } from 'react-icons/lu';
+import { TbSpy } from 'react-icons/tb';
+import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
+import { IoChevronDownOutline } from 'react-icons/io5';
+import { isSellerId } from '../../Utils/NumberUtil';
 
-const HeaderMenu = () => {
-    const { theme } = useSelector((state) => state.system)
+const HeaderMenu = ({ isSubscribed = true }) => {
+    const { theme } = useSelector((state) => state.system);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [modalOpen, setModalOpen] = useState(false)
 
+    const [modalOpen, setModalOpen] = useState(false);
     const [sellerId, setSellerId] = useState('');
     const [inputError, setInputError] = useState('');
 
@@ -44,27 +43,37 @@ const HeaderMenu = () => {
 
     return (
         <div className="flex gap-2 items-center">
-            {/* --- Visible ONLY on small screens (<md) --- */}
-            <div className=" gap-2 md:flex hidden">
+            {/* --- Visible ONLY on large screens (>=md) --- */}
+            <div className="gap-2 md:flex hidden">
                 <ToggleSwitch
                     options={['Dark', 'Light']}
                     selected={theme ? 'Dark' : 'Light'}
                     onChange={(value) => dispatch(setTheme(value === 'Dark'))}
                 />
-                <Button
-                    size="medium"
-                    variant="accent"
-                    corner="full"
-                    label={
-                        <div className="flex gap-2 items-center">
-                            <TbSpy size={18} /> Store Spy
-                        </div>
-                    }
-                    action={() => setModalOpen(!modalOpen)}
-                />
+
+                {isSubscribed && (
+                    <Button
+                        size="medium"
+                        variant="accent"
+                        corner="full"
+                        label={<div className="flex gap-2 items-center"><TbSpy size={18} /> Store Spy</div>}
+                        action={() => setModalOpen(!modalOpen)}
+                    />
+                )}
             </div>
-            <Button size='medium' variant='accent' corner='small' className='!pl-4 pr-4 rounded-r-none' label={<div className='flex gap-2 items-center'><LuUserRound size={18} />Account</div>} action={() => navigate('/account?tab=profile')} />
-            <div className=" hidden md:block">
+
+            {/* Account button */}
+            <Button
+                size='medium'
+                variant='accent'
+                corner='small'
+                className='!pl-4 pr-4 rounded-r-none'
+                label={<div className='flex gap-2 items-center'><LuUserRound size={18} />Account</div>}
+                action={() => navigate('/account?tab=profile')}
+            />
+
+            {/* Desktop PopupMenu */}
+            <div className="hidden md:block">
                 <PopupMenu
                     trigger={
                         <Button
@@ -76,11 +85,11 @@ const HeaderMenu = () => {
                         />
                     }
                     data={[
-                        {
+                        ...(isSubscribed ? [{
                             icon: <LuHistory size={18} />,
                             name: 'History',
                             action: () => navigate('/history'),
-                        },
+                        }] : []),
                         {
                             icon: <BiLogOut size={18} />,
                             name: 'Logout',
@@ -90,6 +99,7 @@ const HeaderMenu = () => {
                 />
             </div>
 
+            {/* Mobile PopupMenu */}
             <div className="md:hidden block">
                 <PopupMenu
                     trigger={
@@ -102,25 +112,21 @@ const HeaderMenu = () => {
                         />
                     }
                     data={[
-                        {
+                        ...(isSubscribed ? [{
                             icon: <TbSpy size={18} />,
                             name: 'Store Spy',
                             action: () => setModalOpen(!modalOpen),
-                        },
+                        }] : []),
                         {
-                            icon: !theme ? (
-                                <MdOutlineDarkMode size={18} />
-                            ) : (
-                                <MdOutlineLightMode size={18} />
-                            ),
+                            icon: !theme ? <MdOutlineDarkMode size={18} /> : <MdOutlineLightMode size={18} />,
                             name: !theme ? 'Dark Theme' : 'Light Theme',
-                            action: (value) => dispatch(setTheme(!theme)),
+                            action: () => dispatch(setTheme(!theme)),
                         },
-                        {
+                        ...(isSubscribed ? [{
                             icon: <LuHistory size={18} />,
                             name: 'History',
                             action: () => navigate('/history'),
-                        },
+                        }] : []),
                         {
                             icon: <BiLogOut size={18} />,
                             name: 'Logout',
@@ -129,22 +135,36 @@ const HeaderMenu = () => {
                     ]}
                 />
             </div>
-            <Modal
-                isOpen={modalOpen}
-                setIsOpen={setModalOpen}
-                label='Store Spy'
-                subText="Enter a Seller ID to find and analyze store details, including products, performance, and other insights."
-                actions={<>
-                    <Button label='Cancel' size='medium' variant='outline' action={() => setModalOpen(false)} />
-                    <Button type='submit' label='Store Spy' size='medium' variant='secondary' action={handleSubmit} />
-                </>}>
-                <form onSubmit={handleSubmit}>
-                    <CustomInput size='large' placeholder={'e.g. A1Z5U5O7R7H3DQ'} value={sellerId} onChange={(e) => setSellerId(e.target.value)} error={inputError} prefix={'Seller Id'} />
-                    <button type='submit' className='hidden'></button>
-                </form>
-            </Modal>
-        </div>
-    )
-}
 
-export default HeaderMenu
+            {/* Store Spy Modal */}
+            {isSubscribed && (
+                <Modal
+                    isOpen={modalOpen}
+                    setIsOpen={setModalOpen}
+                    label='Store Spy'
+                    subText="Enter a Seller ID to find and analyze store details, including products, performance, and other insights."
+                    actions={
+                        <>
+                            <Button label='Cancel' size='medium' variant='outline' action={() => setModalOpen(false)} />
+                            <Button type='submit' label='Store Spy' size='medium' variant='secondary' action={handleSubmit} />
+                        </>
+                    }
+                >
+                    <form onSubmit={handleSubmit}>
+                        <CustomInput
+                            size='large'
+                            placeholder='e.g. A1Z5U5O7R7H3DQ'
+                            value={sellerId}
+                            onChange={(e) => setSellerId(e.target.value)}
+                            error={inputError}
+                            prefix='Seller Id'
+                        />
+                        <button type='submit' className='hidden'></button>
+                    </form>
+                </Modal>
+            )}
+        </div>
+    );
+};
+
+export default HeaderMenu;

@@ -12,21 +12,23 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      return state;
+    },
+    setUserSubscription: (state, action) => {
+      if (state.user) {
+        state.user.currentSubscription = action.payload;
+      }
     },
     setLogout: (state) => {
       state.user = null;
       localStorage.removeItem('ProfitBuddyToken');
       state.userLoading = false;
-      return state;
     },
     setUserLoading: (state, action) => {
       state.userLoading = action.payload;
-      return state;
     },
   },
 });
 
-export const { setUser, setLogout, setUserLoading } = userSlice.actions;
+export const { setUser, setLogout, setUserLoading, setUserSubscription } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

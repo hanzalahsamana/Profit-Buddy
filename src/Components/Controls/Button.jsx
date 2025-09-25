@@ -27,7 +27,7 @@ const Button = ({
     }
 
     const sizeClasses = {
-        large: `py-2 px-6 text-lg font-medium`,
+        large: `py-2 px-6 text-lg font-semibold`,
         medium: `!min-h-10 px-6 text-[15px]/[15px] font-medium`,
         small: `!h-8 px-4 w-max text-sm font-medium`,
     }

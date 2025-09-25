@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { VscClose } from "react-icons/vsc";
 import { AnimatePresence, motion } from "framer-motion";
+import { IoPricetagsOutline } from "react-icons/io5";
 
 const backdropVariants = {
   hidden: { opacity: 0 },
@@ -77,10 +78,10 @@ const Modal = ({
             </button>
 
             {(label || subText) && (
-              <div className='flex flex-col gap-2 px-4 pt-4 w-full'>
-                {label && <h1 className='w-full text-secondary/90 text-[28px]/[28px] font-semibold '>{label}</h1>}
-                {subText && <p className='text-lText text-sm'>{subText}</p>}
-              </div>
+                <div className='flex flex-col gap-2 px-4 pt-4 w-full'>
+                    {label && <h1 className='w-full text-secondary/90 text-[28px]/[28px] font-semibold '>{label}</h1>}
+                  {subText && <p className='text-lText text-sm'>{subText}</p>}
+                </div>
             )}
 
             <div className="h-full px-4 py-6">

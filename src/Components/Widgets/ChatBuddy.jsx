@@ -4,6 +4,8 @@ import Button from "../Controls/Button";
 import { aiChatStream } from "../../Apis/AiChat";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { SUBSCRIPTION_PLANS_DATA } from "../../Enums/Enums";
+import { useSelector } from "react-redux";
 
 const ChatBuddy = () => {
     const [message, setMessage] = useState("");
@@ -12,6 +14,14 @@ const ChatBuddy = () => {
     ]);
     const messengerRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [quotaUsed, setQuotaUsed] = useState(0);
+    const { user } = useSelector((state) => state?.user);
+
+    const userPlan = SUBSCRIPTION_PLANS_DATA?.[user?.currentSubscription?.planName]
+
+    useEffect(() => {
+        setQuotaUsed(user.quotasUsed.aiChat || 0)
+    }, [user.quotasUsed.aiChat])
 
     const onMessageChunk = (chunk) => {
         setChat((prev) => {
@@ -59,19 +69,35 @@ const ChatBuddy = () => {
                 const lines = chunk.split('\n\n');
 
                 for (let line of lines) {
+                    console.log(line);
                     if (line.startsWith('data: ')) {
                         const text = line.replace('data: ', '').trim();
                         if (text === '[DONE]') break;
 
-                        botMessage += ` ${text}`;
 
-                        if (onMessageChunk) {
-                            onMessageChunk(botMessage); // callback to update React state
+
+                        if (text.startsWith('QUOTA:')) {
+                            // Example: "QUOTA:{"used":12,"remaining":88}"
+                            try {
+                                const quotaData = JSON.parse(text.replace('QUOTA:', ''));
+                                const usedQuota = quotaData?.used || 0;
+                                setQuotaUsed(usedQuota); // save quota in state
+                            } catch (err) {
+                                console.error('Failed to parse quota:', err);
+                            }
+                        } else {
+                            botMessage += ` ${text}`;
+
+                            if (onMessageChunk) {
+                                onMessageChunk(botMessage); // callback to update React state
+                            }
                         }
                     }
                 }
             }
         } catch (error) {
+            console.log(message);
+
             if (onMessageChunk) onMessageChunk('Oops! Something went wrong.');
         } finally {
             setLoading(false)
@@ -85,10 +111,11 @@ const ChatBuddy = () => {
     }, [chat]);
 
     return (
-        <div className="h-[350px] flex flex-col">
+        <div className="h-[350px] flex flex-col relative pb-4">
+            <p className="absolute -bottom-[12px] right-4 text-secondary text-sm ">{userPlan?.quotas?.aiChat === -1 ? "Unlimited Access" : `${quotaUsed} / ${userPlan?.quotas?.aiChat || 0} Chat Limit`}</p>
             <div
                 ref={messengerRef}
-                className="flex-1 scroll-smooth customScroll space-y-6 p-2"
+                className="flex-1 scroll-smooth customScroll space-y-6 py-2 pr-3"
             >
 
                 {chat.map((msg, idx) => (
@@ -101,7 +128,7 @@ const ChatBuddy = () => {
                                 ? "bg-border/80 text-secondary rounded-br-none text-sm max-w-[75%]"
                                 : "bg-transparent text-secondary/70 rounded-bl-none text-sm"
                                 }`}
-                            style={{ whiteSpace: "pre-wrap" }} // keep line breaks
+                            style={{ whiteSpace: "pre-wrap" }}
                         >
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
                             {msg.time && (

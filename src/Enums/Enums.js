@@ -31,7 +31,7 @@ export const OfferGraphKeys = {
 export const SalesConfig = [
   { name: 'Amazon', key: 'amazonPrice', color: '#ff8400', lightColor: '#fff3d6', symbol: '$', strokeWidth: 2, decimal: true, fillGraph: true },
   { name: 'New Price', key: 'newPrice', color: '#8888dd', lightColor: '#f0f0fb', symbol: '$', strokeWidth: 2, decimal: true },
-  { name: 'Sales Rank', key: 'sellRank', color: '#8FBC8F', lightColor: '#eef7ee', symbol: '#', strokeWidth: 2, decimal: false, axis: 'y2',notFoundText: 'Unknown' },
+  { name: 'Sales Rank', key: 'sellRank', color: '#8FBC8F', lightColor: '#eef7ee', symbol: '#', strokeWidth: 2, decimal: false, axis: 'y2', notFoundText: 'Unknown' },
   { name: 'BuyBox', key: 'buybox', color: '#ff00b4', lightColor: '#facfed', symbol: '$', strokeWidth: 2, decimal: true, notFoundText: 'Suppressed' },
 ];
 
@@ -51,4 +51,54 @@ export const ScaleFactors = {
   large: 1,
   small: 0.63,
   xsmall: 0.5,
+};
+
+// Subscription
+export const COUPON_CODE_PREFIX = 'PROFIT-BUDDY-';
+
+export const SUBSCRIPTION_PLANS_DATA = {
+  basic_monthly: {
+    id: 'basic_monthly',
+    name: 'Basic',
+    subText: 'Perfect for individual users getting started',
+    price: 34.99,
+    isPopular: false,
+    type: 'monthly',
+    quotas: { aiChat: 1000, supportAccess: false },
+    benefits: ['Cancel at anytime', 'Access to ProfitBuddy University, Store Spying, AI Buddy, Chrome Extension, Sales Estimator, and more...'],
+    includes: ['1 User', 'Unlimited Product Lookups', 'Limited AI Access', 'Basic Support'],
+  },
+  basic_yearly: {
+    id: 'basic_yearly',
+    name: 'Basic',
+    subText: 'Perfect for individual users getting started',
+    price: 249.99,
+    isPopular: false,
+    type: 'yearly',
+    quotas: { aiChat: 12000, supportAccess: false },
+    benefits: ['Cancel at anytime', 'Access to ProfitBuddy University, Store Spying, AI Buddy, Chrome Extension, Sales Estimator, and more...'],
+    includes: ['1 User', 'Unlimited Product Lookups', 'Limited AI Access', 'Basic Support'],
+  },
+  business_monthly: {
+    id: 'business_monthly',
+    name: 'Business',
+    subText: 'Ideal for teams needing full access',
+    price: 49.99,
+    isPopular: true,
+    type: 'monthly',
+    quotas: { aiChat: -1, supportAccess: true },
+    benefits: ['Cancel at anytime', 'Access to ProfitBuddy University, Store Spying, AI Buddy, Chrome Extension, Sales Estimator, and more...'],
+    includes: ['3 Users (With Individual Analytics)', 'Unlimited Product Lookups', 'Unlimited AI Access', 'Priority Support + Onboarding'],
+  },
+  business_yearly: {
+    id: 'business_yearly',
+    name: 'Business',
+    subText: 'Ideal for teams needing full access',
+    price: 399.99,
+    isPopular: true,
+    type: 'yearly',
+    quotas: { aiChat: -1, supportAccess: true },
+    benefits: ['Cancel at anytime', 'Access to ProfitBuddy University, Store Spying, AI Buddy, Chrome Extension, Sales Estimator, and more...'],
+    includes: ['3 Users (With Individual Analytics)', 'Unlimited Product Lookups', 'Unlimited AI Access', 'Priority Support + Onboarding'],
+  },
 };
