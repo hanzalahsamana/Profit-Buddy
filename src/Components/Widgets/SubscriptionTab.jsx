@@ -86,7 +86,7 @@ const SubscriptionTab = () => {
                 <div className="flex justify-between items-center">
                     <p className="text-base  text-secondary/80">Status</p>
                     <p className={`text-base  px-3 rounded-full ${subscriptionStatus() === "Active" ? "text-green-500 bg-green-200" :
-                        subscriptionStatus() === "Canceled" ? "text-red-500 bg-red-200" : "text-yellow-500 bg-yellow-200"
+                        subscriptionStatus() === "Canceled" ? "text-red-500 bg-red-200" : "text-orange-500 bg-orange-200"
                         }`}>
                         {subscriptionStatus()}
                     </p>

@@ -101,8 +101,8 @@ const Checkout = () => {
 
   if (!clientSecret) return (
     <div className="flex flex-col items-center justify-center mt-12 h-screen">
-      <div className="w-16 h-16 border-4 border-t-black border-gray-200 rounded-full animate-spin"></div>
-      <p className="mt-4 text-gray-700 text-lg font-medium">Preparing your checkout...</p>
+      <div className="w-16 h-16 border-4 border-t-secondary border-border rounded-full animate-spin"></div>
+      <p className="mt-4 text-lText text-lg font-medium">Preparing your checkout...</p>
     </div>
   );
 
@@ -123,34 +123,34 @@ const Checkout = () => {
       <div className="bg-lBackground min-h-screen flex justify-center items-start py-12 px-6 gap-8">
         <div className="flex gap-10 w-full max-w-[1000px]">
           {/* Order Summary */}
-          <div className="w-full p-6 bg-primary border border-border rounded-lg flex flex-col gap-4 h-max">
-            <h2 className="text-[30px] font-semibold text-secondary mb-4">Order Summary</h2>
+          <div className="w-full p-6 bg-white border border-border rounded-lg flex flex-col gap-4 h-max">
+            <h2 className="text-[30px] font-semibold text-gray-900 mb-4">Order Summary</h2>
 
             <div className="flex justify-between">
-              <span className="text-lText">Plan:</span>
-              <span className="font-medium text-secondary">{summary.planName}</span>
+              <span className="text-gray-600">Plan:</span>
+              <span className="font-medium text-gray-900">{summary.planName}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="text-lText">Amount:</span>
-              <span className="font-medium text-secondary">{summary.currency.toUpperCase()} {summary.amount.toFixed(2)}</span>
+              <span className="text-gray-600">Amount:</span>
+              <span className="font-medium text-gray-900">{summary.currency.toUpperCase()} {summary.amount.toFixed(2)}</span>
             </div>
 
             {summary.description && (
               <div className="flex justify-between">
-                <span className="text-lText">Description:</span>
-                <span className="font-medium text-secondary">{summary.description}</span>
+                <span className="text-gray-600">Description:</span>
+                <span className="font-medium text-gray-900">{summary.description}</span>
               </div>
             )}
 
             <div className="flex justify-between">
-              <span className="text-lText">Start Date:</span>
-              <span className="font-medium text-secondary">{formatDate(summary.startDate)}, {formatYear(summary.startDate)}</span>
+              <span className="text-gray-600">Start Date:</span>
+              <span className="font-medium text-gray-900">{formatDate(summary.startDate)}, {formatYear(summary.startDate)}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="text-lText">End Date:</span>
-              <span className="font-medium text-secondary">{formatDate(summary.endDate)}, {formatYear(summary.endDate)}</span>
+              <span className="text-gray-600">End Date:</span>
+              <span className="font-medium text-gray-900">{formatDate(summary.endDate)}, {formatYear(summary.endDate)}</span>
             </div>
           </div>
 
