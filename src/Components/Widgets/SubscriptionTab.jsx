@@ -20,7 +20,7 @@ const SubscriptionTab = () => {
     const dispatch = useDispatch()
 
     const subscription = user?.currentSubscription;
-    const PlanData = SUBSCRIPTION_PLANS_DATA?.[subscription.planName]
+    const PlanData = SUBSCRIPTION_PLANS_DATA?.[subscription?.planName]
 
 
 
