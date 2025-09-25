@@ -7,7 +7,7 @@ const SubscriptionRoute = () => {
 
     if (userLoading) return <Loader />;
 
-    if (!user) return <Navigate to="/login" replace />;
+    if (!user) return <Navigate to="/authentication?tab=login" replace />;
 
     const sub = user.currentSubscription;
     const now = new Date();
