@@ -10,6 +10,7 @@ import { SUBSCRIPTION_PLANS_DATA } from "../Enums/Enums";
 import { getUserDetail } from "../Apis/User";
 import { setUser } from "../Redux/Slices/UserSlice";
 import { useDispatch } from "react-redux";
+import { BsArrowLeft } from "react-icons/bs";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -123,7 +124,8 @@ const Checkout = () => {
       <div className="bg-lBackground min-h-screen flex justify-center items-start py-12 px-6 gap-8">
         <div className="flex gap-10 w-full max-w-[1000px]">
           {/* Order Summary */}
-          <div className="w-full p-6 bg-white border border-border rounded-lg flex flex-col gap-4 h-max">
+          <div className="w-full relative p-6 bg-white border border-border rounded-lg flex flex-col gap-4 h-max">
+            <p onClick={() => navigate('/plans')} className="text-gray-600 absolute top-1.5 left-1.5 text-sm flex gap-1 hover:text-gray-400 cursor-pointer items-center"><BsArrowLeft /> Back To Plans</p>
             <h2 className="text-[30px] font-semibold text-gray-900 mb-4">Order Summary</h2>
 
             <div className="flex justify-between">
