@@ -20,6 +20,7 @@ import VerifyEmailPage from './Pages/VerifyEmail'
 import Plans from './Pages/Plans'
 import Checkout from './Pages/Checkout'
 import SubscriptionRoute from './AuthRouting/SubscriptionRoutes'
+import CouponGenerator from './Pages/CouponGenerator'
 
 function App() {
   const location = useLocation();
@@ -55,6 +56,7 @@ function App() {
               <Route path="/detail" element={<ProductDetail />} />
               <Route path="/sellerProfile" element={<SellerProfile />} />
               <Route path="/history" element={<History />} />
+              <Route path="/coupon-generator" element={<CouponGenerator />} />
             </Route>
           </Routes>
         </div>

@@ -1,5 +1,3 @@
-import BASE_URL from '../../config';
-
 export const EndPoints = {
   registerUser: `/post/register`,
   loginUser: `/post/login`,
@@ -14,6 +12,7 @@ export const EndPoints = {
   deleteAccount: 'post/delete-account',
   createSubscription: 'post/create-subscription',
   cancelSubscription: 'post/cancel-subscription',
+  generateCoupon: 'post/generate-coupon',
 
   getUserDetail: `/get/user-detail`,
   getProducts: `/get/products`,
@@ -26,4 +25,5 @@ export const EndPoints = {
   getSellerRevenue: `/get/calculate-seller-revenue`,
   getHistory: `/get/history`,
   aiChat: `/get/ai-chat`,
+  getCoupons: `/get/coupons`,
 };

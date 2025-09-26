@@ -5,7 +5,6 @@ import Button from '../Controls/Button'
 import { createSubscription } from '../../Apis/Subscription'
 import { setUserSubscription } from '../../Redux/Slices/UserSlice'
 import { useDispatch } from 'react-redux'
-import { COUPON_CODE_PREFIX } from '../../Enums/Enums'
 import { useNavigate } from 'react-router-dom'
 
 const ApplyCouponModal = ({ isOpen, setIsOpen }) => {
@@ -28,7 +27,7 @@ const ApplyCouponModal = ({ isOpen, setIsOpen }) => {
         }
         setLoading(true)
         try {
-            const data = await createSubscription({ couponCode: `${COUPON_CODE_PREFIX}${couponCode}` })
+            const data = await createSubscription({ couponCode: `${couponCode}` })
             dispatch(setUserSubscription(data?.subscription))
             setCouponCodeStatus({ success: true, message: data?.message })
             await sleep(1000);
@@ -74,7 +73,6 @@ const ApplyCouponModal = ({ isOpen, setIsOpen }) => {
                 )}
 
                 <CustomInput
-                    prefix={COUPON_CODE_PREFIX}
                     label={'Coupon Code'}
                     placeholder={"e.g. CARTTON"}
                     value={couponCode}

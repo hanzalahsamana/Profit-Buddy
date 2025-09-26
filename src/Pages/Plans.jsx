@@ -11,9 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { SUBSCRIPTION_PLANS_DATA } from "../Enums/Enums";
 import { cancelSubscription, createSubscription } from "../Apis/Subscription";
 import { useNavigate } from "react-router-dom";
+import AnimationWrapper from "../Components/Layout/AnimationWrapper";
 
 const Plans = () => {
-    const [billingCycle, setBillingCycle] = useState("Monthly");
+    const [billingCycle, setBillingCycle] = useState("Yearly");
     const { user } = useSelector((state) => state?.user);
     const userSubscription = user?.currentSubscription;
 
@@ -77,85 +78,88 @@ const Plans = () => {
     };
 
     return (
-        <div className="bg-lBackground flex flex-col gap-8 items-center py-10 px-4">
-            <div className="flex items-center  gap-4 justify-between w-full max-w-[670px]">
+        <AnimationWrapper>
+            <div className="bg-lBackground flex flex-col gap-8 items-center py-10 px-4">
 
-                <ToggleSwitch
-                    options={['Monthly', 'Yearly']}
-                    onChange={(option) => setBillingCycle(option)}
-                    selected={billingCycle}
+                <div className="flex items-center  gap-4 justify-between w-full max-w-[670px]">
+
+                    <ToggleSwitch
+                        options={['Monthly', 'Yearly']}
+                        onChange={(option) => setBillingCycle(option)}
+                        selected={billingCycle}
+                    />
+
+                    <button onClick={() => setApplyCouponModalOpen(true)} className="text-[16px] outline-none border-border text-lText bg-primary hover:scale-[1.04] transition-all duration-300 cursor-pointer flex gap-2 items-center glowSpinBox  py-3 px-3 rounded-lg !border-[1.5px] ">
+                        <RiDiscountPercentLine size={20} />
+                        Proceed with coupon code
+                        <BsArrowRight size={20} />
+                    </button>
+
+                </div>
+                <div className="flex gap-8 w-full justify-center items-center">
+                    {Object.values(SUBSCRIPTION_PLANS_DATA)
+                        .filter(plan => plan.type.toLowerCase() === billingCycle.toLowerCase()) // only monthly/yearly
+                        .map((plan) => {
+                            return (
+                                <div
+                                    key={plan.id}
+                                    className={`relative rounded-lg border-[1.5px] w-[320px] p-6 rainbow-glow-box cursor-pointer transition-all duration-300 ${plan.isPopular ? 'border-accent bg-primary shadow-lg' : 'border-border/80 bg-lBackground'}`}
+                                    onClick={() => setSelectedPlan(plan.id)}
+                                >
+                                    {plan.isPopular && (
+                                        <div className="absolute top-2 right-2 bg-accent text-primary rounded-full px-3 py-1 text-xs">
+                                            Most Popular
+                                        </div>
+                                    )}
+                                    <h2 className="text-2xl font-semibold text-secondary">{plan.name} Plan</h2>
+                                    <p className="text-sm/[14px] text-lText/80">{plan.subText}</p>
+                                    <p className="text-lText my-2">
+                                        <span className="text-[40px] text-secondary font-semibold">{plan.price.toFixed(2)}</span> / Paid {billingCycle}
+                                    </p>
+                                    <Button
+                                        label={userSubscription?.status === 'active' && userSubscription?.planName === plan.id
+                                            ? "Cancel Plan"
+                                            : "Subscribe"
+                                        }
+                                        action={userSubscription?.status === 'active' && userSubscription?.planName === plan.id
+                                            ? handleCancelSubscription
+                                            : () => handleSubscribePlan(plan.id)
+                                        }
+                                        variant={userSubscription?.status === 'active' && userSubscription?.planName === plan.id ? "outline" : "secondary"}
+                                        size="medium"
+                                        className={`${!plan.isPopular? "" : "ring-4 ring-secondary/20 "}mb-3 w-full`}
+                                        disabled={loading}
+                                    />
+
+                                    <div className="mb-4">
+                                        <h3 className="font-semibold text-secondary mb-1">Key Benefits</h3>
+                                        <ul className="text-lText text-sm list-disc list-inside space-y-1">
+                                            {plan.benefits.map((b, i) => (
+                                                <li key={i}>{b}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-secondary mb-1">Includes</h3>
+                                        <ul className="text-lText text-sm list-disc list-inside space-y-1">
+                                            {plan.includes.map((i, idx) => (
+                                                <li key={idx}>{i}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                </div>
+
+                <ApplyCouponModal
+                    isOpen={applyCouponModalOpen}
+                    setIsOpen={setApplyCouponModalOpen}
                 />
 
-                <button onClick={() => setApplyCouponModalOpen(true)} className="text-[16px] outline-none border-border text-lText bg-primary hover:scale-[1.04] transition-all duration-300 cursor-pointer flex gap-2 items-center glowSpinBox  py-3 px-3 rounded-lg !border-[1.5px] ">
-                    <RiDiscountPercentLine size={20} />
-                    Proceed with coupon code
-                    <BsArrowRight size={20} />
-                </button>
-
+                {ConfirmationModal}
             </div>
-            <div className="flex gap-8 w-full justify-center items-center">
-                {Object.values(SUBSCRIPTION_PLANS_DATA)
-                    .filter(plan => plan.type.toLowerCase() === billingCycle.toLowerCase()) // only monthly/yearly
-                    .map((plan) => {
-                        return (
-                            <div
-                                key={plan.id}
-                                className={`relative rounded-lg border-[1.5px] w-[320px] p-6 rainbow-glow-box cursor-pointer transition-all duration-300 ${plan.isPopular ? 'border-accent bg-primary shadow-lg' : 'border-border/80 bg-lBackground'}`}
-                                onClick={() => setSelectedPlan(plan.id)}
-                            >
-                                {plan.isPopular && (
-                                    <div className="absolute top-2 right-2 bg-accent text-primary rounded-full px-3 py-1 text-xs">
-                                        Most Popular
-                                    </div>
-                                )}
-                                <h2 className="text-2xl font-semibold text-secondary">{plan.name} Plan</h2>
-                                <p className="text-sm/[14px] text-lText/80">{plan.subText}</p>
-                                <p className="text-lText my-2">
-                                    <span className="text-[40px] text-secondary font-semibold">{plan.price.toFixed(2)}</span> / Paid {billingCycle}
-                                </p>
-                                <Button
-                                    label={userSubscription?.status === 'active' && userSubscription?.planName === plan.id
-                                        ? "Cancel Plan"
-                                        : "Subscribe"
-                                    }
-                                    action={userSubscription?.status === 'active' && userSubscription?.planName === plan.id
-                                        ? handleCancelSubscription
-                                        : () => handleSubscribePlan(plan.id)
-                                    }
-                                    variant={plan.isPopular ? "secondary" : "secondary"}
-                                    size="medium"
-                                    className="ring-4 mb-3 ring-secondary/20 w-full"
-                                    disabled={loading}
-                                />
-
-                                <div className="mb-4">
-                                    <h3 className="font-semibold text-secondary mb-1">Key Benefits</h3>
-                                    <ul className="text-lText text-sm list-disc list-inside space-y-1">
-                                        {plan.benefits.map((b, i) => (
-                                            <li key={i}>{b}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-secondary mb-1">Includes</h3>
-                                    <ul className="text-lText text-sm list-disc list-inside space-y-1">
-                                        {plan.includes.map((i, idx) => (
-                                            <li key={idx}>{i}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        );
-                    })}
-            </div>
-
-            <ApplyCouponModal
-                isOpen={applyCouponModalOpen}
-                setIsOpen={setApplyCouponModalOpen}
-            />
-
-            {ConfirmationModal}
-        </div>
+        </AnimationWrapper>
     );
 };
 

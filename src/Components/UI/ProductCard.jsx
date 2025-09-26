@@ -24,6 +24,7 @@ const ProductCard = ({ product }) => {
   const { info, graphData, images, reviews } = product
   const [loading, setloading] = useState(false)
   const [productOffers, setproductOffers] = useState({})
+  const [showChart, setShowChart] = useState(false);
 
   const { offers } = productOffers || {}
 
@@ -40,13 +41,18 @@ const ProductCard = ({ product }) => {
   }
 
   useEffect(() => {
+    const timeout = setTimeout(() => setShowChart(true), 500);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
     if (!product) return
     handleGetOffers()
   }, [product])
 
   return (
-    <AnimationWrapper>
-      <Link to={`/detail?asin=${product?.asin}`}>
+    <Link to={`/detail?asin=${product?.asin}`}>
+      <AnimationWrapper>
         <div className='p-3 rounded-[10px] bg-primary transition-shadow cursor-pointer productCardShadow border-border border'>
           <div className='flex gap-2 md:gap-3  lg:flex-nowrap flex-wrap w-full items-center '>
             <div className='flex flex-1 gap-3'>
@@ -186,19 +192,16 @@ const ProductCard = ({ product }) => {
             }} className='hidden lg:flex  gap-0 pl-[10px] max-w-[500px] max-h-[460px] overflow-hidden items-start h-full  rounded-lg '>
 
               <div className='max-w-[750px] min-w-[750px] h-max overflow-hidden flex items-end  justify-end  '>
-                <ChartWraaper product={product} className=' origin-top-left' size='small' />
+                {showChart && (
+                  <ChartWraaper product={product} className=' origin-top-left' size='small' />
+                )}
               </div>
-              {/* <div className='w-[450px] h-max overflow-hidden  '>
-                <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={SalesGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />
-              </div>
-              <div className='w-[450px] h-max overflow-hidden  '>
-                <DynamicChart graphData={graphData?.keepaGraphData} graphKeys={OfferGraphKeys} showLegend={false} size='small' syncID={product?.asin} wantsDrag={false} />
-              </div> */}
+
             </div>
           </div >
         </div >
-      </Link>
-    </AnimationWrapper >
+      </AnimationWrapper >
+    </Link>
 
 
   )

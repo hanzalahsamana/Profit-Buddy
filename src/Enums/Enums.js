@@ -59,6 +59,7 @@ export const COUPON_CODE_PREFIX = 'PROFIT-BUDDY-';
 export const SUBSCRIPTION_PLANS_DATA = {
   basic_monthly: {
     id: 'basic_monthly',
+    idName: 'Basic Plan Monthly',
     name: 'Basic',
     subText: 'Perfect for individual users getting started',
     price: 34.99,
@@ -66,10 +67,11 @@ export const SUBSCRIPTION_PLANS_DATA = {
     type: 'monthly',
     quotas: { aiChat: 1000, supportAccess: false },
     benefits: ['Cancel at anytime', 'Access to ProfitBuddy University, Store Spying, AI Buddy, Chrome Extension, Sales Estimator, and more...'],
-    includes: ['1 User', 'Unlimited Product Lookups', 'Limited AI Access', 'Basic Support'],
+    includes: ['1 User', 'Unlimited Product Lookups', 'AI Access', 'Basic Support'],
   },
   basic_yearly: {
     id: 'basic_yearly',
+    idName: 'Basic Plan Yearly',
     name: 'Basic',
     subText: 'Perfect for individual users getting started',
     price: 249.99,
@@ -77,10 +79,11 @@ export const SUBSCRIPTION_PLANS_DATA = {
     type: 'yearly',
     quotas: { aiChat: 12000, supportAccess: false },
     benefits: ['Cancel at anytime', 'Access to ProfitBuddy University, Store Spying, AI Buddy, Chrome Extension, Sales Estimator, and more...'],
-    includes: ['1 User', 'Unlimited Product Lookups', 'Limited AI Access', 'Basic Support'],
+    includes: ['1 User', 'Unlimited Product Lookups', 'AI Access', 'Basic Support'],
   },
   business_monthly: {
     id: 'business_monthly',
+    idName: 'Business Plan Monthly',
     name: 'Business',
     subText: 'Ideal for teams needing full access',
     price: 49.99,
@@ -92,6 +95,7 @@ export const SUBSCRIPTION_PLANS_DATA = {
   },
   business_yearly: {
     id: 'business_yearly',
+    idName: 'Business Plan Yearly',
     name: 'Business',
     subText: 'Ideal for teams needing full access',
     price: 399.99,

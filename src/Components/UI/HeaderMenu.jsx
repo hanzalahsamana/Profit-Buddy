@@ -66,8 +66,8 @@ const HeaderMenu = ({ isSubscribed = true }) => {
             <Button
                 size='medium'
                 variant='accent'
-                corner='small'
-                className='!pl-4 pr-4 rounded-r-none'
+                corner='full'
+                className='!pl-4 pr-1 rounded-r-none'
                 label={<div className='flex gap-2 items-center'><LuUserRound size={18} />Account</div>}
                 action={() => navigate('/account?tab=profile')}
             />
@@ -79,7 +79,7 @@ const HeaderMenu = ({ isSubscribed = true }) => {
                         <Button
                             size="medium"
                             variant="accent"
-                            corner="small"
+                            corner="full"
                             className="!pl-2 !pr-2 -ml-2 rounded-l-none"
                             label={<div className='flex gap-2 items-center'><IoChevronDownOutline size={18} /></div>}
                         />

@@ -54,6 +54,7 @@ const ProfitCalculator = () => {
                     label="Buy Cost"
                     value={buyCost ?? ""}
                     type='number'
+                    size='large'
                     onChange={(e) => {
                         const val = toCents(e.target.value);
                         const formatted = val ? (val / 100).toFixed(2) : '';
@@ -69,6 +70,7 @@ const ProfitCalculator = () => {
                     label="Sale Price"
                     value={salePrice ?? ""}
                     type='number'
+                    size='large'
                     min={0}
                     onChange={(e) => {
                         const val = toCents(e.target.value);
@@ -80,35 +82,7 @@ const ProfitCalculator = () => {
                     }}
                 />
             </div>
-            <Button
-                label={
-                    <span className='flex items-center justify-center gap-2'>
-                        Check Eligibility
-                        <TbExternalLink size={18} />
-                    </span>}
-                size='medium'
-                action={(e) => redirectToSellerCentralAddProduct(e, product?.asin)}
-                variant='secondary'
-            />
-            <ToggleSwitch
-                options={['FBA', 'FBM']}
-                label="Fulfillment Type:"
-                selected={fulfillment}
-                onChange={(value) => dispatch(setFulfillment(value))}
-            />
-
-            {fulfillment === "FBA" && (
-                <RangeSelector
-                    min={0}
-                    max={12}
-                    step={1}
-                    value={storageMonth}
-                    onChange={(value) => dispatch(setStorageMonth(value))}
-                    marks={[0, 3, 6, 9, 12]}
-                    label="Storage Months:"
-                />
-            )}
-            <div className="grid grid-cols-2 gap-2">
+             <div className="grid grid-cols-2 gap-2">
                 <div className={`border p-3 rounded-lg flex justify-between text-lg transition-colors
                      ${profit < 0
                         ? 'border-[red] bg-[#ff000038]'
@@ -132,6 +106,35 @@ const ProfitCalculator = () => {
                     <p className="text-end">{formatNumberWithCommas(roi, 2, false, false)}%</p>
                 </div>
             </div>
+            <Button
+                label={
+                    <span className='flex items-center justify-center gap-2'>
+                        Check Eligibility
+                        <TbExternalLink size={18} />
+                    </span>}
+                size='large'
+                action={(e) => redirectToSellerCentralAddProduct(e, product?.asin)}
+                variant='secondary'
+            />
+            <ToggleSwitch
+                options={['FBA', 'FBM']}
+                label="Fulfillment Type:"
+                selected={fulfillment}
+                onChange={(value) => dispatch(setFulfillment(value))}
+            />
+
+            {fulfillment === "FBA" && (
+                <RangeSelector
+                    min={0}
+                    max={12}
+                    step={1}
+                    value={storageMonth}
+                    onChange={(value) => dispatch(setStorageMonth(value))}
+                    marks={[0, 3, 6, 9, 12]}
+                    label="Storage Months:"
+                />
+            )}
+           
 
             <div className='flex flex-col w-full'>
                 <div
@@ -215,16 +218,20 @@ const ProfitCalculator = () => {
                 step="1"
                 min="1"
             />
-            <div className={`mt-2 space-y-2 text-lText text-sm transition-all overflow-hidden duration-500 ${quantity > 1 ? 'max-h-[100px]' : 'max-h-0'}`}>
+            <div className={`mt-2 space-y-2 text-lText text-sm transition-all overflow-hidden duration-500 ${quantity > 1 ? 'max-h-[130px]' : 'max-h-0'}`}>
                 <div className={`flex justify-between`}>
                     <span>Total Cost:</span>
                     <span className='flex items-center gap-1.5'>{formatNumberWithCommas(buyCost * quantity)}</span>
                 </div>
                 <div className={`flex justify-between`}>
+                    <span>Total Fees:</span>
+                    <span className='flex items-center gap-1.5'>{formatNumberWithCommas(fees?.totalFees * quantity)}</span>
+                </div>
+                <div className={`flex justify-between`}>
                     <span>Sale Price:</span>
                     <span className='flex items-center gap-1.5'>{formatNumberWithCommas(salePrice * quantity)}</span>
                 </div>
-                <div className={`flex justify-between`}>
+                <div className={`flex justify-between border-t border-border pt-2 text-secondary/80`}>
                     <span>Total Profit:</span>
                     <span className='flex items-center gap-1.5'>{formatNumberWithCommas(profit * quantity)}</span>
                 </div>
